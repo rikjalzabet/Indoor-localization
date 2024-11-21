@@ -11,6 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import hr.foi.air.indoorlocalization.navigation.BottomNavigationBar
+import hr.foi.air.indoorlocalization.navigation.NavigationHost
 import hr.foi.air.indoorlocalization.ui.theme.IndoorLocalizationTheme
 
 class MainActivity : ComponentActivity() {
@@ -36,6 +39,16 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         text = "Hello $name!",
         modifier = modifier
     )
+
+    val navController = rememberNavController()
+
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController)
+        }
+    ) { innerPadding ->
+        NavigationHost(navController, Modifier.padding(innerPadding))
+    }
 }
 
 @Preview(showBackground = true)
