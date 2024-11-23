@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "api.csproj", "{BB1A0323-A0B1-4677-AA04-F7B5C2A14B74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "..\DataAccessLayer\DataAccessLayer.csproj", "{F4DFFD27-1BE4-4D68-947D-A910FDB344FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BB1A0323-A0B1-4677-AA04-F7B5C2A14B74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB1A0323-A0B1-4677-AA04-F7B5C2A14B74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB1A0323-A0B1-4677-AA04-F7B5C2A14B74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4DFFD27-1BE4-4D68-947D-A910FDB344FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4DFFD27-1BE4-4D68-947D-A910FDB344FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4DFFD27-1BE4-4D68-947D-A910FDB344FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4DFFD27-1BE4-4D68-947D-A910FDB344FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
