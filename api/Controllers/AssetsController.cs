@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BusinessLogicLayer.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -7,5 +8,17 @@ namespace api.Controllers
     [ApiController]
     public class AssetsController : ControllerBase
     {
+        private readonly IAssetService _assetService;
+        public AssetsController(IAssetService assetService)
+        {
+            _assetService = assetService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var assets = _assetService.GetAllAssets();
+            return Ok(assets);
+        }
     }
 }
