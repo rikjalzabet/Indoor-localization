@@ -1,6 +1,6 @@
 ﻿using EntityLayer.Entities;
 
-namespace BusinessLogicLayer
+namespace BusinessLogicLayer.Services
 {
     public interface IAssetService
     {
