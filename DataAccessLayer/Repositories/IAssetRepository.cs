@@ -9,7 +9,7 @@ namespace DataAccessLayer.Repositories
 {
     public interface IAssetRepository
     {
-        Task<IQueryable<Asset>> GetAllAssets();
+        Task<List<Asset>> GetAllAssets();
         Asset GetAssetById(int id);
         int AddAsset(Asset asset);
         int UpdateAsset(Asset asset);

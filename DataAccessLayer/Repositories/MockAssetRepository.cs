@@ -20,9 +20,9 @@ namespace DataAccessLayer.Repositories
         };
 
         // u pravom repozitoriju sa EFC ide public async, i await umjesto Task.FromResult..
-        public async Task<IQueryable<Asset>> GetAllAssets()
+        public async Task<List<Asset>> GetAllAssets()
         {
-            return await Task.FromResult(_assets.AsQueryable<Asset>());
+            return await Task.FromResult(_assets);
         }
         public int AddAsset(Asset asset)
         {
