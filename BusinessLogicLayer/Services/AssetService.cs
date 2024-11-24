@@ -1,4 +1,5 @@
-﻿using EntityLayer.Entities;
+﻿using DataAccessLayer.Repositories;
+using EntityLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,17 +10,21 @@ namespace BusinessLogicLayer.Services
 {
     public class AssetService : IAssetService
     {
+        private readonly IAssetRepository _assetRepository;
+        public AssetService(IAssetRepository assetRepository)
+        {
+                _assetRepository = assetRepository;
+        }
+        public List<Asset> GetAllAssets()
+        {
+            return _assetRepository.GetAllAssets().ToList();
+        }
         public bool AddAsset(Asset asset)
         {
             throw new NotImplementedException();
         }
 
         public bool DeleteAsset(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Asset> GetAllAssets()
         {
             throw new NotImplementedException();
         }
