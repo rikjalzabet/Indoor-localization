@@ -17,7 +17,7 @@ namespace api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var assets = _assetService.GetAllAssets();
+            var assets = await _assetService.GetAllAssets();
             if (assets != null)
             {
                 return Ok(assets);
