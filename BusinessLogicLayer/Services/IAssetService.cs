@@ -4,7 +4,7 @@ namespace BusinessLogicLayer.Services
 {
     public interface IAssetService
     {
-        List<Asset> GetAllAssets();
+        Task<List<Asset>> GetAllAssets();
         Asset GetAssetById(int id);
         bool AddAsset(Asset asset);
         bool UpdateAsset(Asset asset);

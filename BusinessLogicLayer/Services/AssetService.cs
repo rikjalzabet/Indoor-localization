@@ -15,9 +15,10 @@ namespace BusinessLogicLayer.Services
         {
                 _assetRepository = assetRepository;
         }
-        public List<Asset> GetAllAssets()
+        public async Task<List<Asset>> GetAllAssets()
         {
-            return _assetRepository.GetAllAssets().ToList();
+            var queryableAssets = await _assetRepository.GetAllAssets();
+            return queryableAssets.ToList();
         }
         public bool AddAsset(Asset asset)
         {
