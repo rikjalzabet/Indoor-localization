@@ -18,7 +18,15 @@ namespace api.Controllers
         public async Task<IActionResult> GetAll()
         {
             var assets = _assetService.GetAllAssets();
-            return Ok(assets);
+            if (assets != null)
+            {
+                return Ok(assets);
+            }
+            else
+            {
+                return BadRequest();
+            }
+            
         }
     }
 }

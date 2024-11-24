@@ -19,6 +19,7 @@ namespace DataAccessLayer.Repositories
                 new Asset { Id = 3, Name = "Asset 3", X = 5.5, Y = 10.5, LastSync = DateTime.UtcNow.AddHours(-1), FloorMapId = 2, Active = false }
         };
 
+        // u pravom repozitoriju sa EFC ide public async, i await umjesto Task.FromResult..
         public IQueryable<Asset> GetAllAssets()
         {
             return _assets.AsQueryable<Asset>();
