@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common'; // Required for common directive
 import { WebUiService } from '../services/web-ui.service';
 import { IAsset } from '../models/iasset';
 import { MatIconModule } from '@angular/material/icon';
+import { IFloorMap } from '../models/IFloorMap';
 @Component({
   selector: 'app-asset-management',
   standalone: true,
@@ -21,8 +22,10 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './asset-management.component.css'
 })
 export class AssetManagementComponent implements OnInit {
-    displayedColumns: string[] = ['id', 'name', 'x', 'y', 'lastSync', 'floorMapId', 'active'];
+    displayedColumns: string[] = ['id', 'name', 'x', 'y', 'lastSync', 'floorMap', 'active'];
     dataSource = new MatTableDataSource<IAsset>([]);
+    floorMaps? : IFloorMap[];
+    floorMapMap = new Map<number, string>();
 
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -31,6 +34,7 @@ export class AssetManagementComponent implements OnInit {
     
     ngOnInit(): void{
         this.fetchAssets();
+        this.fetchFloorMaps();
     }
 
     ngAfterViewInit() {
@@ -48,5 +52,19 @@ export class AssetManagementComponent implements OnInit {
         next: (data) => (this.dataSource.data = data),
         error: (err) => console.error ('Error fetching data', err)
       });
+    }
+
+    fetchFloorMaps(): void {
+      this.webUiService.getFloorMaps().subscribe({
+        next: (data) => {
+          this.floorMaps = data;
+          this.floorMaps.forEach(fm => this.floorMapMap.set(fm.id, fm.name));
+        },
+        error: (err) => console.error('Error fetching data', err)
+      });
+    }
+
+    getFloorMapName(floorMapId: number): string {
+      return this.floorMapMap.get(floorMapId) || 'Unknown';
     }
 }

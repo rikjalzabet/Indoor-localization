@@ -30,9 +30,9 @@
         </ng-container>
 
   
-        <ng-container matColumnDef="floorMapId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Floor Map ID </th>
-            <td mat-cell *matCellDef="let row"> {{ row.floorMapId }} </td>
+        <ng-container matColumnDef="floorMap">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Floor Map </th>
+            <td mat-cell *matCellDef="let row"> {{ getFloorMapName(row.floorMapId) }} </td>
         </ng-container>
 
         <ng-container matColumnDef="active">

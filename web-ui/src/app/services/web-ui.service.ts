@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { IAsset } from '../models/iasset';
+import { IFloorMap } from '../models/IFloorMap';
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +59,28 @@ export class WebUiService {
       ];
   
       return of(mockAssets);
+    }
+
+    public getFloorMaps(): Observable<IFloorMap[]> {
+      const mockFloorMaps: IFloorMap[] = [
+        {
+          id :1,
+          name: 'Floor map A',
+          image: 'Image 1'
+        },
+        {
+          id :2,
+          name: 'Floor map B',
+          image: 'Image 2'
+        },
+        {
+          id :3,
+          name: 'Floor map C',
+          image: 'Image 3'
+        }
+      ];
+
+      return of(mockFloorMaps);
     }
 
   }
