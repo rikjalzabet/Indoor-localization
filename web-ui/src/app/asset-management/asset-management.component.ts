@@ -8,6 +8,7 @@ import { WebUiService } from '../services/web-ui.service';
 import { IAsset } from '../models/iasset';
 import { MatIconModule } from '@angular/material/icon';
 import { IFloorMap } from '../models/IFloorMap';
+import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-asset-management',
   standalone: true,
@@ -16,7 +17,8 @@ import { IFloorMap } from '../models/IFloorMap';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    MatIconModule
+    MatIconModule,
+    MatButtonModule
   ],
   templateUrl: './asset-management.component.html',
   styleUrl: './asset-management.component.css'
@@ -66,5 +68,9 @@ export class AssetManagementComponent implements OnInit {
 
     getFloorMapName(floorMapId: number): string {
       return this.floorMapMap.get(floorMapId) || 'Unknown';
+    }
+
+    deleteAsset(){
+      
     }
 }
