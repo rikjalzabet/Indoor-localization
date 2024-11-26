@@ -11,7 +11,8 @@ import { IFloorMap } from '../models/IFloorMap';
 import { MatButtonModule } from '@angular/material/button';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatRadioModule } from '@angular/material/radio';
-import { error } from 'console';
+import { AddAssetDialogComponent } from '../add-asset-dialog/add-asset-dialog.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 @Component({
   selector: 'app-asset-management',
   standalone: true,
@@ -22,7 +23,8 @@ import { error } from 'console';
     MatPaginatorModule,
     MatIconModule,
     MatButtonModule,
-    MatRadioModule
+    MatRadioModule,
+    MatDialogModule
   ],
   templateUrl: './asset-management.component.html',
   styleUrl: './asset-management.component.css'
@@ -37,7 +39,7 @@ export class AssetManagementComponent implements OnInit {
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    constructor(private webUiService: WebUiService){}
+    constructor(private webUiService: WebUiService, private dialog: MatDialog){}
     
     ngOnInit(): void{
         this.fetchAssets();
@@ -78,5 +80,21 @@ export class AssetManagementComponent implements OnInit {
     deleteAsset(): void{
       const selectedAsset = this.selection.selected[0];
       this.webUiService.deleteAsset(selectedAsset.id);
+      this.fetchAssets();
+    }
+
+    addAsset(): void{
+      const dialogRef = this.dialog.open(AddAssetDialogComponent,{
+        width: '400px',
+        data: {floorMaps: this.floorMaps},
+      });
+
+      dialogRef.afterClosed().subscribe((result) =>{
+        if (result)
+        {
+          console.log("New asset is added");
+          this.fetchAssets();
+        }
+      })
     }
 }
