@@ -9,6 +9,9 @@ import { IAsset } from '../models/iasset';
 import { MatIconModule } from '@angular/material/icon';
 import { IFloorMap } from '../models/IFloorMap';
 import { MatButtonModule } from '@angular/material/button';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatRadioModule } from '@angular/material/radio';
+import { error } from 'console';
 @Component({
   selector: 'app-asset-management',
   standalone: true,
@@ -18,16 +21,18 @@ import { MatButtonModule } from '@angular/material/button';
     MatSortModule,
     MatPaginatorModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatRadioModule
   ],
   templateUrl: './asset-management.component.html',
   styleUrl: './asset-management.component.css'
 })
 export class AssetManagementComponent implements OnInit {
-    displayedColumns: string[] = ['id', 'name', 'x', 'y', 'lastSync', 'floorMap', 'active'];
+    displayedColumns: string[] = ['select', 'id', 'name', 'x', 'y', 'lastSync', 'floorMap', 'active'];
     dataSource = new MatTableDataSource<IAsset>([]);
     floorMaps? : IFloorMap[];
     floorMapMap = new Map<number, string>();
+    selection = new SelectionModel<IAsset>(false, []);
 
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -70,7 +75,8 @@ export class AssetManagementComponent implements OnInit {
       return this.floorMapMap.get(floorMapId) || 'Unknown';
     }
 
-    deleteAsset(){
-      
+    deleteAsset(): void{
+      const selectedAsset = this.selection.selected[0];
+      this.webUiService.deleteAsset(selectedAsset.id);
     }
 }

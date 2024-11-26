@@ -83,5 +83,9 @@ export class WebUiService {
       return of(mockFloorMaps);
     }
 
+    public deleteAsset(Id: number): void {
+          console.log('Asset is deleted: ', Id)
+    }
+
   }
 
