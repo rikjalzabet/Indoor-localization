@@ -43,7 +43,13 @@ export class AddAssetDialogComponent implements OnInit {
   }
 
   save() {
-    this.dialogRef.close();
+    const newAsset = {
+      name: this.assetName,
+      x: this.assetX,
+      y: this.assetY,
+      floorMapId: this.assetFloorMapId
+    }
+    this.dialogRef.close(newAsset);
   }
 
   cancel(){

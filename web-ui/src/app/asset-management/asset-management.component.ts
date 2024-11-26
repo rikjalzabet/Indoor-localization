@@ -92,7 +92,7 @@ export class AssetManagementComponent implements OnInit {
       dialogRef.afterClosed().subscribe((result) =>{
         if (result)
         {
-          console.log("New asset is added");
+          this.webUiService.addAsset(result);
           this.fetchAssets();
         }
       })

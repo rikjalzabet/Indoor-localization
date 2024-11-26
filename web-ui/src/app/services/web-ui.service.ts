@@ -87,5 +87,8 @@ export class WebUiService {
           console.log('Asset is deleted: ', Id)
     }
 
+    public addAsset(Asset: IAsset): void{
+      console.log('Asset is added',Asset);
+    }
   }
 
