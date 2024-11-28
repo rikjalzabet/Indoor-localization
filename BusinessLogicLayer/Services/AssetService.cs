@@ -29,9 +29,13 @@ namespace BusinessLogicLayer.Services
             return isSuccessful;
         }
 
-        public bool DeleteAsset(int id)
+        public async Task<bool> DeleteAsset(int id)
         {
-            throw new NotImplementedException();
+            bool isSuccessful = false;
+            int affectedRow = await _assetRepository.DeleteAsset(id);
+
+            isSuccessful = affectedRow > 0;
+            return isSuccessful;
         }
 
         public async Task<Asset> GetAssetById(int id)
