@@ -44,5 +44,20 @@ namespace api.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var asset = await _assetService.GetAssetById(id);
+            if (asset != null)
+            {
+                return Ok(asset);
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
     }
 }
