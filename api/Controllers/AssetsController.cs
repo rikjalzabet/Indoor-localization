@@ -45,7 +45,7 @@ namespace api.Controllers
             return BadRequest();
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var asset = await _assetService.GetAssetById(id);
@@ -60,7 +60,7 @@ namespace api.Controllers
 
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromBody] Asset asset)
         {
             bool isUpdated = false;
