@@ -30,21 +30,6 @@ namespace api.Controllers
             
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Asset asset)
-        {
-            bool isAdded = false;
-            if (asset != null)
-            {
-                isAdded = await _assetService.AddAsset(asset);
-            }
-            if(isAdded)
-            {
-                return Ok();
-            }
-            return BadRequest();
-        }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -60,6 +45,23 @@ namespace api.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] Asset asset)
+        {
+            bool isAdded = false;
+            if (asset != null)
+            {
+                isAdded = await _assetService.AddAsset(asset);
+            }
+            if(isAdded)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromBody] Asset asset)
         {
@@ -69,6 +71,21 @@ namespace api.Controllers
                 isUpdated = await _assetService.UpdateAsset(asset);
             }
             if (isUpdated)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            bool isDeleted = false;
+            if (id != null)
+            {
+                isDeleted = await _assetService.DeleteAsset(id);
+            }
+            if (isDeleted)
             {
                 return Ok();
             }
