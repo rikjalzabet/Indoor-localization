@@ -90,5 +90,9 @@ export class WebUiService {
     public addAsset(Asset: IAsset): void{
       console.log('Asset is added',Asset);
     }
+
+    public updateAsset(Asset: IAsset): void{
+      console.log('Asset is updated',Asset);
+    }
   }
 
