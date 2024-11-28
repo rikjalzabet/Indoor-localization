@@ -48,6 +48,7 @@ namespace DataAccessLayer.Repositories
             if (existingAsset == null)
                 return 0;
 
+            existingAsset.Name = asset.Name;
             existingAsset.X = asset.X;
             existingAsset.Y = asset.Y;
             existingAsset.Active = asset.Active;
