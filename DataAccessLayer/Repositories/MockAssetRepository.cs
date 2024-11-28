@@ -34,6 +34,8 @@ namespace DataAccessLayer.Repositories
         public async Task<int> DeleteAsset(int id)
         {
             var existingAsset = _assets.FirstOrDefault(a => a.Id == id);
+            if (existingAsset == null)
+                return 0;
             _assets.Remove(existingAsset);
             return 1;
         }
