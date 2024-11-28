@@ -8,6 +8,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms'; 
 import { IFloorMap } from '../models/IFloorMap';
 import { CommonModule } from '@angular/common'; 
+import { IAsset } from '../models/iasset';
 
 @Component({
   selector: 'app-add-asset-dialog',
@@ -26,20 +27,36 @@ import { CommonModule } from '@angular/common';
 })
 export class AddAssetDialogComponent implements OnInit {
   assetName: string = '';
+  dialogTitle: string = 'Add new asset';
   assetX: number = 0;
   assetY: number = 0;
   assetFloorMapId: number | null = null;
   floorMaps: IFloorMap[];
+  asset?: IAsset;
 
   constructor(
     public dialogRef: MatDialogRef<AddAssetDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { floorMaps: IFloorMap[] }
+    @Inject(MAT_DIALOG_DATA) public data: { floorMaps: IFloorMap[] , asset: IAsset}
   ) {
     this.floorMaps = data.floorMaps;
+    this.asset = data.asset;
   }
 
   ngOnInit(): void{
     console.log("FLOOR MAPS ",this.floorMaps)
+    console.log("ASSET",this.asset);
+    if(this.asset)
+    {
+      this.populateAsset();
+    }
+  }
+
+  populateAsset(): void{
+    this.dialogTitle = 'Edit asset';
+    this.assetName = this.asset?.name ?? '';
+    this.assetX = this.asset?.x ?? 0;
+    this.assetY = this.asset?.y ?? 0;
+    this.assetFloorMapId = this.asset?.floorMapId ?? null;
   }
 
   save() {

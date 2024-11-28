@@ -97,4 +97,23 @@ export class AssetManagementComponent implements OnInit {
         }
       })
     }
+
+    editAsset(): void{
+      const selectedAsset = this.selection.selected[0];
+      console.log("Selected assit", selectedAsset);
+      const dialogRef = this.dialog.open(AddAssetDialogComponent,{
+        width: '400px',
+        data: {floorMaps: this.floorMaps,
+          asset: selectedAsset
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) =>{
+        if (result)
+        {
+          this.webUiService.addAsset(result);
+          this.fetchAssets();
+        }
+      })
+    }
 }
