@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Services;
+using EntityLayer.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,21 @@ namespace api.Controllers
                 return BadRequest();
             }
             
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] Asset asset)
+        {
+            bool isAdded = false;
+            if (asset != null)
+            {
+                isAdded = await _assetService.AddAsset(asset);
+            }
+            if(isAdded)
+            {
+                return Ok();
+            }
+            return BadRequest();
         }
     }
 }

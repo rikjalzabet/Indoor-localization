@@ -6,7 +6,7 @@ namespace BusinessLogicLayer.Services
     {
         Task<List<Asset>> GetAllAssets();
         Asset GetAssetById(int id);
-        bool AddAsset(Asset asset);
+        Task<bool> AddAsset(Asset asset);
         bool UpdateAsset(Asset asset);
         bool DeleteAsset(int id);
     }
