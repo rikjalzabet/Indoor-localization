@@ -81,8 +81,14 @@ export class AssetManagementComponent implements OnInit {
 
     deleteAsset(): void{
       const selectedAsset = this.selection.selected[0];
+      if(selectedAsset){
       this.webUiService.deleteAsset(selectedAsset.id);
       this.fetchAssets();
+      this.notificationService.showSuccess('Succcesfully deleted asset!');
+      }
+      else{
+        this.notificationService.showError('Error: No asset was selected');
+      }
     }
 
     addAsset(): void{
