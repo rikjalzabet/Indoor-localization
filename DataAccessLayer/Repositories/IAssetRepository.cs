@@ -11,7 +11,7 @@ namespace DataAccessLayer.Repositories
     {
         Task<List<Asset>> GetAllAssets();
         Asset GetAssetById(int id);
-        int AddAsset(Asset asset);
+        Task<int> AddAsset(Asset asset);
         int UpdateAsset(Asset asset);
         int DeleteAsset(int id);
     }
