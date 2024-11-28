@@ -8,6 +8,6 @@ namespace BusinessLogicLayer.Services
         Task<Asset> GetAssetById(int id);
         Task<bool> AddAsset(Asset asset);
         Task<bool> UpdateAsset(Asset asset);
-        bool DeleteAsset(int id);
+        Task<bool> DeleteAsset(int id);
     }
 }
