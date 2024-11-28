@@ -59,5 +59,20 @@ namespace api.Controllers
             }
 
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] Asset asset)
+        {
+            bool isUpdated = false;
+            if (asset != null)
+            {
+                isUpdated = await _assetService.UpdateAsset(asset);
+            }
+            if (isUpdated)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
     }
 }
