@@ -27,8 +27,13 @@ namespace DataAccessLayer.Repositories
         }
         public async Task<int> AddAsset(Asset asset)
         {
-            _assets.Add(asset);
-            return 1;
+            var existingAsset = _assets.FirstOrDefault(a => a.Id == asset.Id);
+            if (existingAsset == null)
+            {
+                _assets.Add(asset);
+                return 1;
+            }
+            return 0;
         }
 
         public async Task<int> DeleteAsset(int id)
