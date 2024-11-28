@@ -11,6 +11,7 @@ namespace DataAccessLayer.Repositories
     {
 
         // ovaj repozitorij bude zamijenjen pravim repozitorijem nakon kreiranja EFC-a prema bazi
+        // tu je simulirano asinkrono programiranje jer nemamo baze...
 
         private readonly List<Asset> _assets = new()
         {
@@ -40,9 +41,20 @@ namespace DataAccessLayer.Repositories
             return await Task.FromResult(_assets.FirstOrDefault(a => a.Id == id));
         }
 
-        public int UpdateAsset(Asset asset)
+        public async Task<int> UpdateAsset(Asset asset)
         {
-            throw new NotImplementedException();
+            var existingAsset = _assets.FirstOrDefault(a => a.Id == asset.Id);
+
+            if (existingAsset == null)
+                return 0;
+
+            existingAsset.X = asset.X;
+            existingAsset.Y = asset.Y;
+            existingAsset.Active = asset.Active;
+            existingAsset.FloorMapId = asset.FloorMapId;
+
+            return 1;
+
         }
     }
 }
