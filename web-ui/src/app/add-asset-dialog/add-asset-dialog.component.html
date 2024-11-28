@@ -1,0 +1,29 @@
+<h1 mat-dialog-title >{{dialogTitle}}</h1>
+<div mat-dialog-content>
+    <form>
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Asset Name</mat-label>
+          <input matInput placeholder="Enter asset name" [(ngModel)]="assetName" name="assetName" />
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>X Coordinate</mat-label>
+          <input matInput type="number" placeholder="Enter X coordinate" [(ngModel)]="assetX" name="assetX" />
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Y Coordinate</mat-label>
+          <input matInput type="number" placeholder="Enter Y coordinate" [(ngModel)]="assetY" name="assetY" />
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Floor Map</mat-label>
+          <mat-select [(ngModel)]="assetFloorMapId" name="assetFloorMapId">
+            <mat-option *ngFor="let floorMap of floorMaps" [value]="floorMap.id">
+              {{ floorMap.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-button color="primary" (click)="save()">Save</button>
+  </div>
