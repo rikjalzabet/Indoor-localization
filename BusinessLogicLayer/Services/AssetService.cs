@@ -40,9 +40,13 @@ namespace BusinessLogicLayer.Services
             return asset;
         }
 
-        public bool UpdateAsset(Asset asset)
+        public async Task<bool> UpdateAsset(Asset asset)
         {
-            throw new NotImplementedException();
+            bool isSuccessful = false;
+            int affectedRow = await _assetRepository.UpdateAsset(asset);
+
+            isSuccessful = affectedRow > 0;
+            return isSuccessful;
         }
     }
 }
