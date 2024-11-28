@@ -13,6 +13,6 @@ namespace DataAccessLayer.Repositories
         Task<Asset> GetAssetById(int id);
         Task<int> AddAsset(Asset asset);
         Task<int> UpdateAsset(Asset asset);
-        int DeleteAsset(int id);
+        Task<int> DeleteAsset(int id);
     }
 }
