@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { IFloorMap } from '../models/IFloorMap';
 import { CommonModule } from '@angular/common'; 
 import { IAsset } from '../models/iasset';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-add-asset-dialog',
@@ -34,7 +35,7 @@ export class AddAssetDialogComponent implements OnInit {
   floorMaps: IFloorMap[];
   asset?: IAsset;
 
-  constructor(
+  constructor(private notificationService: NotificationService,
     public dialogRef: MatDialogRef<AddAssetDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { floorMaps: IFloorMap[] , asset: IAsset}
   ) {
@@ -66,7 +67,13 @@ export class AddAssetDialogComponent implements OnInit {
       y: this.assetY,
       floorMapId: this.assetFloorMapId
     }
+    if(!(newAsset.name || newAsset.y || newAsset.x || newAsset.floorMapId))
+    {
+        this.notificationService.showError("Error: Some data is empty, fill all data");
+    }
+    else{
     this.dialogRef.close(newAsset);
+    }
   }
 
   cancel(){

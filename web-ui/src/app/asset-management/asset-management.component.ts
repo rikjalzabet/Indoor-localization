@@ -13,6 +13,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatRadioModule } from '@angular/material/radio';
 import { AddAssetDialogComponent } from '../add-asset-dialog/add-asset-dialog.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { NotificationService } from '../services/notification.service';
+
 @Component({
   selector: 'app-asset-management',
   standalone: true,
@@ -39,7 +41,7 @@ export class AssetManagementComponent implements OnInit {
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    constructor(private webUiService: WebUiService, private dialog: MatDialog){}
+    constructor(private webUiService: WebUiService, private dialog: MatDialog, private notificationService: NotificationService){}
     
     ngOnInit(): void{
         this.fetchAssets();
@@ -94,6 +96,7 @@ export class AssetManagementComponent implements OnInit {
         {
           this.webUiService.addAsset(result);
           this.fetchAssets();
+          this.notificationService.showSuccess('Succcesfully added new asset!');
         }
       })
     }
@@ -116,4 +119,7 @@ export class AssetManagementComponent implements OnInit {
         }
       })
     }
+
+
+    
 }
