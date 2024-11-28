@@ -34,9 +34,10 @@ namespace BusinessLogicLayer.Services
             throw new NotImplementedException();
         }
 
-        public Asset GetAssetById(int id)
+        public async Task<Asset> GetAssetById(int id)
         {
-            throw new NotImplementedException();
+            var asset = await _assetRepository.GetAssetById(id);
+            return asset;
         }
 
         public bool UpdateAsset(Asset asset)
