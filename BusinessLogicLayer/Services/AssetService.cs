@@ -20,9 +20,10 @@ namespace BusinessLogicLayer.Services
             var queryableAssets = await _assetRepository.GetAllAssets();
             return queryableAssets.ToList();
         }
-        public bool AddAsset(Asset asset)
+        public async Task<bool> AddAsset(Asset asset)
         {
-            throw new NotImplementedException();
+            bool su
+            _assetRepository.AddAsset(asset);
         }
 
         public bool DeleteAsset(int id)

@@ -24,9 +24,10 @@ namespace DataAccessLayer.Repositories
         {
             return await Task.FromResult(_assets);
         }
-        public int AddAsset(Asset asset)
+        public async Task<int> AddAsset(Asset asset)
         {
-            throw new NotImplementedException();
+            _assets.Add(asset);
+            return 1;
         }
 
         public int DeleteAsset(int id)
