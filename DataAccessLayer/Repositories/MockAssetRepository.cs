@@ -31,9 +31,11 @@ namespace DataAccessLayer.Repositories
             return 1;
         }
 
-        public int DeleteAsset(int id)
+        public async Task<int> DeleteAsset(int id)
         {
-            throw new NotImplementedException();
+            var existingAsset = _assets.FirstOrDefault(a => a.Id == id);
+            _assets.Remove(existingAsset);
+            return 1;
         }
 
         public async Task<Asset> GetAssetById(int id)
