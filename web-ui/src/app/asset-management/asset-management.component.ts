@@ -103,6 +103,7 @@ export class AssetManagementComponent implements OnInit {
 
     editAsset(): void{
       const selectedAsset = this.selection.selected[0];
+      if(selectedAsset){
       console.log("Selected assit", selectedAsset);
       const dialogRef = this.dialog.open(AddAssetDialogComponent,{
         width: '400px',
@@ -116,9 +117,14 @@ export class AssetManagementComponent implements OnInit {
         {
           this.webUiService.updateAsset(result);
           this.fetchAssets();
+          this.notificationService.showSuccess('Succcesfully updated asset!');
         }
       })
     }
+    else{
+      this.notificationService.showError('Error: No asset was selected');
+    }
+  }
 
 
     
