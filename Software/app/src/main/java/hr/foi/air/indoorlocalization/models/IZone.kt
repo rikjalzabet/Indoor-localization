@@ -1,6 +1,6 @@
 package hr.foi.air.indoorlocalization.models
 
-interface Zone {
+interface IZone {
     val id: Int
     val name: String
     val points: List<Point>

@@ -2,7 +2,7 @@ package hr.foi.air.indoorlocalization.models
 
 import java.util.Date
 
-interface Asset {
+interface IAsset {
     val id: Int
     val name: String
     val x: Float

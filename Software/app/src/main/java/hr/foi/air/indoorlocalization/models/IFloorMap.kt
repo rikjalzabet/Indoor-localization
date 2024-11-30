@@ -1,6 +1,6 @@
 package hr.foi.air.indoorlocalization.models
 
-interface FloorMap {
+interface IFloorMap {
     val id: Int
     val name: String
     val image: String
