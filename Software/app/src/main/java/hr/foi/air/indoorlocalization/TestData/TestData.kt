@@ -21,9 +21,8 @@ class TestData {
 
         fun getFloorMaps(): List<IFloorMap> {
             return listOf(
-                FloorMap(1, "Floor 1", "floor1.png"),
-                FloorMap(2, "Floor 2", "floor2.png"),
-                FloorMap(3, "Floor 3", "floor3.png")
+                FloorMap(1, "Floor 1 (local)", "local_floor_map_test_1"),
+                FloorMap(2, "Floor 2 (online)", "https://cdn.sick.com/media/content/he4/h01/10666047406110.jpg"),
             )
         }
 

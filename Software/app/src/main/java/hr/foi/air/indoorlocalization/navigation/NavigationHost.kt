@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import hr.foi.air.indoorlocalization.TestData.TestData
 import hr.foi.air.indoorlocalization.navigation.items.Heatmap
 import hr.foi.air.indoorlocalization.navigation.items.MapHome
 import hr.foi.air.indoorlocalization.navigation.items.Reports
@@ -20,7 +21,8 @@ fun NavigationHost(
         modifier = modifier
     ) {
         composable(BottomNavigationItem.Map.route) {
-            MapHome()
+            val floorMap = TestData.getFloorMaps()[0]
+            MapHome(floorMap=floorMap)
         }
         composable(BottomNavigationItem.Heatmap.route) {
             Heatmap()
