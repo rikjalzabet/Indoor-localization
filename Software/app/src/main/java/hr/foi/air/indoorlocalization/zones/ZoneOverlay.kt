@@ -5,49 +5,72 @@ import hr.foi.air.indoorlocalization.models.IZone
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.unit.dp
 
 @Composable
-fun ZoneOverlay(zone: IZone){
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val path = Path()
-        val points = zone.points.map { point ->
-            val scaledX = point.x * size.width
-            val scaledY = point.y * size.height
-            scaledX to scaledY
-        }
+fun ZoneOverlay(
+    zone: IZone,
+    imageSize: Size,
+    imageOffset: Offset
+){
+    Canvas(
+        modifier = Modifier
+            //.size(imageSize.width.dp, imageSize.height.dp)*/
 
-        if (points.isNotEmpty()) {
-            path.moveTo(points.first().first, points.first().second)
-            points.forEach { (x, y) ->
-                path.lineTo(x, y)
+            .fillMaxSize()
+    ) {
+        clipRect(
+            left=imageOffset.x,
+            top=imageOffset.y,
+            right=imageOffset.x + imageSize.width,
+            bottom=imageOffset.y + imageSize.height
+        ){
+            val path = Path()
+            val points = zone.points.map { point ->
+                val scaledX = imageOffset.x + point.x * imageSize.width
+                val scaledY = imageOffset.y + point.y * imageSize.height
+                Offset(scaledX, scaledY)
             }
-            path.close()
+            if (points.isNotEmpty()) {
+                path.moveTo(points.first().x, points.first().y)
+                points.forEach { offset ->
+                    path.lineTo(offset.x, offset.y)
+                }
+                path.close()
 
-            drawPath(
-                path = path,
-                color = Color(0xFFADD8E6),
-                style = Fill
-            )
+                drawPath(
+                    path = path,
+                    color = Color(0xFFADD8E6).copy(alpha = 0.5f),
+                    style = Fill
+                )
+            }
+            points.zipWithNext { start, end ->
+                drawLine(
+                    color = Color.Blue,
+                    start = start,
+                    end = end,
+                    strokeWidth = 4f
+                )
+            }
+
+            points.forEach { point ->
+                drawCircle(
+                    color = Color.Blue,
+                    radius = 8f,
+                    center = point
+                )
+            }
         }
 
-        points.zipWithNext { start, end ->
-            drawLine(
-                color = Color.Blue,
-                start = androidx.compose.ui.geometry.Offset(start.first, start.second),
-                end = androidx.compose.ui.geometry.Offset(end.first, end.second),
-                strokeWidth = 4f
-            )
-        }
 
-        points.forEach { (x, y) ->
-            drawCircle(
-                color = Color.Blue,
-                radius = 8f,
-                center = androidx.compose.ui.geometry.Offset(x, y)
-            )
-        }
+
+
+
     }
 }
