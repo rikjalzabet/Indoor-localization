@@ -29,9 +29,14 @@ import hr.foi.air.indoorlocalization.TestData.TestData
 import hr.foi.air.indoorlocalization.models.IFloorMap
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import hr.foi.air.indoorlocalization.models.IZone
+import hr.foi.air.indoorlocalization.zones.ZoneOverlay
 
 @Composable
-fun MapHome(floorMap: IFloorMap){
+fun MapHome(
+    floorMap: IFloorMap,
+    zones: List<IZone>
+){
     Box (modifier = Modifier
         .fillMaxSize()
         .padding(16.dp),
@@ -71,6 +76,10 @@ fun MapHome(floorMap: IFloorMap){
                 contentScale = ContentScale.Fit
             )
         }
+        zones.forEach{
+            zone->
+            ZoneOverlay(zone=zone)
+        }
 
         Text(
             text=floorMap.name,
@@ -84,6 +93,7 @@ fun MapHome(floorMap: IFloorMap){
 @Preview(showBackground = true)
 @Composable
 fun PreviewMapHome(){
-    val testFloorMap = TestData.getFloorMaps()[1]
-    MapHome(floorMap=testFloorMap)
+    val testFloorMap = TestData.getFloorMaps()[0]
+    val zones=TestData.getZones()
+    MapHome(floorMap=testFloorMap, listOf(zones[0],zones[1],zones[2]))
 }

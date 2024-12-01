@@ -32,14 +32,24 @@ class TestData {
                     1, "IZone 1", listOf(
                         Point(10.5f, 20.3f, 1),
                         Point(15.7f, 25.8f, 2),
-                        Point(20.0f, 30.0f, 3)
+                        Point(20.0f, 30.0f, 3),
+                        Point(25.0f, 35.0f, 4)
                     )
                 ),
                 Zone(
                     2, "IZone 2", listOf(
-                        Point(5.5f, 10.3f, 1),
-                        Point(12.0f, 15.8f, 2),
-                        Point(18.2f, 22.5f, 3)
+                        Point(0.2f, 0.2f, 1),
+                        Point(0.4f, 0.4f, 2),
+                        Point(0.2f, 0.4f, 3),
+                        Point(0.4f, 0.2f, 4)
+                    )
+                ),
+                Zone(
+                    3, "IZone 3", listOf(
+                        Point(0.1f, 0.1f, 1),
+                        Point(0.5f, 0.1f, 2),
+                        Point(0.5f, 0.5f, 3),
+                        Point(0.1f, 0.5f, 4)
                     )
                 )
             )
