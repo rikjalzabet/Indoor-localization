@@ -22,7 +22,7 @@ class TestData {
         fun getFloorMaps(): List<IFloorMap> {
             return listOf(
                 FloorMap(1, "Floor 1 (local)", "local_floor_map_test_1"),
-                FloorMap(2, "Floor 2 (online)", "https://cdn.sick.com/media/content/he4/h01/10666047406110.jpg"),
+                FloorMap(2, "Floor 2 (online)", "https://i.redd.it/sl4sos5p3v6b1.png")//"https://cdn.sick.com/media/content/he4/h01/10666047406110.jpg"),
             )
         }
 

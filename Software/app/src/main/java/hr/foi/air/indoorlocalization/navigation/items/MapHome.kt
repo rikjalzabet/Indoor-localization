@@ -24,8 +24,11 @@ import androidx.compose.ui.res.painterResource
 import coil3.compose.AsyncImage
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import hr.foi.air.indoorlocalization.TestData.TestData
 import hr.foi.air.indoorlocalization.models.IFloorMap
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 @Composable
 fun MapHome(floorMap: IFloorMap){
@@ -34,12 +37,7 @@ fun MapHome(floorMap: IFloorMap){
         .padding(16.dp),
         contentAlignment = Alignment.Center
     ){
-        if(floorMap.image.startsWith("http")){
-            rememberAsyncImagePainter(floorMap.image)
-        }
-        val model: String = floorMap.image
-
-        val painter: Painter=if(!floorMap.image.startsWith("http")) {
+        val painter: Painter = if(!floorMap.image.startsWith("http")) {
             val context = LocalContext.current
             val resourceId = context
                 .resources
@@ -57,22 +55,22 @@ fun MapHome(floorMap: IFloorMap){
                     .build()
             )
         }
-        //if(!floorMap.image.startsWith("http")){
+        if(!floorMap.image.startsWith("http")){
             Image(
                 painter = painter,
                 contentDescription = "Floor Map",
                 modifier= Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Fit
             )
-       /* }
+        }
         else{
-            AsyncImage(
-                model=model,
-                contentDescription = "Floor Map Online",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+            Image(
+                painter = rememberAsyncImagePainter(floorMap.image),
+                contentDescription = "Floor Map",
+                modifier= Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit
             )
-        }*/
+        }
 
         Text(
             text=floorMap.name,
@@ -81,24 +79,6 @@ fun MapHome(floorMap: IFloorMap){
                 .align(Alignment.TopCenter)
         )
     }
-    /*
-    Scaffold{
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(it),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround,
-        ){
-            Text(
-                text="This is main map page",
-                style= typography.bodyLarge,
-                modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                textAlign= TextAlign.Center
-            )
-        }
-    }*/
 }
 
 @Preview(showBackground = true)
