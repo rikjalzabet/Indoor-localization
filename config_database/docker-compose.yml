@@ -1,0 +1,61 @@
+version: '3.9'
+
+services:
+  database:
+    image: 'postgres:latest'
+    container_name: postgres_db
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: il_database
+    env_file:
+      - .env
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+    networks:
+      - postgres-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - 15433:80
+    env_file:
+      - .env
+    depends_on:
+      - database
+    networks:
+      - postgres-network
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    restart: always
+
+  node-red:
+    image: nodered/node-red:latest
+    container_name: node-red
+    ports:
+      - 1880:1880
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+    volumes:
+      - nodered-data:/data
+    depends_on:
+      - database
+    networks:
+      - postgres-network
+    restart: always
+
+networks:
+  postgres-network:
+
+
+volumes:
+  db-data:
+  pgadmin-data:
+  nodered-data:
