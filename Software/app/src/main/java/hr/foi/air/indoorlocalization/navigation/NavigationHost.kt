@@ -22,7 +22,8 @@ fun NavigationHost(
     ) {
         composable(BottomNavigationItem.Map.route) {
             val floorMap = TestData.getFloorMaps()[1]
-            MapHome(floorMap=floorMap)
+            val zones = TestData.getZones()
+            MapHome(floorMap=floorMap, zones=zones)
         }
         composable(BottomNavigationItem.Heatmap.route) {
             Heatmap()
