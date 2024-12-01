@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.clipRect
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun ZoneOverlay(
@@ -21,8 +20,6 @@ fun ZoneOverlay(
 ){
     Canvas(
         modifier = Modifier
-            //.size(imageSize.width.dp, imageSize.height.dp)*/
-
             .fillMaxSize()
     ) {
         clipRect(
@@ -67,10 +64,5 @@ fun ZoneOverlay(
                 )
             }
         }
-
-
-
-
-
     }
 }

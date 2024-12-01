@@ -18,8 +18,11 @@ import androidx.compose.ui.unit.dp
 import hr.foi.air.indoorlocalization.models.impl.FloorMap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -76,38 +79,6 @@ fun MapHome(
                     .build()
             )
         }
-        /*if(!floorMap.image.startsWith("http")){
-            Image(
-                painter = painter,
-                contentDescription = "Floor Map",
-                modifier= Modifier
-                    .onGloballyPositioned { coordinates->
-                        val bounds = coordinates.size
-                        imageSize.value = Size(
-                            bounds.width.toFloat(),
-                            bounds.height.toFloat()
-                        )
-                    }
-                    .fillMaxSize(),
-                contentScale = ContentScale.Fit
-            )
-        }*/
-        /*else{
-            Image(
-                painter = rememberAsyncImagePainter(floorMap.image),
-                contentDescription = "Floor Map",
-                modifier= Modifier
-                    .onGloballyPositioned { coordinates->
-                    val bounds = coordinates.size
-                    imageSize.value = Size(
-                        bounds.width.toFloat(),
-                        bounds.height.toFloat()
-                    )
-                }
-                    .fillMaxSize(),
-                contentScale = ContentScale.Fit
-            )
-        }*/
             Image(
                 painter = painter,
                 contentDescription = "Floor Map",
@@ -136,17 +107,6 @@ fun MapHome(
                     )
                 }
             }
-
-        /*if(imageSize.value.width>0 && imageSize.value.height>0){
-           zones.forEachIndexed{index, zone->
-               ZoneOverlay(
-                   zone=zone,
-                   imageSize=imageSize.value
-               )
-           }
-        }*/
-
-
         Text(
             text=floorMap.name,
             modifier=Modifier
