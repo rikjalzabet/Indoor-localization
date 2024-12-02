@@ -4,6 +4,13 @@ CREATE TABLE floorMaps (
     name VARCHAR(100) NOT NULL,
     image TEXT
 );
+-- Generate some floorMaps records
+INSERT INTO floorMaps (id, name, image) VALUES
+(1, 'FloorMap944', 'https://picsum.photos/id/944/500/500'),
+(2, 'FloorMap343', 'https://picsum.photos/id/343/500/500'),
+(3, 'FloorMap69', 'https://picsum.photos/id/69/500/500'),
+(4, 'FloorMap879', 'https://picsum.photos/id/879/500/500'),
+(5, 'FloorMap333', 'https://picsum.photos/id/333/500/500');
 -- Table: assets
 CREATE TABLE assets (
     id SERIAL PRIMARY KEY,
