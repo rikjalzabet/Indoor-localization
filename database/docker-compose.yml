@@ -34,17 +34,22 @@ services:
 
   node-red:
     image: nodered/node-red:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: node-red
     ports:
       - 1880:1880
     environment:
-      DB_HOST: database
+      DB_HOST: postgres_db
       DB_PORT: 5432
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_NAME: ${POSTGRES_DB}
+      NODE_RED_FLOW: flows.json
     volumes:
       - nodered-data:/data
+      - .flows.json:/data/flows.json
     depends_on:
       - database
     networks:
