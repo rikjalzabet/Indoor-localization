@@ -18,7 +18,7 @@ namespace api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var zones = await _zoneService.GetAllZones();
+            var zones = await _zoneService.GetAllZones(); 
             if (zones != null)
             {
                 return Ok(zones);
