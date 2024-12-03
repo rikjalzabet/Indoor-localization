@@ -29,7 +29,7 @@ namespace api.Controllers
             }
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(int id) 
         {
             var zone = await _zoneService.GetZoneById(id);
             if (zone != null)
