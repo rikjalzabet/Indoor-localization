@@ -14,7 +14,10 @@ builder.Services.AddSwaggerGen();
 // zamijeniti sa AddScoped nakon kreiranja EFC-a
 
 builder.Services.AddSingleton<IAssetRepository, MockAssetRepository>();
+builder.Services.AddSingleton<IZoneRepository, MockZoneRepository>();
 builder.Services.AddSingleton<IAssetService, AssetService>();
+builder.Services.AddSingleton<IZoneService, ZoneService>();
+
 
 var app = builder.Build();
 
