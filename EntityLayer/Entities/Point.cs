@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace EntityLayer.Entities
 {
-    public class Zone : IZone
+    public class Point
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public List<Point> Points { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
     }
 }
