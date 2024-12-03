@@ -12,7 +12,7 @@ namespace BusinessLogicLayer.Services
     {
         private readonly IZoneRepository _zoneRepository;
         public ZoneService(IZoneRepository zoneRepository)
-        {
+        { 
             _zoneRepository = zoneRepository;
         }
         public async Task<List<Zone>> GetAllZones()
