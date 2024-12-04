@@ -11,7 +11,7 @@ namespace DataAccessLayer.Repositories
     {
         Task<List<FloorMap>> GetAllFloorMaps();
         Task<FloorMap> GetFloorMapById(int id);
-        Task<int> AddFloorMap(Asset asset);
+        Task<int> AddFloorMap(FloorMap floorMap);
         Task<int> UpdateFloorMap(FloorMap floorMap);
         Task<int> DeleteFloorMap(int id);
     }
