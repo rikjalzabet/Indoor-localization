@@ -15,7 +15,7 @@ namespace DataAccessLayer.Repositories
             new FloorMap {Id = 2, Name = "FloorMap343", Image = "https://picsum.photos/id/343/500/500"},
             new FloorMap {Id = 3, Name = "FloorMap69", Image = "https://picsum.photos/id/69/500/500"},
             new FloorMap {Id = 4, Name = "FloorMap879", Image = "https://picsum.photos/id/879/500/500"},
-            new FloorMap{Id = 5, Name = "FloorMap333", Image = "https://picsum.photos/id/333/500/500"}
+            new FloorMap {Id = 5, Name = "FloorMap333", Image = "https://picsum.photos/id/333/500/500"}
         };
         public async Task<int> AddFloorMap(FloorMap floorMap)
         {
@@ -33,9 +33,9 @@ namespace DataAccessLayer.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<List<FloorMap>> GetAllFloorMaps()
+        public async Task<List<FloorMap>> GetAllFloorMaps()
         {
-            throw new NotImplementedException();
+            return await Task.FromResult(_floorMaps);
         }
 
         public async Task<FloorMap> GetFloorMapById(int id)

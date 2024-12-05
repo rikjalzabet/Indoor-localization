@@ -51,5 +51,17 @@ namespace api.Controllers
             else
                 return BadRequest();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllFloorMaps()
+        {
+            var floorMaps = await _floorMapService.GetAllFloorMaps();
+            if(floorMaps != null)
+            {
+                return Ok(floorMaps);
+            }
+            else 
+                return BadRequest();
+        }
     }
 }

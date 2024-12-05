@@ -29,9 +29,10 @@ namespace BusinessLogicLayer.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<FloorMap>> GetAllFloorMap()
+        public async Task<List<FloorMap>> GetAllFloorMaps()
         {
-            throw new NotImplementedException();
+            var queryableFloorMaps = await _floorMapRepository.GetAllFloorMaps();
+            return queryableFloorMaps.ToList();
         }
 
         public async Task<FloorMap> GetFloorMapById(int id)
