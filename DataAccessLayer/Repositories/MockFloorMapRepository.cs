@@ -49,12 +49,11 @@ namespace DataAccessLayer.Repositories
             return await Task.FromResult(_floorMaps.FirstOrDefault(f => f.Id == id));
         }
 
-        public async Task<int> UpdateFloorMap(FloorMap floorMap)
+        public async Task<int> UpdateFloorMap(FloorMap floorMap, int id)
         {
-            var existingFloorMap = _floorMaps.FirstOrDefault(f => f.Id == floorMap.Id);
+            var existingFloorMap = _floorMaps.FirstOrDefault(f => f.Id == id);
             if (existingFloorMap != null)
             {
-                existingFloorMap.Id = floorMap.Id;
                 existingFloorMap.Name = floorMap.Name;
                 existingFloorMap.Image = floorMap.Image;
 

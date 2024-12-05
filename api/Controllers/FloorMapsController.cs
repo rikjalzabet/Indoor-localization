@@ -52,13 +52,13 @@ namespace api.Controllers
 
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] FloorMap floorMap)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromBody] FloorMap floorMap, [FromRoute] int id)
         {
             bool isUpdated = false;
             if (floorMap != null)
             {
-                isUpdated = await _floorMapService.UpdateFloorMap(floorMap);
+                isUpdated = await _floorMapService.UpdateFloorMap(floorMap, id);
             }
 
             return isUpdated ? Ok() : BadRequest();

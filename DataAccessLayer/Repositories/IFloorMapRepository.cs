@@ -12,7 +12,7 @@ namespace DataAccessLayer.Repositories
         Task<List<FloorMap>> GetAllFloorMaps();
         Task<FloorMap> GetFloorMapById(int id);
         Task<int> AddFloorMap(FloorMap floorMap);
-        Task<int> UpdateFloorMap(FloorMap floorMap);
+        Task<int> UpdateFloorMap(FloorMap floorMap, int id);
         Task<int> DeleteFloorMap(int id);
     }
 }

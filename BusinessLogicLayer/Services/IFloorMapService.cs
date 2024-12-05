@@ -12,7 +12,7 @@ namespace BusinessLogicLayer.Services
         Task<List<FloorMap>> GetAllFloorMaps();
         Task<FloorMap> GetFloorMapById(int id);
         Task<bool> AddFloorMap(FloorMap floorMap);
-        Task<bool> UpdateFloorMap(FloorMap floorMap);
+        Task<bool> UpdateFloorMap(FloorMap floorMap, int id);
         Task<bool> DeleteFloorMap(int id);
     }
 }

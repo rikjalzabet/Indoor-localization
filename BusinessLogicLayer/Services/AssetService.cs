@@ -44,10 +44,10 @@ namespace BusinessLogicLayer.Services
             return asset;
         }
 
-        public async Task<bool> UpdateAsset(Asset asset)
+        public async Task<bool> UpdateAsset(Asset asset, int id)
         {
             bool isSuccessful = false;
-            int affectedRow = await _assetRepository.UpdateAsset(asset);
+            int affectedRow = await _assetRepository.UpdateAsset(asset, id);
 
             isSuccessful = affectedRow > 0;
             return isSuccessful;

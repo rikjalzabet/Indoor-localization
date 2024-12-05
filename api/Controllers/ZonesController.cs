@@ -51,28 +51,24 @@ namespace api.Controllers
             {
                 isAdded = await _zoneService.AddZone(zone);
             }
-            if (isAdded)
-            {
-                return Ok();
-            }
-            return BadRequest();
+
+            return isAdded ? Ok() : BadRequest();
+
         }
 
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromBody] Zone zone)
+        public async Task<IActionResult> Update([FromBody] Zone zone, [FromRoute] int id)
         {
             bool isUpdated = false;
             if (zone != null)
             {
                 isUpdated = await _zoneService.UpdateZone(zone);
             }
-            if (isUpdated)
-            {
-                return Ok();
-            }
-            return BadRequest();
+
+            return isUpdated ? Ok() : BadRequest();
+
         }
 
         [HttpDelete("{id}")]
@@ -83,11 +79,8 @@ namespace api.Controllers
             {
                 isDeleted = await _zoneService.DeleteZone(id);
             }
-            if (isDeleted)
-            {
-                return Ok();
-            }
-            return BadRequest();
+            
+            return isDeleted ? Ok() : BadRequest();
         }
     }
 }

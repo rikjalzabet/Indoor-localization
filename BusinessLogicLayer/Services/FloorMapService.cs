@@ -45,10 +45,10 @@ namespace BusinessLogicLayer.Services
             return existingFloorMap;
         }
 
-        public async Task<bool> UpdateFloorMap(FloorMap floorMap)
+        public async Task<bool> UpdateFloorMap(FloorMap floorMap, int id)
         {
             bool isSuccessful = false;
-            int affectedRow = await _floorMapRepository.UpdateFloorMap(floorMap);
+            int affectedRow = await _floorMapRepository.UpdateFloorMap(floorMap, id);
             isSuccessful = affectedRow > 0;
             return isSuccessful;
         }

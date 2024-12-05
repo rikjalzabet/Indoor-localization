@@ -50,9 +50,9 @@ namespace DataAccessLayer.Repositories
             return await Task.FromResult(_assets.FirstOrDefault(a => a.Id == id));
         }
 
-        public async Task<int> UpdateAsset(Asset asset)
+        public async Task<int> UpdateAsset(Asset asset, int id)
         {
-            var existingAsset = _assets.FirstOrDefault(a => a.Id == asset.Id);
+            var existingAsset = _assets.FirstOrDefault(a => a.Id == id);
 
             if (existingAsset == null)
                 return 0;
