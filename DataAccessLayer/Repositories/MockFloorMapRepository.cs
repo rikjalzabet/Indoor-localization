@@ -11,11 +11,11 @@ namespace DataAccessLayer.Repositories
     {
         private readonly List<FloorMap> _floorMaps = new()
         {
-            new FloorMap { 1, 'FloorMap944', 'https://picsum.photos/id/944/500/500'},
-            new FloorMap { 2, 'FloorMap343', 'https://picsum.photos/id/343/500/500'},
-            new FloorMap {3, 'FloorMap69', 'https://picsum.photos/id/69/500/500'},
-            new FloorMap {4, 'FloorMap879', 'https://picsum.photos/id/879/500/500'},
-            new FloorMap{5, 'FloorMap333', 'https://picsum.photos/id/333/500/500'}
+            new FloorMap {Id = 1, Name = "FloorMap944", Image = "https://picsum.photos/id/944/500/500"},
+            new FloorMap {Id = 2, Name = "FloorMap343", Image = "https://picsum.photos/id/343/500/500"},
+            new FloorMap {Id = 3, Name = "FloorMap69", Image = "https://picsum.photos/id/69/500/500"},
+            new FloorMap {Id = 4, Name = "FloorMap879", Image = "https://picsum.photos/id/879/500/500"},
+            new FloorMap{Id = 5, Name = "FloorMap333", Image = "https://picsum.photos/id/333/500/500"}
         };
         public async Task<int> AddFloorMap(FloorMap floorMap)
         {
@@ -43,9 +43,19 @@ namespace DataAccessLayer.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<int> UpdateFloorMap(FloorMap floorMap)
+        public async Task<int> UpdateFloorMap(FloorMap floorMap)
         {
-            throw new NotImplementedException();
+            var existingFloorMap = _floorMaps.FirstOrDefault(f => f.Id == floorMap.Id);
+            if (existingFloorMap != null)
+            {
+                existingFloorMap.Id = floorMap.Id;
+                existingFloorMap.Name = floorMap.Name;
+                existingFloorMap.Image = floorMap.Image;
+
+                return 1;
+            }
+            else
+                return 0;
         }
     }
 }
