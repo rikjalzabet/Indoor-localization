@@ -39,9 +39,12 @@ namespace BusinessLogicLayer.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateFloorMap(FloorMap floorMap)
+        public async Task<bool> UpdateFloorMap(FloorMap floorMap)
         {
-            throw new NotImplementedException();
+            bool isSuccessful = false;
+            int affectedRow = await _floorMapRepository.UpdateFloorMap(floorMap);
+            isSuccessful = affectedRow > 0;
+            return isSuccessful;
         }
     }
 }

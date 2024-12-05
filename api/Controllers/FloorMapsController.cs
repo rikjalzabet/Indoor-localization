@@ -23,11 +23,21 @@ namespace api.Controllers
             {
                 isAdded = await _floorMapService.AddFloorMap(floorMap);
             }
-            if (isAdded)
+
+            return isAdded ? Ok() : BadRequest();
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] FloorMap floorMap)
+        {
+            bool isUpdated = false;
+            if (floorMap != null)
             {
-                return Ok();
+                isUpdated = await _floorMapService.UpdateFloorMap(floorMap);
             }
-            return BadRequest();
+
+            return isUpdated ? Ok() : BadRequest();
         }
     }
 }
