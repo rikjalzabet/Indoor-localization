@@ -15,6 +15,30 @@ namespace api.Controllers
             _floorMapService = floorMapService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllFloorMaps()
+        {
+            var floorMaps = await _floorMapService.GetAllFloorMaps();
+            if (floorMaps != null)
+            {
+                return Ok(floorMaps);
+            }
+            else
+                return BadRequest();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var existingFloorMap = await _floorMapService.GetFloorMapById(id);
+            if (existingFloorMap != null)
+            {
+                return Ok(existingFloorMap);
+            }
+            else
+                return BadRequest();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] FloorMap floorMap)
         {
@@ -40,28 +64,16 @@ namespace api.Controllers
             return isUpdated ? Ok() : BadRequest();
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            var existingFloorMap = await _floorMapService.GetFloorMapById(id);
-            if (existingFloorMap != null)
+            bool isDeleted = false;
+            if (id != null)
             {
-                return Ok(existingFloorMap);
+                isDeleted = await _floorMapService.DeleteFloorMap(id);
             }
-            else
-                return BadRequest();
-        }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllFloorMaps()
-        {
-            var floorMaps = await _floorMapService.GetAllFloorMaps();
-            if(floorMaps != null)
-            {
-                return Ok(floorMaps);
-            }
-            else 
-                return BadRequest();
+            return isDeleted ? Ok() : BadRequest();
         }
     }
 }

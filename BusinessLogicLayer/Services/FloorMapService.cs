@@ -24,9 +24,13 @@ namespace BusinessLogicLayer.Services
             return isSuccessful;
         }
 
-        public Task<bool> DeleteFloorMap(int id)
+        public async Task<bool> DeleteFloorMap(int id)
         {
-            throw new NotImplementedException();
+            bool isSuccessful = false;
+            int affectedRow = await _floorMapRepository.DeleteFloorMap(id);
+            isSuccessful = affectedRow > 0;
+
+            return isSuccessful;
         }
 
         public async Task<List<FloorMap>> GetAllFloorMaps()

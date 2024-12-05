@@ -53,14 +53,12 @@ namespace api.Controllers
             {
                 isAdded = await _assetService.AddAsset(asset);
             }
-            if(isAdded)
-            {
-                return Ok();
-            }
-            return BadRequest();
+
+            return isAdded ? Ok() : BadRequest();
+
         }
 
-        
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromBody] Asset asset)
@@ -70,11 +68,9 @@ namespace api.Controllers
             {
                 isUpdated = await _assetService.UpdateAsset(asset);
             }
-            if (isUpdated)
-            {
-                return Ok();
-            }
-            return BadRequest();
+
+            return isUpdated ? Ok() : BadRequest();
+
         }
 
         [HttpDelete("{id}")]
@@ -85,11 +81,8 @@ namespace api.Controllers
             {
                 isDeleted = await _assetService.DeleteAsset(id);
             }
-            if (isDeleted)
-            {
-                return Ok();
-            }
-            return BadRequest();
+       
+            return isDeleted ? Ok() : BadRequest();
         }
     }
 }

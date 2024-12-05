@@ -28,9 +28,15 @@ namespace DataAccessLayer.Repositories
             return 0;
         }
 
-        public Task<int> DeleteFloorMap(int id)
+        public async Task<int> DeleteFloorMap(int id)
         {
-            throw new NotImplementedException();
+            var existingFloorMap = _floorMaps.FirstOrDefault(f => f.Id == id);
+            if(existingFloorMap != null)
+            {
+                _floorMaps.Remove(existingFloorMap);
+                return 1;
+            }
+            return 0;
         }
 
         public async Task<List<FloorMap>> GetAllFloorMaps()
