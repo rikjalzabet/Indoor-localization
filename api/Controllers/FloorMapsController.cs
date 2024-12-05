@@ -39,5 +39,17 @@ namespace api.Controllers
 
             return isUpdated ? Ok() : BadRequest();
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var existingFloorMap = await _floorMapService.GetFloorMapById(id);
+            if (existingFloorMap != null)
+            {
+                return Ok(existingFloorMap);
+            }
+            else
+                return BadRequest();
+        }
     }
 }

@@ -15,8 +15,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IAssetRepository, MockAssetRepository>();
 builder.Services.AddSingleton<IZoneRepository, MockZoneRepository>();
+builder.Services.AddSingleton<IFloorMapRepository, MockFloorMapRepository>();
 builder.Services.AddSingleton<IAssetService, AssetService>();
 builder.Services.AddSingleton<IZoneService, ZoneService>();
+builder.Services.AddSingleton<IFloorMapService, FloorMapService>();
 
 
 var app = builder.Build();

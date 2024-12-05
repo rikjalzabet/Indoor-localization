@@ -38,9 +38,9 @@ namespace DataAccessLayer.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<FloorMap> GetFloorMapById(int id)
+        public async Task<FloorMap> GetFloorMapById(int id)
         {
-            throw new NotImplementedException();
+            return await Task.FromResult(_floorMaps.FirstOrDefault(f => f.Id == id));
         }
 
         public async Task<int> UpdateFloorMap(FloorMap floorMap)

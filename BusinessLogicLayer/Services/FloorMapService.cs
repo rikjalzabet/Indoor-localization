@@ -34,9 +34,10 @@ namespace BusinessLogicLayer.Services
             throw new NotImplementedException();
         }
 
-        public Task<FloorMap> GetFloorMapById(int id)
+        public async Task<FloorMap> GetFloorMapById(int id)
         {
-            throw new NotImplementedException();
+            var existingFloorMap = await _floorMapRepository.GetFloorMapById(id);
+            return existingFloorMap;
         }
 
         public async Task<bool> UpdateFloorMap(FloorMap floorMap)
