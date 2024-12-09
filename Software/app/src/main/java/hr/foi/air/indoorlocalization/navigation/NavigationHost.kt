@@ -6,9 +6,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import hr.foi.air.indoorlocalization.TestData.TestData
+import hr.foi.air.indoorlocalization.TestData.testDataJSONZones
 import hr.foi.air.indoorlocalization.navigation.items.Heatmap
 import hr.foi.air.indoorlocalization.navigation.items.MapHome
 import hr.foi.air.indoorlocalization.navigation.items.Reports
+import hr.foi.air.indoorlocalization.parser.updateZonesFromJson
 
 @Composable
 fun NavigationHost(
@@ -21,9 +23,9 @@ fun NavigationHost(
         modifier = modifier
     ) {
         composable(BottomNavigationItem.Map.route) {
-            val floorMap = TestData.getFloorMaps()[1]
-            val zones = TestData.getZones()
-            MapHome(floorMap=floorMap, zones=zones)
+            val floorMap = TestData.getFloorMaps()[0]
+            updateZonesFromJson(testDataJSONZones)
+            MapHome(floorMap = floorMap)
         }
         composable(BottomNavigationItem.Heatmap.route) {
             Heatmap()

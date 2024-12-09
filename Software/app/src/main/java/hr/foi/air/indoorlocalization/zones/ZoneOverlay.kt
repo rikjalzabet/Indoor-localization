@@ -32,7 +32,7 @@ fun ZoneOverlay(
             val points = zone.points.map { point ->
                 val scaledX = imageOffset.x + point.x * imageSize.width
                 val scaledY = imageOffset.y + point.y * imageSize.height
-                Offset(scaledX, scaledY)
+                Offset(scaledX.toFloat(), scaledY.toFloat())
             }
             if (points.isNotEmpty()) {
                 path.moveTo(points.first().x, points.first().y)

@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,15 +43,14 @@ import coil3.request.ImageRequest
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import hr.foi.air.indoorlocalization.TestData.TestData
 import hr.foi.air.indoorlocalization.models.IFloorMap
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import hr.foi.air.indoorlocalization.models.IZone
+import hr.foi.air.indoorlocalization.parser.zonesList
 import hr.foi.air.indoorlocalization.zones.ZoneOverlay
+import kotlinx.coroutines.delay
 
 @Composable
 fun MapHome(
     floorMap: IFloorMap,
-    zones: List<IZone>
+    //zones: List<IZone>
 ){
     val imageSize = remember { mutableStateOf(Size.Zero) }
     val imageOffset = remember { mutableStateOf(Offset.Zero) }
@@ -97,16 +97,16 @@ fun MapHome(
                     .border(2.dp, Color.Black),
                 contentScale = ContentScale.Crop
             )
-
-            if(imageSize.value.width > 0 && imageSize.value.height > 0){
-                zones.forEachIndexed { index, zone ->
-                    ZoneOverlay(
-                        zone = zone,
-                        imageSize = imageSize.value,
-                        imageOffset = imageOffset.value
-                    )
-                }
+        if (imageSize.value.width > 0 && imageSize.value.height > 0) {
+            zonesList.forEach { zone ->
+                ZoneOverlay(
+                    zone = zone,
+                    imageSize = imageSize.value,
+                    imageOffset = imageOffset.value
+                )
             }
+        }
+
         Text(
             text=floorMap.name,
             modifier=Modifier
@@ -120,6 +120,5 @@ fun MapHome(
 @Composable
 fun PreviewMapHome(){
     val testFloorMap = TestData.getFloorMaps()[0]
-    val zones=TestData.getZones()
-    MapHome(floorMap=testFloorMap, zones=zones)
+    MapHome(floorMap=testFloorMap)
 }

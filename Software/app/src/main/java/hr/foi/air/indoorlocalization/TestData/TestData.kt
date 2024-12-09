@@ -7,6 +7,7 @@ import hr.foi.air.indoorlocalization.models.Point
 import hr.foi.air.indoorlocalization.models.impl.Asset
 import hr.foi.air.indoorlocalization.models.impl.FloorMap
 import hr.foi.air.indoorlocalization.models.impl.Zone
+import hr.foi.air.indoorlocalization.parser.zonesList
 import java.util.Date
 
 class TestData {
@@ -27,24 +28,29 @@ class TestData {
         }
 
         fun getZones(): List<IZone> {
-            return listOf(
-                Zone(
-                    2, "IZone 1", listOf(
-                        Point(0.2f, 0.2f, 1),
-                        Point(0.4f, 0.4f, 2),
-                        Point(0.2f, 0.4f, 3),
-                        Point(0.4f, 0.2f, 4)
-                    )
-                ),
-                Zone(
-                    3, "IZone 2", listOf(
-                        Point(0.1f, 0.1f, 1),
-                        Point(0.5f, 0.1f, 2),
-                        Point(0.5f, 0.5f, 3),
-                        Point(0.1f, 0.5f, 4)
+                return listOf(
+                    /* Zone(
+                         2, "IZone 1", listOf(
+                             Point(0.2f, 0.2f, 1),
+                             Point(0.4f, 0.4f, 2),
+                             Point(0.2f, 0.4f, 3),
+                             Point(0.4f, 0.2f, 4)
+                         )
+                     ),*/
+                    Zone(
+                        3, "IZone 2", listOf(
+                            Point(0.1f, 0.1f, 1),
+                            Point(0.5f, 0.1f, 2),
+                            Point(0.5f, 0.5f, 3),
+                            Point(0.1f, 0.5f, 4)
+                        )
                     )
                 )
-            )
+            }
+        fun addZonesToList(){
+            for (zone in getZones()){
+                zonesList.add(zone)
+            }
         }
     }
 }
