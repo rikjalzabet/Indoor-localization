@@ -66,7 +66,7 @@ export class WebUiService {
         {
           id :1,
           name: 'Floor map A',
-          image: 'Image 1'
+          image: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Blue_rectangle.png'
         },
         {
           id :2,
