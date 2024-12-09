@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { IAsset } from '../models/iasset';
 import { IFloorMap } from '../models/IFloorMap';
+import { IAssetPositionHistory } from '../models/IAssetPositionHistory';
 
 @Injectable({
   providedIn: 'root'
@@ -93,6 +94,37 @@ export class WebUiService {
 
     public updateAsset(Asset: IAsset): void{
       console.log('Asset is updated',Asset);
+    }
+
+    public getAssetPositionHistory(FloorMapId: number): Observable<IAssetPositionHistory[]>  {
+      const mockAssetPositionHistory: IAssetPositionHistory[] = [
+        {
+          id: 1,
+          assetId: 1,
+          x: 34.56,
+          y: 78.90,
+          dateTime: new Date('2024-12-09T10:00:00Z'),
+          floorMapId: 1,
+      },
+      {
+          id: 2,
+          assetId: 1,
+          x: 40.12,
+          y: 85.67,
+          dateTime: new Date('2024-12-09T10:05:00Z'),
+          floorMapId: 1,
+      },
+      {
+          id: 3,
+          assetId: 2,
+          x: 50.34,
+          y: 90.78,
+          dateTime: new Date('2024-12-09T10:10:00Z'),
+          floorMapId: 1,
+      }
+      ];
+
+      return of(mockAssetPositionHistory);
     }
   }
 
