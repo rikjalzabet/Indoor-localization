@@ -12,8 +12,7 @@ import hr.foi.air.indoorlocalization.navigation.items.Heatmap
 import hr.foi.air.indoorlocalization.navigation.items.MapHome
 import hr.foi.air.indoorlocalization.navigation.items.Reports
 import hr.foi.air.indoorlocalization.parser.floorMapList
-import hr.foi.air.indoorlocalization.parser.updateFloorMapsFromJson
-import hr.foi.air.indoorlocalization.parser.updateZonesFromJson
+import hr.foi.air.indoorlocalization.parser.*
 
 @Composable
 fun NavigationHost(
@@ -26,9 +25,9 @@ fun NavigationHost(
         modifier = modifier
     ) {
         composable(BottomNavigationItem.Map.route) {
-            updateFloorMapsFromJson(testDataJSONMap)
+            JsonDataParser().updateFloorMaps(testDataJSONMap)
             val floorMap = floorMapList[0]//TestData.getFloorMaps()[0]
-            updateZonesFromJson(testDataJSONZones)
+            JsonDataParser().updateZones(testDataJSONZones)
             MapHome(floorMap = floorMap)
         }
         composable(BottomNavigationItem.Heatmap.route) {

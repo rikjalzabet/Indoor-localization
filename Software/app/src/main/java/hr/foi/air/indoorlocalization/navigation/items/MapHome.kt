@@ -21,7 +21,7 @@ import hr.foi.air.indoorlocalization.TestData.TestData
 import hr.foi.air.indoorlocalization.TestData.testDataJSONMap
 import hr.foi.air.indoorlocalization.models.IFloorMap
 import hr.foi.air.indoorlocalization.parser.floorMapList
-import hr.foi.air.indoorlocalization.parser.updateFloorMapsFromJson
+import hr.foi.air.indoorlocalization.parser.*
 import hr.foi.air.indoorlocalization.parser.zonesList
 import hr.foi.air.indoorlocalization.zones.ZoneOverlay
 import androidx.compose.material3.DropdownMenuItem
@@ -99,7 +99,7 @@ fun MapHome(
 @Preview(showBackground = true)
 @Composable
 fun PreviewMapHome(){
-    updateFloorMapsFromJson(testDataJSONMap)
+    JsonDataParser().updateFloorMaps(testDataJSONMap)
     val testFloorMap = floorMapList[0] //TestData.getFloorMaps()[0]
     MapHome(floorMap=testFloorMap)
 }
