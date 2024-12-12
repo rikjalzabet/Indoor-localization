@@ -64,7 +64,7 @@ namespace api.Controllers
             bool isUpdated = false;
             if (zone != null)
             {
-                isUpdated = await _zoneService.UpdateZone(zone);
+                isUpdated = await _zoneService.UpdateZone(zone, id);
             }
 
             return isUpdated ? Ok() : BadRequest();

@@ -44,10 +44,10 @@ namespace BusinessLogicLayer.Services
             isSuccessful = affectedRow > 0;
             return isSuccessful;
         }
-        public async Task<bool> UpdateZone(Zone zone)
+        public async Task<bool> UpdateZone(Zone zone, int id)
         {
             bool isSuccessful = false;
-            int affectedRow = await _zoneRepository.UpdateZone(zone);
+            int affectedRow = await _zoneRepository.UpdateZone(zone, id);
 
             isSuccessful = affectedRow > 0;
             return isSuccessful;

@@ -78,9 +78,9 @@ namespace DataAccessLayer.Repositories
             return 1;
         }
 
-        public async Task<int> UpdateZone(Zone zone)
+        public async Task<int> UpdateZone(Zone zone, int id)
         {
-            var existingZone = _zones.FirstOrDefault(z => z.Id == zone.Id);
+            var existingZone = _zones.FirstOrDefault(z => z.Id == id);
 
             if (existingZone == null)
                 return 0;

@@ -12,7 +12,7 @@ namespace DataAccessLayer.Repositories
         Task<List<Zone>> GetAllZones();
         Task<Zone> GetZoneById(int id);
         Task<int> AddZone(Zone zone);
-        Task<int> UpdateZone(Zone zone);
+        Task<int> UpdateZone(Zone zone, int id);
         Task<int> DeleteZone(int id);
     }
 }
