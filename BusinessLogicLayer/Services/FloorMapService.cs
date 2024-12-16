@@ -36,7 +36,7 @@ namespace BusinessLogicLayer.Services
         public async Task<List<FloorMap>> GetAllFloorMaps()
         {
             var queryableFloorMaps = await _floorMapRepository.GetAllFloorMaps();
-            return queryableFloorMaps.ToList();
+            return queryableFloorMaps;
         }
 
         public async Task<FloorMap> GetFloorMapById(int id)
