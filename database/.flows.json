@@ -2,7 +2,7 @@
     {
         "id": "28686cc3313ecabf",
         "type": "function",
-        "z": "f6f2187d.f17ca8",
+        "z": "49454b1d9f2fc071",
         "name": "Generate random asset data",
         "func": "// Assuming msg.payload contains the random id from the query\nconst randomAssetId = Math.floor(Math.random() * 10000); // Random asset id\nconst name = `Asset${randomAssetId}`;\nconst x = (Math.random() * 100).toFixed(6); // Random x coordinate\nconst y = (Math.random() * 100).toFixed(6); // Random y coordinate\nconst lastSync = new Date().toISOString(); // Current timestamp\n\n// Convert the floorMapId from msg.payload to an integer\n//const floorMapId = parseInt(msg.payload[0].id, 10); // Ensure it's an integer\nconst floorMapId = msg.payload[0].id;\nconst active = Math.random() > 0.5; // Random active status\n\n// Update msg.params with the new values\nmsg.params = [name, x, y, lastSync, floorMapId, active];\n\nreturn msg;\n",
         "outputs": 1,
@@ -22,7 +22,7 @@
     {
         "id": "a1c848f631eca0be",
         "type": "postgresql",
-        "z": "f6f2187d.f17ca8",
+        "z": "49454b1d9f2fc071",
         "name": "Insert asset",
         "query": "INSERT INTO assets (name, x, y, lastSync, floorMapId, active) \nVALUES ($1, $2, $3, $4, $5, $6);",
         "postgreSQLConfig": "521e2c9b19c962e2",
@@ -35,13 +35,13 @@
     {
         "id": "02f95b2fde228170",
         "type": "inject",
-        "z": "f6f2187d.f17ca8",
+        "z": "49454b1d9f2fc071",
         "name": "Start",
         "props": [],
         "repeat": "",
         "crontab": "",
-        "once": true,
-        "onceDelay": "",
+        "once": false,
+        "onceDelay": "1",
         "topic": "",
         "x": 170,
         "y": 260,
@@ -54,7 +54,7 @@
     {
         "id": "228113cc613ba360",
         "type": "postgresql",
-        "z": "f6f2187d.f17ca8",
+        "z": "49454b1d9f2fc071",
         "name": "Random floorMapsId",
         "query": "SELECT id \nFROM floorMaps \nORDER BY RANDOM() \nLIMIT 1;",
         "postgreSQLConfig": "0585a90e498522aa",
