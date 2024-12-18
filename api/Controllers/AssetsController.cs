@@ -63,7 +63,6 @@ namespace api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromBody] Asset asset, [FromRoute] int id)
         {
-            Console.WriteLine("TESTIRAMO ID iz route: " + id);
             bool isUpdated = false;
             if (asset != null)
             {
