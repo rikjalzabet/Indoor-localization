@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Repositories.DataBaseRepositories
+namespace DataAccessLayer.Repositories
 {
     public class AssetRepository //:IAssetRepository
     {

@@ -1,11 +1,12 @@
-﻿using EntityLayer.Entities;
+﻿using DataAccessLayer.Interfaces;
+using EntityLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Repositories
+namespace DataAccessLayer.MockRepositories
 {
     public class MockFloorMapRepository : IFloorMapRepository
     {
@@ -31,7 +32,7 @@ namespace DataAccessLayer.Repositories
         public async Task<int> DeleteFloorMap(int id)
         {
             var existingFloorMap = _floorMaps.FirstOrDefault(f => f.Id == id);
-            if(existingFloorMap != null)
+            if (existingFloorMap != null)
             {
                 _floorMaps.Remove(existingFloorMap);
                 return 1;
