@@ -13,7 +13,7 @@ namespace BusinessLogicLayer.Services
         private readonly IAssetRepository _assetRepository;
         public AssetService(IAssetRepository assetRepository)
         {
-                _assetRepository = assetRepository;
+            _assetRepository = assetRepository;
         }
         public async Task<List<Asset>> GetAllAssets()
         {
