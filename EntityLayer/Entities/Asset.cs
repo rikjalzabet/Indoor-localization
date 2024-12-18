@@ -18,6 +18,8 @@ namespace EntityLayer.Entities
         public bool Active { get; set; }
 
         public virtual FloorMap FloorMap { get; set; } = null!;
+        public virtual ICollection<AssetPositionHistory> AssetPositionHistories { get; set; } = new List<AssetPositionHistory>();
+
 
     }
 }

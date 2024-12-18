@@ -15,7 +15,7 @@ namespace EntityLayer.Entities
         public DateTime DateTime { get; set; }
         public int FloorMapId { get; set; }
 
-        public Asset Asset { get; set; }
-        public FloorMap FloorMap { get; set; }
+        public virtual Asset Asset { get; set; } = null!;
+        public virtual FloorMap FloorMap { get; set; } = null!;
     }
 }

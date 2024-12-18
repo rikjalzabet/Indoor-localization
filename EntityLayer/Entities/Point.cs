@@ -10,5 +10,8 @@ namespace EntityLayer.Entities
     {
         public double X { get; set; }
         public double Y { get; set; }
+        public int ZoneId { get; set; }
+        public virtual Zone Zone { get; set; }
+
     }
 }
