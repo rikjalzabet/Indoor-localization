@@ -18,20 +18,20 @@ namespace BusinessLogicLayer.Services
         }
         public async Task<List<Zone>> GetAllZones()
         {
-            var queryableZones = await _zoneRepository.GetAllZones();
+            var queryableZones = await _zoneRepository.GetAllAsync();
             return queryableZones.ToList();
         }
 
         public async Task<Zone> GetZoneById(int id)
         {
-            var zone = await _zoneRepository.GetZoneById(id);
+            var zone = await _zoneRepository.GetByIdAsync(id);
             return zone;
         }
 
         public async Task<bool> AddZone(Zone zone)
         {
             bool isSuccessful = false;
-            int affectedRow = await _zoneRepository.AddZone(zone);
+            int affectedRow = await _zoneRepository.AddAsync(zone);
 
             isSuccessful = affectedRow > 0;
             return isSuccessful;
@@ -40,7 +40,7 @@ namespace BusinessLogicLayer.Services
         public async Task<bool> DeleteZone(int id)
         {
             bool isSuccessful = false;
-            int affectedRow = await _zoneRepository.DeleteZone(id);
+            int affectedRow = await _zoneRepository.DeleteAsync(id);
 
             isSuccessful = affectedRow > 0;
             return isSuccessful;

@@ -19,7 +19,7 @@ namespace BusinessLogicLayer.Services
         public async Task<bool> AddFloorMap(FloorMap floorMap)
         {
             bool isSuccessful = false;
-            int affectedRow = await _floorMapRepository.AddFloorMap(floorMap);
+            int affectedRow = await _floorMapRepository.AddAsync(floorMap);
 
             isSuccessful = affectedRow > 0;
             return isSuccessful;
@@ -28,7 +28,7 @@ namespace BusinessLogicLayer.Services
         public async Task<bool> DeleteFloorMap(int id)
         {
             bool isSuccessful = false;
-            int affectedRow = await _floorMapRepository.DeleteFloorMap(id);
+            int affectedRow = await _floorMapRepository.DeleteAsync(id);
             isSuccessful = affectedRow > 0;
 
             return isSuccessful;
@@ -36,13 +36,13 @@ namespace BusinessLogicLayer.Services
 
         public async Task<List<FloorMap>> GetAllFloorMaps()
         {
-            var queryableFloorMaps = await _floorMapRepository.GetAllFloorMaps();
-            return queryableFloorMaps;
+            var queryableFloorMaps = await _floorMapRepository.GetAllAsync();
+            return queryableFloorMaps.ToList();
         }
 
         public async Task<FloorMap> GetFloorMapById(int id)
         {
-            var existingFloorMap = await _floorMapRepository.GetFloorMapById(id);
+            var existingFloorMap = await _floorMapRepository.GetByIdAsync(id);
             return existingFloorMap;
         }
 

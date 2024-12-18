@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.MockRepositories
 {
-    public class MockZoneRepository : IZoneRepository
+    public class MockZoneRepository : IRepository<Zone>
     {
 
         private readonly List<Zone> _zones = new()
@@ -48,18 +48,18 @@ namespace DataAccessLayer.MockRepositories
             }
         };
 
-        public async Task<List<Zone>> GetAllZones()
+        public async Task<IEnumerable<Zone>> GetAllAsync()
         {
             return await Task.FromResult(_zones);
         }
 
-        public async Task<Zone> GetZoneById(int id)
+        public async Task<Zone> GetByIdAsync(int id)
         {
             return await Task.FromResult(_zones.FirstOrDefault(z => z.Id == id));
 
         }
 
-        public async Task<int> AddZone(Zone zone)
+        public async Task<int> AddAsync(Zone zone)
         {
             var existingZone = _zones.FirstOrDefault(z => z.Id == zone.Id);
             if (existingZone == null)
@@ -70,7 +70,7 @@ namespace DataAccessLayer.MockRepositories
             return 0;
         }
 
-        public async Task<int> DeleteZone(int id)
+        public async Task<int> DeleteAsync(int id)
         {
             var existingZone = _zones.FirstOrDefault(z => z.Id == id);
             if (existingZone == null)
