@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Interfaces
 {
-    public interface IAssetRepository
+    public interface IAssetRepository : IRepository<Asset>
     {
-        Task<List<Asset>> GetAllAssets();
-        Task<Asset> GetAssetById(int id);
-        Task<int> AddAsset(Asset asset);
         Task<int> UpdateAsset(Asset asset, int id);
-        Task<int> DeleteAsset(int id);
     }
 }

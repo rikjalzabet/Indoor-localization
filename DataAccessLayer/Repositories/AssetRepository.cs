@@ -1,5 +1,6 @@
 ﻿using DataAccessLayer.Interfaces;
 using EntityLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
-    public class AssetRepository// : Repository<Asset>, IAssetRepository
+    public class AssetRepository : Repository<Asset>, IAssetRepository
     {
-        /*
+        
         protected readonly AppDbContext Context;
         public DbSet<Asset> Entities { get; set; }
 
@@ -72,6 +73,6 @@ namespace DataAccessLayer.Repositories
 
             return 1;
         }
-        */
+        
     }
 }
