@@ -16,5 +16,8 @@ namespace EntityLayer.Entities
         public DateTime LastSync { get; set; }
         public int FloorMapId { get; set; }
         public bool Active { get; set; }
+
+        public virtual FloorMap FloorMap { get; set; } = null!;
+
     }
 }
