@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Interfaces
 {
-    public interface IFloorMapRepository
+    public interface IFloorMapRepository : IRepository<FloorMap>
     {
-        Task<List<FloorMap>> GetAllFloorMaps();
-        Task<FloorMap> GetFloorMapById(int id);
-        Task<int> AddFloorMap(FloorMap floorMap);
         Task<int> UpdateFloorMap(FloorMap floorMap, int id);
-        Task<int> DeleteFloorMap(int id);
     }
 }
