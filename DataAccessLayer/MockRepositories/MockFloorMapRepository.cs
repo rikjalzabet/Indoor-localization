@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.MockRepositories
 {
-    public class MockFloorMapRepository : IFloorMapRepository
+    public class MockFloorMapRepository : IRepository<FloorMap>
     {
         private readonly List<FloorMap> _floorMaps = new()
         {
@@ -18,7 +18,7 @@ namespace DataAccessLayer.MockRepositories
             new FloorMap {Id = 4, Name = "FloorMap879", Image = "https://picsum.photos/id/879/500/500"},
             new FloorMap {Id = 5, Name = "FloorMap333", Image = "https://picsum.photos/id/333/500/500"}
         };
-        public async Task<int> AddFloorMap(FloorMap floorMap)
+        public async Task<int> AddAsync(FloorMap floorMap)
         {
             var existingFloorMap = _floorMaps.FirstOrDefault(f => f.Id == floorMap.Id);
             if (existingFloorMap == null)
@@ -29,7 +29,7 @@ namespace DataAccessLayer.MockRepositories
             return 0;
         }
 
-        public async Task<int> DeleteFloorMap(int id)
+        public async Task<int> DeleteAsync(int id)
         {
             var existingFloorMap = _floorMaps.FirstOrDefault(f => f.Id == id);
             if (existingFloorMap != null)
@@ -40,12 +40,12 @@ namespace DataAccessLayer.MockRepositories
             return 0;
         }
 
-        public async Task<List<FloorMap>> GetAllFloorMaps()
+        public async Task<IEnumerable<FloorMap>> GetAllAsync()
         {
             return await Task.FromResult(_floorMaps);
         }
 
-        public async Task<FloorMap> GetFloorMapById(int id)
+        public async Task<FloorMap> GetByIdAsync(int id)
         {
             return await Task.FromResult(_floorMaps.FirstOrDefault(f => f.Id == id));
         }

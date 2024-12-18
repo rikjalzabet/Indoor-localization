@@ -25,10 +25,13 @@ builder.Services.AddSwaggerGen();
 /////// REPOSITORIES
 
 //builder.Services.AddScoped<IRepository<Asset>, MockAssetRepository>();
+//builder.Services.AddSingleton<IRepository<FloorMap>, MockFloorMapRepository>();
+
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
+builder.Services.AddScoped<IFloorMapRepository, FloorMapRepository>();
+
 
 builder.Services.AddSingleton<IZoneRepository, MockZoneRepository>();
-builder.Services.AddSingleton<IFloorMapRepository, MockFloorMapRepository>();
 builder.Services.AddSingleton<IAssetPositionHistoryRepository, MockAssetPositionHistoryRepository>();
 
 //////// SERVICES
