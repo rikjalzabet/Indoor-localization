@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.MockRepositories
 {
-    public class MockAssetRepository : IAssetRepository
+    public class MockAssetRepository : IRepository<Asset>
     {
 
         // ovaj repozitorij bude zamijenjen pravim repozitorijem nakon kreiranja EFC-a prema bazi
@@ -22,11 +22,11 @@ namespace DataAccessLayer.MockRepositories
         };
 
         // u pravom repozitoriju sa EFC ide public async, i await umjesto Task.FromResult..
-        public async Task<List<Asset>> GetAllAssets()
+        public async Task<IEnumerable<Asset>> GetAllAsync()
         {
             return await Task.FromResult(_assets);
         }
-        public async Task<int> AddAsset(Asset asset)
+        public async Task<int> AddAsync(Asset asset)
         {
             var existingAsset = _assets.FirstOrDefault(a => a.Id == asset.Id);
             if (existingAsset == null)
@@ -37,7 +37,7 @@ namespace DataAccessLayer.MockRepositories
             return 0;
         }
 
-        public async Task<int> DeleteAsset(int id)
+        public async Task<int> DeleteAsync(int id)
         {
             var existingAsset = _assets.FirstOrDefault(a => a.Id == id);
             if (existingAsset == null)
@@ -46,7 +46,7 @@ namespace DataAccessLayer.MockRepositories
             return 1;
         }
 
-        public async Task<Asset> GetAssetById(int id)
+        public async Task<Asset> GetByIdAsync(int id)
         {
             return await Task.FromResult(_assets.FirstOrDefault(a => a.Id == id));
         }
