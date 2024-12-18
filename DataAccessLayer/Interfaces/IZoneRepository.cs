@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Interfaces
 {
-    public interface IZoneRepository
+    public interface IZoneRepository : IRepository<Zone>
     {
-        Task<List<Zone>> GetAllZones();
-        Task<Zone> GetZoneById(int id);
-        Task<int> AddZone(Zone zone);
         Task<int> UpdateZone(Zone zone, int id);
-        Task<int> DeleteZone(int id);
     }
 }
