@@ -1,4 +1,5 @@
-﻿using EntityLayer.Entities;
+﻿using DataAccessLayer.Interfaces;
+using EntityLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Repositories
 {
-    public class AssetRepository //:IAssetRepository
+    public class AssetRepository// : Repository<Asset>, IAssetRepository
     {
         /*
         protected readonly AppDbContext Context;
