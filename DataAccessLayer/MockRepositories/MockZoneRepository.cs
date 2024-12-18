@@ -1,9 +1,11 @@
 ﻿using DataAccessLayer.Interfaces;
 using EntityLayer.Entities;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DataAccessLayer.MockRepositories
@@ -17,36 +19,44 @@ namespace DataAccessLayer.MockRepositories
             {
                 Id = 1,
                 Name = "Zone 1",
-                Points = new List<Point>
+                Points = JsonDocument.Parse(@"
                 {
-                    new Point { X = 10.5, Y = 20.5 },
-                    new Point { X = 15.5, Y = 25.5 },
-                    new Point { X = 10.5, Y = 30.5 }
-                }
+                    ""points"": [
+                        { ""X"": 10.5, ""Y"": 20.5 },
+                        { ""X"": 15.5, ""Y"": 25.5 },
+                        { ""X"": 10.5, ""Y"": 30.5 }
+                    ]
+                }")
             },
             new Zone
             {
                 Id = 2,
                 Name = "Zone 2",
-                Points = new List<Point>
+                Points = JsonDocument.Parse(@"
                 {
-                    new Point { X = 5.0, Y = 10.0 },
-                    new Point { X = 7.0, Y = 12.0 },
-                    new Point { X = 9.0, Y = 8.0 }
-                }
+                    ""points"": [
+                        { ""X"": 5.0, ""Y"": 10.0 },
+                        { ""X"": 7.0, ""Y"": 12.0 },
+                        { ""X"": 9.0, ""Y"": 8.0 }
+                    ]
+                }")
             },
             new Zone
             {
                 Id = 3,
                 Name = "Zone 3",
-                Points = new List<Point>
+                Points = JsonDocument.Parse(@"
                 {
-                    new Point { X = 1.5, Y = 3.5 },
-                    new Point { X = 4.5, Y = 5.5 },
-                    new Point { X = 2.5, Y = 6.5 }
-                }
+                    ""points"": [
+                        { ""X"": 1.5, ""Y"": 3.5 },
+                        { ""X"": 4.5, ""Y"": 5.5 },
+                        { ""X"": 2.5, ""Y"": 6.5 }
+                    ]
+                }")
             }
         };
+
+
 
         public async Task<IEnumerable<Zone>> GetAllAsync()
         {

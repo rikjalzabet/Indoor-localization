@@ -37,11 +37,16 @@ builder.Services.AddSingleton<IAssetPositionHistoryRepository, MockAssetPosition
 //////// SERVICES
 
 builder.Services.AddScoped<IAssetService, AssetService>();
-builder.Services.AddSingleton<IZoneService, ZoneService>();
-builder.Services.AddSingleton<IFloorMapService, FloorMapService>();
+builder.Services.AddScoped<IZoneService, ZoneService>();
+builder.Services.AddScoped<IFloorMapService, FloorMapService>();
 builder.Services.AddSingleton<IAssetPositionHistoryService, AssetPositionHistoryService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

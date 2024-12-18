@@ -11,7 +11,9 @@ namespace DataAccessLayer
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+      : base(options)
         {
         }
         public DbSet<Zone> Zones { get; set; }
@@ -74,11 +76,12 @@ namespace DataAccessLayer
                 entity.HasOne(a => a.Zone)
                       .WithMany()
                       .HasForeignKey(a => a.ZoneId);
-            });*/
-
+            });
+            */
             base.OnModelCreating(modelBuilder);
 
         }
 
     }
+
 }
