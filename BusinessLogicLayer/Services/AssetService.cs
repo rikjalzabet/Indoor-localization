@@ -18,13 +18,13 @@ namespace BusinessLogicLayer.Services
         }
         public async Task<List<Asset>> GetAllAssets()
         {
-            var queryableAssets = await _assetRepository.GetAllAssets();
+            var queryableAssets = await _assetRepository.GetAllAsync();
             return queryableAssets.ToList();
         }
         public async Task<bool> AddAsset(Asset asset)
         {
             bool isSuccessful = false;
-            int affectedRow = await _assetRepository.AddAsset(asset);
+            int affectedRow = await _assetRepository.AddAsync(asset);
 
             isSuccessful = affectedRow > 0;
             return isSuccessful;
@@ -33,7 +33,7 @@ namespace BusinessLogicLayer.Services
         public async Task<bool> DeleteAsset(int id)
         {
             bool isSuccessful = false;
-            int affectedRow = await _assetRepository.DeleteAsset(id);
+            int affectedRow = await _assetRepository.DeleteAsync(id);
 
             isSuccessful = affectedRow > 0;
             return isSuccessful;
@@ -41,7 +41,7 @@ namespace BusinessLogicLayer.Services
 
         public async Task<Asset> GetAssetById(int id)
         {
-            var asset = await _assetRepository.GetAssetById(id);
+            var asset = await _assetRepository.GetByIdAsync(id);
             return asset;
         }
 
