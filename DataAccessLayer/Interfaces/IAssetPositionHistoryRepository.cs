@@ -9,8 +9,8 @@ namespace DataAccessLayer.Interfaces
 {
     public interface IAssetPositionHistoryRepository
     {
-        IQueryable<AssetPositionHistory> GetAssetPositionHistory();
-        IQueryable<AssetPositionHistory> GetAssetPositionHistoryByFloorMapId(int floorMapId);
-        int AddAssetPositionHistory(AssetPositionHistory assetPositionHistory);
+        Task<List<AssetPositionHistory>> GetAssetPositionHistory();
+        Task<List<AssetPositionHistory>> GetAssetPositionHistoryByFloorMapId(int floorMapId);
+        Task<int> AddAssetPositionHistory(AssetPositionHistory assetPositionHistory);
     }
 }
