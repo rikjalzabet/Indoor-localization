@@ -23,7 +23,7 @@ builder.Services.AddSwaggerGen();
 // zamijeniti sa AddScoped nakon kreiranja EFC-a
 
 /////// REPOSITORIES
-
+/// for MockRepositories
 //builder.Services.AddScoped<IRepository<Asset>, MockAssetRepository>();
 //builder.Services.AddScoped<IRepository<FloorMap>, MockFloorMapRepository>();
 //builder.Services.AddScoped<IRepository<Zone>, MockZoneRepository>();
