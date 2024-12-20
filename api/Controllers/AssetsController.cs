@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Interfaces;
+using EntityLayer.DTOs;
 using EntityLayer.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -46,9 +47,20 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Asset asset)
+        public async Task<IActionResult> Add([FromBody] AssetDTO assetDto)
         {
             bool isAdded = false;
+            var asset = new Asset
+            {
+                Id = assetDto.Id,
+                Name = assetDto.Name,
+                X = assetDto.X,
+                Y = assetDto.Y,
+                LastSync = assetDto.LastSync,
+                FloorMapId = assetDto.FloorMapId,
+                Active = assetDto.Active
+            };
+
             if (asset != null)
             {
                 isAdded = await _assetService.AddAsset(asset);

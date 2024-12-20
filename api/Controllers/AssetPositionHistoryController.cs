@@ -1,5 +1,6 @@
 ﻿using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.Services;
+using EntityLayer.DTOs;
 using EntityLayer.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -47,9 +48,19 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAssetPositionHistory([FromBody] AssetPositionHistory assetPositionHistory)
+        public async Task<IActionResult> AddAssetPositionHistory([FromBody] AssetPositionHistoryDTO assetPositionHistoryDTO)
         {
             bool isAdded = false;
+            var assetPositionHistory = new AssetPositionHistory
+            {
+                Id = assetPositionHistoryDTO.Id,
+                AssetId = assetPositionHistoryDTO.AssetId,
+                X = assetPositionHistoryDTO.X,
+                Y = assetPositionHistoryDTO.Y,
+                DateTime = assetPositionHistoryDTO.DateTime,
+                FloorMapId = assetPositionHistoryDTO.FloorMapId
+            };
+
             if (assetPositionHistory != null)
             {
                 isAdded = await _assetPositionHistoryService.AddAssetPositionHistory(assetPositionHistory);
