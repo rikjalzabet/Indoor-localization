@@ -41,4 +41,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":core"))
+    implementation("androidx.compose.runtime:runtime:1.5.0")
 }

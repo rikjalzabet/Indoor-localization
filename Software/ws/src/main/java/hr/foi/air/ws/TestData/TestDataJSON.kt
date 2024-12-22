@@ -1,4 +1,4 @@
-package hr.foi.air.indoorlocalization.TestData
+package hr.foi.air.ws.TestData
 
 
 val testDataJSONZones = """

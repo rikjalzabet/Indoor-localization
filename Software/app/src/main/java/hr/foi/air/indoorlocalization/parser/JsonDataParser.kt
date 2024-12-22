@@ -1,39 +1,15 @@
 package hr.foi.air.indoorlocalization.parser
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
-import hr.foi.air.core.models.IFloorMap
-import hr.foi.air.core.models.IZone
 import hr.foi.air.core.models.impl.FloorMap
 import hr.foi.air.core.models.impl.Zone
 import com.google.gson.Gson
+import hr.foi.air.core.parser.DataParser
+import hr.foi.air.core.parser.floorMapList
+import hr.foi.air.core.parser.zonesList
 import kotlinx.serialization.json.*
 
 
-val floorMapList = mutableStateListOf<IFloorMap>()
-val zonesList = mutableStateListOf<IZone>()
-
-/*fun updateZonesFromJson(json: String) {
-    val gson = Gson()
-    val newZones = gson.fromJson(json, Array<Zone>::class.java).toList()
-    newZones.forEach { newZone ->
-        if (zonesList.none { it.id == newZone.id }) {
-            zonesList.add(newZone)
-        }
-    }
-}
-
-fun updateFloorMapsFromJson(json: String) {
-    val gson = Gson()
-    val newFloorMaps = gson.fromJson(json, Array<FloorMap>::class.java).toList()
-
-    newFloorMaps.forEach { newFloorMap ->
-        if (floorMapList.none { it.id == newFloorMap.id }) {
-            floorMapList.add(newFloorMap)
-        }
-    }
-}*/
-class JsonDataParser():DataParser{
+class JsonDataParser(): DataParser {
     override fun updateZones(json: String) {
         val gson = Gson()
         val newZones = gson.fromJson(json, Array<Zone>::class.java).toList()

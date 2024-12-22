@@ -1,6 +1,4 @@
-package hr.foi.air.indoorlocalization.parser
-
-import androidx.compose.runtime.mutableStateListOf
+package hr.foi.air.core.parser
 
 interface DataParser {
     fun updateZones(json: String)

@@ -43,4 +43,6 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     implementation("org.jetbrains.kotlin:kotlin-parcelize-runtime:2.1.0")
+
+    implementation("androidx.compose.runtime:runtime:1.5.0")
 }

@@ -17,13 +17,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
-import hr.foi.air.indoorlocalization.TestData.testDataJSONMap
-import hr.foi.air.indoorlocalization.parser.floorMapList
+import hr.foi.air.ws.TestData.testDataJSONMap
 import hr.foi.air.indoorlocalization.parser.*
-import hr.foi.air.indoorlocalization.parser.zonesList
 import hr.foi.air.indoorlocalization.zones.ZoneOverlay
 import androidx.compose.material3.DropdownMenuItem
 import hr.foi.air.core.models.IFloorMap
+import hr.foi.air.core.parser.floorMapList
+import hr.foi.air.core.parser.zonesList
 
 @Composable
 fun MapHome(
@@ -98,7 +98,7 @@ fun MapHome(
 @Preview(showBackground = true)
 @Composable
 fun PreviewMapHome(){
-    JsonDataParser().updateFloorMaps(testDataJSONMap)
+    JsonDataParser().updateFloorMaps(hr.foi.air.ws.TestData.testDataJSONMap)
     val testFloorMap = floorMapList[0] //TestData.getFloorMaps()[0]
     MapHome(floorMap=testFloorMap)
 }
