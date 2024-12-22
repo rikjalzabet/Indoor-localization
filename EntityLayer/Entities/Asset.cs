@@ -17,7 +17,7 @@ namespace EntityLayer.Entities
         public int FloorMapId { get; set; }
         public bool Active { get; set; }
 
-        public virtual FloorMap FloorMap { get; set; } = null!;
+        public virtual FloorMap FloorMap { get; set; }
         //public virtual ICollection<AssetPositionHistory> AssetPositionHistories { get; set; } = new List<AssetPositionHistory>();
 
 

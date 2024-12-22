@@ -1,7 +1,9 @@
 ﻿using BusinessLogicLayer.Interfaces;
+using EntityLayer.DTOs;
 using EntityLayer.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace api.Controllers
 {
@@ -44,9 +46,19 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Zone zone)
+        public async Task<IActionResult> Add([FromBody] ZoneDTO zoneDTO)
         {
             bool isAdded = false;
+
+            var pointsJson = JsonDocument.Parse(JsonSerializer.Serialize(zoneDTO.Points));
+
+            var zone = new Zone
+            {
+                Id = zoneDTO.Id,
+                Name = zoneDTO.Name,
+                Points = pointsJson
+            };
+
             if (zone != null)
             {
                 isAdded = await _zoneService.AddZone(zone);
