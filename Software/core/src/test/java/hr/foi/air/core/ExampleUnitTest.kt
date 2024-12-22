@@ -1,4 +1,4 @@
-package com.example.core
+package hr.foi.air.core
 
 import org.junit.Test
 

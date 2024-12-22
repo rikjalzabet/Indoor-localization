@@ -1,12 +1,12 @@
 package hr.foi.air.indoorlocalization.TestData
 
-import com.example.core.models.IAsset
-import com.example.core.models.IFloorMap
-import com.example.core.models.IZone
-import com.example.core.models.Point
-import com.example.core.models.impl.Asset
-import com.example.core.models.impl.FloorMap
-import com.example.core.models.impl.Zone
+import hr.foi.air.core.models.IAsset
+import hr.foi.air.core.models.IFloorMap
+import hr.foi.air.core.models.IZone
+import hr.foi.air.core.models.Point
+import hr.foi.air.core.models.impl.Asset
+import hr.foi.air.core.models.impl.FloorMap
+import hr.foi.air.core.models.impl.Zone
 import hr.foi.air.indoorlocalization.parser.zonesList
 import java.util.Date
 

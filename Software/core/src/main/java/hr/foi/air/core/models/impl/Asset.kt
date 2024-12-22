@@ -1,6 +1,6 @@
-package com.example.core.models.impl
+package hr.foi.air.core.models.impl
 
-import com.example.core.models.IAsset
+import hr.foi.air.core.models.IAsset
 import java.util.Date
 
 class Asset(

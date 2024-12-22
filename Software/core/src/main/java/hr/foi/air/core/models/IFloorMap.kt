@@ -1,4 +1,4 @@
-package com.example.core.models
+package hr.foi.air.core.models
 
 interface IFloorMap {
     val id: Int

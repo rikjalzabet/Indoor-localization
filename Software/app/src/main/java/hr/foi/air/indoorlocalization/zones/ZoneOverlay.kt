@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.clipRect
-import com.example.core.models.IZone
+import hr.foi.air.core.models.IZone
 
 @Composable
 fun ZoneOverlay(

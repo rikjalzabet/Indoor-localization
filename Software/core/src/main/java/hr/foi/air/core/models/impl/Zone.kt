@@ -1,7 +1,7 @@
-package com.example.core.models.impl
+package hr.foi.air.core.models.impl
 
-import com.example.core.models.IZone
-import com.example.core.models.Point
+import hr.foi.air.core.models.IZone
+import hr.foi.air.core.models.Point
 import kotlinx.serialization.Serializable
 
 @Serializable

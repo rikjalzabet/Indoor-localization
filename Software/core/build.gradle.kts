@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.core"
+    namespace = "hr.foi.air.core"
     compileSdk = 34
 
     defaultConfig {

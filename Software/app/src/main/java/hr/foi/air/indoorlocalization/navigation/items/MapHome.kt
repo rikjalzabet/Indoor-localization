@@ -23,7 +23,7 @@ import hr.foi.air.indoorlocalization.parser.*
 import hr.foi.air.indoorlocalization.parser.zonesList
 import hr.foi.air.indoorlocalization.zones.ZoneOverlay
 import androidx.compose.material3.DropdownMenuItem
-import com.example.core.models.IFloorMap
+import hr.foi.air.core.models.IFloorMap
 
 @Composable
 fun MapHome(

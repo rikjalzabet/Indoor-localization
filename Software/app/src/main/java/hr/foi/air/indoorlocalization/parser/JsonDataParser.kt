@@ -2,10 +2,10 @@ package hr.foi.air.indoorlocalization.parser
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
-import com.example.core.models.IFloorMap
-import com.example.core.models.IZone
-import com.example.core.models.impl.FloorMap
-import com.example.core.models.impl.Zone
+import hr.foi.air.core.models.IFloorMap
+import hr.foi.air.core.models.IZone
+import hr.foi.air.core.models.impl.FloorMap
+import hr.foi.air.core.models.impl.Zone
 import com.google.gson.Gson
 import kotlinx.serialization.json.*
 
