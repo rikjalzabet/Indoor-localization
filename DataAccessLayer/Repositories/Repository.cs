@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Interfaces;
+using EntityLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,16 @@ namespace DataAccessLayer.Repositories
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await Entities.ToListAsync();
+
+            if (typeof(T) == typeof(Asset))
+            {
+                return await Entities.Include("FloorMap").ToListAsync();
+            }
+            else if (typeof(T) == typeof(AssetPositionHistory))
+            {
+                return await Entities.Include("Asset").Include("FloorMap").ToListAsync();
+            }
+            else return await Entities.ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(int id)
