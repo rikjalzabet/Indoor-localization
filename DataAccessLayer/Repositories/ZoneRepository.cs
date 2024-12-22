@@ -17,7 +17,7 @@ namespace DataAccessLayer.Repositories
         }
         public async Task<int> UpdateZone(Zone zone, int id)
         {
-            var existingZone = await Entities.FindAsync(zone);
+            var existingZone = await Entities.FindAsync(id);
 
             if (existingZone != null)
             {

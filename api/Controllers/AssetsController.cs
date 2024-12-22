@@ -73,9 +73,20 @@ namespace api.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromBody] Asset asset, [FromRoute] int id)
+        public async Task<IActionResult> Update([FromBody] AssetDTO assetDto, [FromRoute] int id)
         {
             bool isUpdated = false;
+            var asset = new Asset
+            {
+                Id = assetDto.Id,
+                Name = assetDto.Name,
+                X = assetDto.X,
+                Y = assetDto.Y,
+                LastSync = assetDto.LastSync,
+                FloorMapId = assetDto.FloorMapId,
+                Active = assetDto.Active
+            };
+
             if (asset != null)
             {
                 isUpdated = await _assetService.UpdateAsset(asset, id);

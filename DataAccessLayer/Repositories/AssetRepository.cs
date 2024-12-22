@@ -17,7 +17,7 @@ namespace DataAccessLayer.Repositories
         }
         public async Task<int> UpdateAsset(Asset asset, int id)
         {
-            var existingAsset = await Entities.FindAsync(asset);
+            var existingAsset = await Entities.FindAsync(id);
             if (existingAsset != null)
             {
                 existingAsset.Id = asset.Id;

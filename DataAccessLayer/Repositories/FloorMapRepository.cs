@@ -16,7 +16,7 @@ namespace DataAccessLayer.Repositories
         }
         public async Task<int> UpdateFloorMap(FloorMap floorMap, int id)
         {
-            var existingFloorMap = await Entities.FindAsync(floorMap);
+            var existingFloorMap = await Entities.FindAsync(id);
 
             if (existingFloorMap != null)
             {

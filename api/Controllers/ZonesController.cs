@@ -71,9 +71,19 @@ namespace api.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromBody] Zone zone, [FromRoute] int id)
+        public async Task<IActionResult> Update([FromBody] ZoneDTO zoneDTO, [FromRoute] int id)
         {
             bool isUpdated = false;
+
+            var pointsJson = JsonDocument.Parse(JsonSerializer.Serialize(zoneDTO.Points));
+
+            var zone = new Zone
+            {
+                Id = zoneDTO.Id,
+                Name = zoneDTO.Name,
+                Points = pointsJson
+            };
+
             if (zone != null)
             {
                 isUpdated = await _zoneService.UpdateZone(zone, id);
