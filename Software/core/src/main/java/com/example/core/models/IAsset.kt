@@ -1,4 +1,4 @@
-package hr.foi.air.indoorlocalization.models
+package com.example.core.models
 
 import java.util.Date
 

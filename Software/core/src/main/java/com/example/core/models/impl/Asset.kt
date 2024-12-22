@@ -1,6 +1,6 @@
-package hr.foi.air.indoorlocalization.models.impl
+package com.example.core.models.impl
 
-import hr.foi.air.indoorlocalization.models.IAsset
+import com.example.core.models.IAsset
 import java.util.Date
 
 class Asset(
@@ -11,5 +11,5 @@ class Asset(
     override val lastSync: Date,
     override val floorMapId: Int,
     override val active: Boolean
-):IAsset {
+): IAsset {
 }

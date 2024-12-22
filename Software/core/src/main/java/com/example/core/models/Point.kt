@@ -1,6 +1,5 @@
-package hr.foi.air.indoorlocalization.models
+package com.example.core.models
 
-import kotlinx.android.parcel.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable

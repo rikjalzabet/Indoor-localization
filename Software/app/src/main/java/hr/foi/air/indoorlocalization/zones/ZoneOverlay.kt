@@ -1,7 +1,6 @@
 package hr.foi.air.indoorlocalization.zones
 
 import androidx.compose.runtime.Composable
-import hr.foi.air.indoorlocalization.models.IZone
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Modifier
@@ -11,6 +10,7 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.clipRect
+import com.example.core.models.IZone
 
 @Composable
 fun ZoneOverlay(

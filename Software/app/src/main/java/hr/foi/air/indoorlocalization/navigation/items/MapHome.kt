@@ -17,14 +17,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
-import hr.foi.air.indoorlocalization.TestData.TestData
 import hr.foi.air.indoorlocalization.TestData.testDataJSONMap
-import hr.foi.air.indoorlocalization.models.IFloorMap
 import hr.foi.air.indoorlocalization.parser.floorMapList
 import hr.foi.air.indoorlocalization.parser.*
 import hr.foi.air.indoorlocalization.parser.zonesList
 import hr.foi.air.indoorlocalization.zones.ZoneOverlay
 import androidx.compose.material3.DropdownMenuItem
+import com.example.core.models.IFloorMap
 
 @Composable
 fun MapHome(
