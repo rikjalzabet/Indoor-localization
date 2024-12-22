@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.Services;
+﻿using BusinessLogicLayer.Interfaces;
+using EntityLayer.DTOs;
 using EntityLayer.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -46,9 +47,20 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Asset asset)
+        public async Task<IActionResult> Add([FromBody] AssetDTO assetDto)
         {
             bool isAdded = false;
+            var asset = new Asset
+            {
+                Id = assetDto.Id,
+                Name = assetDto.Name,
+                X = assetDto.X,
+                Y = assetDto.Y,
+                LastSync = assetDto.LastSync,
+                FloorMapId = assetDto.FloorMapId,
+                Active = assetDto.Active
+            };
+
             if (asset != null)
             {
                 isAdded = await _assetService.AddAsset(asset);
@@ -61,10 +73,20 @@ namespace api.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromBody] Asset asset, [FromRoute] int id)
+        public async Task<IActionResult> Update([FromBody] AssetDTO assetDto, [FromRoute] int id)
         {
-            Console.WriteLine("TESTIRAMO ID iz route: " + id);
             bool isUpdated = false;
+            var asset = new Asset
+            {
+                Id = assetDto.Id,
+                Name = assetDto.Name,
+                X = assetDto.X,
+                Y = assetDto.Y,
+                LastSync = assetDto.LastSync,
+                FloorMapId = assetDto.FloorMapId,
+                Active = assetDto.Active
+            };
+
             if (asset != null)
             {
                 isUpdated = await _assetService.UpdateAsset(asset, id);

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EntityLayer.Entities
+namespace EntityLayer.Interfaces
 {
     public interface IAssetZoneHistory
     {

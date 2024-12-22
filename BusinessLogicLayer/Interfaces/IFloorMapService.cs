@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Repositories
+namespace BusinessLogicLayer.Interfaces
 {
-    public interface IFloorMapRepository
+    public interface IFloorMapService
     {
         Task<List<FloorMap>> GetAllFloorMaps();
         Task<FloorMap> GetFloorMapById(int id);
-        Task<int> AddFloorMap(FloorMap floorMap);
-        Task<int> UpdateFloorMap(FloorMap floorMap, int id);
-        Task<int> DeleteFloorMap(int id);
+        Task<bool> AddFloorMap(FloorMap floorMap);
+        Task<bool> UpdateFloorMap(FloorMap floorMap, int id);
+        Task<bool> DeleteFloorMap(int id);
     }
 }
