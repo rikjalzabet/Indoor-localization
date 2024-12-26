@@ -39,3 +39,12 @@ val testDataJSONMap = """
         }
     ]
 """
+
+val testAssetPositionJSON = """
+[
+    { "id": 1, "name": "Asset 1", "x": 0.2, "y": 0.2, "lastSync": "2024-12-02 00:00:00", "floorMapId": 1, "active": true },
+    { "id": 2, "name": "Asset 2", "x": 0.5, "y": 0.4, "lastSync": "2024-12-02 00:00:05", "floorMapId": 1, "active": true },
+    { "id": 3, "name": "Asset 3", "x": 0.1, "y": 0.1, "lastSync": "2024-12-02 00:00:10", "floorMapId": 1, "active": true },
+    { "id": 4, "name": "Asset 4", "x": 0.01, "y": 0.01, "lastSync": "2024-12-02 00:00:15", "floorMapId": 1, "active": true }
+]
+"""
