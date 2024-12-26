@@ -32,14 +32,17 @@ builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 builder.Services.AddScoped<IFloorMapRepository, FloorMapRepository>();
 builder.Services.AddScoped<IZoneRepository, ZoneRepository>();
 
-builder.Services.AddSingleton<IAssetPositionHistoryRepository, MockAssetPositionHistoryRepository>();
+builder.Services.AddScoped<IAssetPositionHistoryRepository, MockAssetPositionHistoryRepository>();
 
 //////// SERVICES
 
 builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddScoped<IZoneService, ZoneService>();
 builder.Services.AddScoped<IFloorMapService, FloorMapService>();
-builder.Services.AddSingleton<IAssetPositionHistoryService, AssetPositionHistoryService>();
+builder.Services.AddScoped<IAssetPositionHistoryService, AssetPositionHistoryService>();
+
+builder.Services.AddHostedService<MqttBackgroundService>();
+
 
 var app = builder.Build();
 
