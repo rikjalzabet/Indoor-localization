@@ -17,21 +17,28 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
-import hr.foi.air.ws.TestData.testDataJSONMap
 import hr.foi.air.indoorlocalization.parser.*
 import hr.foi.air.indoorlocalization.zones.ZoneOverlay
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.ui.graphics.drawscope.clipRect
 import hr.foi.air.core.models.IFloorMap
 import hr.foi.air.core.parser.floorMapList
 import hr.foi.air.core.parser.zonesList
+import hr.foi.air.indoorlocalization.asset.HomeMapAssetLiveMovement
+import hr.foi.air.core.movements.*
+
 
 @Composable
 fun MapHome(
     floorMap: IFloorMap,
-    //zones: List<IZone>
+    ILiveAssetMovement: ILiveAssetMovement
 ){
     val imageSize = remember { mutableStateOf(Size.Zero) }
     val imageOffset = remember { mutableStateOf(Offset.Zero) }
+    val currentPosition = remember { mutableStateOf(Offset.Zero) }
+
+    LaunchedEffect(Unit) {
+        ILiveAssetMovement.simulateLiveMovement(currentPosition, floorMap.id)
+    }
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -83,6 +90,27 @@ fun MapHome(
                     imageOffset = imageOffset.value
                 )
             }
+
+            Canvas(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                clipRect(
+                    left = imageOffset.value.x,
+                    top = imageOffset.value.y,
+                    right = imageOffset.value.x + imageSize.value.width,
+                    bottom = imageOffset.value.y + imageSize.value.height
+                ) {
+                    drawCircle(
+                        color = Color.Red,
+                        radius = 15f,
+                        center = Offset(
+                            x = imageOffset.value.x + currentPosition.value.x * imageSize.value.width,
+                            y = imageOffset.value.y + currentPosition.value.y * imageSize.value.height
+                        )
+                    )
+                }
+            }
+
         }
 
         Text(
@@ -99,6 +127,6 @@ fun MapHome(
 @Composable
 fun PreviewMapHome(){
     JsonDataParser().updateFloorMaps(hr.foi.air.ws.TestData.testDataJSONMap)
-    val testFloorMap = floorMapList[0] //TestData.getFloorMaps()[0]
-    MapHome(floorMap=testFloorMap)
+    val testFloorMap = floorMapList[0]
+    MapHome(floorMap=testFloorMap, HomeMapAssetLiveMovement())
 }
