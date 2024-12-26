@@ -23,18 +23,21 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import hr.foi.air.core.models.IFloorMap
 import hr.foi.air.core.parser.floorMapList
 import hr.foi.air.core.parser.zonesList
-import hr.foi.air.indoorlocalization.asset.simulateLiveMovement
+import hr.foi.air.indoorlocalization.asset.HomeMapAssetLiveMovement
+import hr.foi.air.core.movements.*
+
 
 @Composable
 fun MapHome(
-    floorMap: IFloorMap
+    floorMap: IFloorMap,
+    ILiveAssetMovement: ILiveAssetMovement
 ){
     val imageSize = remember { mutableStateOf(Size.Zero) }
     val imageOffset = remember { mutableStateOf(Offset.Zero) }
     val currentPosition = remember { mutableStateOf(Offset.Zero) }
 
     LaunchedEffect(Unit) {
-        simulateLiveMovement(currentPosition, floorMap.id)
+        ILiveAssetMovement.simulateLiveMovement(currentPosition, floorMap.id)
     }
 
     Box(modifier = Modifier
@@ -107,6 +110,7 @@ fun MapHome(
                     )
                 }
             }
+
         }
 
         Text(
@@ -123,6 +127,6 @@ fun MapHome(
 @Composable
 fun PreviewMapHome(){
     JsonDataParser().updateFloorMaps(hr.foi.air.ws.TestData.testDataJSONMap)
-    val testFloorMap = floorMapList[0] //TestData.getFloorMaps()[0]
-    MapHome(floorMap=testFloorMap)
+    val testFloorMap = floorMapList[0]
+    MapHome(floorMap=testFloorMap, HomeMapAssetLiveMovement())
 }
