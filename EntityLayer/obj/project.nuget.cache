@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "g3g4JvXC8pc=",
+  "dgSpecHash": "K62rmN2xXJU=",
   "success": true,
   "projectFilePath": "C:\\Users\\David\\Source\\Repos\\Indoor-localization\\EntityLayer\\EntityLayer.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\David\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

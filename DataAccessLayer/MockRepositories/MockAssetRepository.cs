@@ -1,13 +1,14 @@
-﻿using EntityLayer.Entities;
+﻿using DataAccessLayer.Interfaces;
+using EntityLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccessLayer.Repositories
+namespace DataAccessLayer.MockRepositories
 {
-    public class MockAssetRepository : IAssetRepository
+    public class MockAssetRepository : IRepository<Asset>
     {
 
         // ovaj repozitorij bude zamijenjen pravim repozitorijem nakon kreiranja EFC-a prema bazi
@@ -21,11 +22,11 @@ namespace DataAccessLayer.Repositories
         };
 
         // u pravom repozitoriju sa EFC ide public async, i await umjesto Task.FromResult..
-        public async Task<List<Asset>> GetAllAssets()
+        public async Task<IEnumerable<Asset>> GetAllAsync()
         {
             return await Task.FromResult(_assets);
         }
-        public async Task<int> AddAsset(Asset asset)
+        public async Task<int> AddAsync(Asset asset)
         {
             var existingAsset = _assets.FirstOrDefault(a => a.Id == asset.Id);
             if (existingAsset == null)
@@ -36,7 +37,7 @@ namespace DataAccessLayer.Repositories
             return 0;
         }
 
-        public async Task<int> DeleteAsset(int id)
+        public async Task<int> DeleteAsync(int id)
         {
             var existingAsset = _assets.FirstOrDefault(a => a.Id == id);
             if (existingAsset == null)
@@ -45,7 +46,7 @@ namespace DataAccessLayer.Repositories
             return 1;
         }
 
-        public async Task<Asset> GetAssetById(int id)
+        public async Task<Asset> GetByIdAsync(int id)
         {
             return await Task.FromResult(_assets.FirstOrDefault(a => a.Id == id));
         }

@@ -1,13 +1,14 @@
-﻿using System;
+﻿using EntityLayer.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Nodes;
+using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace EntityLayer.Entities
+namespace EntityLayer.DTOs
 {
-    public interface IZone
+    public class ZoneDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -1,4 +1,5 @@
-﻿using DataAccessLayer.Repositories;
+﻿using BusinessLogicLayer.Interfaces;
+using DataAccessLayer.Interfaces;
 using EntityLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -13,26 +14,24 @@ namespace BusinessLogicLayer.Services
         private readonly IAssetRepository _assetRepository;
         public AssetService(IAssetRepository assetRepository)
         {
-                _assetRepository = assetRepository;
+            _assetRepository = assetRepository;
         }
         public async Task<List<Asset>> GetAllAssets()
         {
-            var queryableAssets = await _assetRepository.GetAllAssets();
+            var queryableAssets = await _assetRepository.GetAllAsync();
             return queryableAssets.ToList();
         }
         public async Task<bool> AddAsset(Asset asset)
         {
-            bool isSuccessful = false;
-            int affectedRow = await _assetRepository.AddAsset(asset);
+            int affectedRow = await _assetRepository.AddAsync(asset);
 
-            isSuccessful = affectedRow > 0;
-            return isSuccessful;
+            return affectedRow > 0;
         }
 
         public async Task<bool> DeleteAsset(int id)
         {
             bool isSuccessful = false;
-            int affectedRow = await _assetRepository.DeleteAsset(id);
+            int affectedRow = await _assetRepository.DeleteAsync(id);
 
             isSuccessful = affectedRow > 0;
             return isSuccessful;
@@ -40,7 +39,7 @@ namespace BusinessLogicLayer.Services
 
         public async Task<Asset> GetAssetById(int id)
         {
-            var asset = await _assetRepository.GetAssetById(id);
+            var asset = await _assetRepository.GetByIdAsync(id);
             return asset;
         }
 
