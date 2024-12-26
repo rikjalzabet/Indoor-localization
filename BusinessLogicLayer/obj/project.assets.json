@@ -1017,7 +1017,8 @@
       "DataAccessLayer >= 1.0.0",
       "EntityLayer >= 1.0.0",
       "MQTTnet >= 4.3.7.1207",
-      "Microsoft.Extensions.Hosting.Abstractions >= 9.0.0"
+      "Microsoft.Extensions.Hosting.Abstractions >= 9.0.0",
+      "Newtonsoft.Json >= 13.0.3"
     ]
   },
   "packageFolders": {
@@ -1084,6 +1085,10 @@
           "Microsoft.Extensions.Hosting.Abstractions": {
             "target": "Package",
             "version": "[9.0.0, )"
+          },
+          "Newtonsoft.Json": {
+            "target": "Package",
+            "version": "[13.0.3, )"
           }
         },
         "imports": [

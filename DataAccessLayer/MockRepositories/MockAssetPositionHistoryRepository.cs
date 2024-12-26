@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.MockRepositories
 {
-    public class MockAssetPositionHistoryRepository : IAssetPositionHistoryRepository
+    public class MockAssetPositionHistoryRepository : IRepository<AssetPositionHistory>
     {
         private readonly List<AssetPositionHistory> _assetPositionHistories = new()
         {
@@ -58,7 +58,7 @@ namespace DataAccessLayer.MockRepositories
                 FloorMapId = 2
             }
         };
-        public async Task<int> AddAssetPositionHistory(AssetPositionHistory assetPositionHistory)
+        public async Task<int> AddAsync(AssetPositionHistory assetPositionHistory)
         {
             var existingAssetPositionHistory = _assetPositionHistories.FirstOrDefault(a => a.Id == assetPositionHistory.Id);
             if (existingAssetPositionHistory == null)
@@ -69,7 +69,12 @@ namespace DataAccessLayer.MockRepositories
             return 0;
         }
 
-        public async Task<List<AssetPositionHistory>> GetAssetPositionHistory()
+        public Task<int> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<AssetPositionHistory>> GetAllAsync()
         {
             return await Task.FromResult(_assetPositionHistories);
         }
@@ -78,6 +83,11 @@ namespace DataAccessLayer.MockRepositories
         {
 
             return await Task.FromResult(_assetPositionHistories.Where(a => a.FloorMapId == floorMapId).ToList());
+        }
+
+        public Task<AssetPositionHistory> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

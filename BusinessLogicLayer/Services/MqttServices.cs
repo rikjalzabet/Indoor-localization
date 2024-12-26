@@ -1,4 +1,6 @@
-﻿using DataAccessLayer.Interfaces;
+﻿using BusinessLogicLayer.Interfaces;
+using DataAccessLayer.Interfaces;
+using DataAccessLayer.Repositories;
 using EntityLayer.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,7 +31,7 @@ namespace BusinessLogicLayer.Services
         {
             var options = new MqttClientOptionsBuilder()
                 .WithClientId("DotNetApiClient")
-                .WithTcpServer("broker.emqx.io", 1883)
+                .WithTcpServer("broker.hivemq.com", 1883)
                 .Build();
 
             try
@@ -68,9 +70,9 @@ namespace BusinessLogicLayer.Services
                 if (positionData != null)
                 {
                     using var scope = _serviceProvider.CreateScope();
-                    var repository = scope.ServiceProvider.GetRequiredService<IAssetPositionHistoryRepository>();
+                    var service = scope.ServiceProvider.GetRequiredService<IAssetPositionHistoryService>();
 
-                    await SavePositionToDatabaseAsync(repository, positionData, stoppingToken);
+                    await SavePositionToDatabaseAsync(service, positionData, stoppingToken);
                 }
             }
             catch (Exception ex)
@@ -79,9 +81,9 @@ namespace BusinessLogicLayer.Services
             }
         }
 
-        private async Task SavePositionToDatabaseAsync(IAssetPositionHistoryRepository repository, AssetPositionHistory positionData, CancellationToken stoppingToken)
+        private async Task SavePositionToDatabaseAsync(IAssetPositionHistoryService service, AssetPositionHistory positionData, CancellationToken stoppingToken)
         {
-            await repository.AddAssetPositionHistory(positionData);
+            await service.AddAssetPositionHistory(positionData);
 
             Console.WriteLine("Spremam poziciju u bazu!");
             await Task.CompletedTask;
