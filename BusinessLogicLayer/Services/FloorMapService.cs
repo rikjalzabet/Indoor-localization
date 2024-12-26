@@ -18,11 +18,9 @@ namespace BusinessLogicLayer.Services
         }
         public async Task<bool> AddFloorMap(FloorMap floorMap)
         {
-            bool isSuccessful = false;
             int affectedRow = await _floorMapRepository.AddAsync(floorMap);
 
-            isSuccessful = affectedRow > 0;
-            return isSuccessful;
+            return affectedRow > 0;
         }
 
         public async Task<bool> DeleteFloorMap(int id)

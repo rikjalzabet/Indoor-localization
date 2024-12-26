@@ -23,11 +23,9 @@ namespace BusinessLogicLayer.Services
         }
         public async Task<bool> AddAsset(Asset asset)
         {
-            bool isSuccessful = false;
             int affectedRow = await _assetRepository.AddAsync(asset);
 
-            isSuccessful = affectedRow > 0;
-            return isSuccessful;
+            return affectedRow > 0;
         }
 
         public async Task<bool> DeleteAsset(int id)
