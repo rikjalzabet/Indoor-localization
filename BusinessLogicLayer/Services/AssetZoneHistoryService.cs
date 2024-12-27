@@ -35,23 +35,45 @@ namespace BusinessLogicLayer.Services
 
             if (currentZone == null)
             {
+                Console.WriteLine("Asset nije unutar nijedne zone.");
+
                 if (lastAssetZoneHistory != null && lastAssetZoneHistory.ExitDateTime == null)
                 {
                     lastAssetZoneHistory.ExitDateTime = DateTime.UtcNow;
-                    lastAssetZoneHistory.RetentionTime = lastAssetZoneHistory.ExitDateTime - lastAssetZoneHistory.EnterDateTime;
+                    if(lastAssetZoneHistory.EnterDateTime > lastAssetZoneHistory.ExitDateTime)
+                    {
+                        lastAssetZoneHistory.RetentionTime = lastAssetZoneHistory.EnterDateTime - lastAssetZoneHistory.ExitDateTime;
+                    }
+                    else
+                        lastAssetZoneHistory.RetentionTime = lastAssetZoneHistory.ExitDateTime - lastAssetZoneHistory.EnterDateTime;
+
+                    Console.WriteLine($"Enter: {lastAssetZoneHistory.EnterDateTime}");
+                    Console.WriteLine($"Exit: {lastAssetZoneHistory.ExitDateTime}");
+                    Console.WriteLine($"Retention Time: {lastAssetZoneHistory.RetentionTime}");
+
                     await _assetZoneHistoryRepository.UpdateZoneHistory(lastAssetZoneHistory);
                 }
             }
             else
             {
+                Console.WriteLine($"Asset ulazi u zonu {currentZone.Id}.");
+
                 // Ako je asset u novoj zoni
-                if (lastAssetZoneHistory == null || lastAssetZoneHistory.ZoneId != currentZone.Id)
+                if (lastAssetZoneHistory == null || lastAssetZoneHistory.ZoneId != currentZone.Id || lastAssetZoneHistory.ExitDateTime != null)
                 {
+                    Console.WriteLine("Asset ulazi u novu zonu ili nema prethodni zapis.");
+
                     // Zatvori prethodnu zonu (ako postoji)
                     if (lastAssetZoneHistory != null && lastAssetZoneHistory.ExitDateTime == null)
                     {
                         lastAssetZoneHistory.ExitDateTime = DateTime.UtcNow;
-                        lastAssetZoneHistory.RetentionTime = lastAssetZoneHistory.ExitDateTime - lastAssetZoneHistory.EnterDateTime;
+                        if (lastAssetZoneHistory.EnterDateTime > lastAssetZoneHistory.ExitDateTime)
+                        {
+                            lastAssetZoneHistory.RetentionTime = lastAssetZoneHistory.EnterDateTime - lastAssetZoneHistory.ExitDateTime;
+                        }
+                        else
+                            lastAssetZoneHistory.RetentionTime = lastAssetZoneHistory.ExitDateTime - lastAssetZoneHistory.EnterDateTime;
+                        
                         await _assetZoneHistoryRepository.UpdateZoneHistory(lastAssetZoneHistory);
                     }
 
@@ -62,6 +84,8 @@ namespace BusinessLogicLayer.Services
                         ZoneId = currentZone.Id,
                         EnterDateTime = DateTime.UtcNow
                     };
+                    Console.WriteLine($"Dodajem novi zapis za Asset {position.AssetId} u zonu {currentZone.Id}.");
+
                     await _assetZoneHistoryRepository.AddAsync(newAssetZoneHistory);
                 }
             }
