@@ -21,9 +21,21 @@ namespace DataAccessLayer.Repositories
             return await Entities.Where(a => a.AssetId == assetId).OrderByDescending(a => a.EnterDateTime).FirstOrDefaultAsync();
         }
 
-        public async Task UpdateZoneHistory(AssetZoneHistory assetZoneHistory)
+        public async Task<int> UpdateZoneHistory(AssetZoneHistory assetZoneHistory)
         {
-            
+            var existingAssetZoneHistory = await Entities.FindAsync(assetZoneHistory.Id);
+
+            if (existingAssetZoneHistory != null)
+            {
+                existingAssetZoneHistory.Id = assetZoneHistory.Id;
+                existingAssetZoneHistory.AssetId = assetZoneHistory.AssetId;
+                existingAssetZoneHistory.ZoneId = assetZoneHistory.ZoneId;
+                existingAssetZoneHistory.EnterDateTime = assetZoneHistory.EnterDateTime;
+                existingAssetZoneHistory.ExitDateTime = assetZoneHistory.ExitDateTime;
+                existingAssetZoneHistory.RetentionTime = assetZoneHistory.RetentionTime;
+            }
+
+            return await _context.SaveChangesAsync();
         }
     }
 }
