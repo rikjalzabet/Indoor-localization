@@ -13,7 +13,9 @@
   <mat-card appearance="outlined">
     <mat-card-content> HeatMap</mat-card-content>
   </mat-card>
-  <img *ngIf="getFloorMapImage(selectedFloorMapId)" [src]="getFloorMapImage(selectedFloorMapId)" alt="Selected Floor Map" style="max-width: 100%; height: auto; margin-top: 10px;" />
+  <div id="heatmapContainer" *ngIf="getFloorMapImage(selectedFloorMapId)" style="width: 100%; height: auto;">
+    <img [src]="getFloorMapImage(selectedFloorMapId)" alt="Selected Floor Map" style="max-width: 100%; height: auto; margin-top: 10px;" />
+  </div>
 <mat-card appearance="outlined">
     <mat-card-content> Asset History</mat-card-content>
   </mat-card>
@@ -62,5 +64,7 @@
           ></tr>
 
     </table>
+ 
   </div>
+    
 </div>

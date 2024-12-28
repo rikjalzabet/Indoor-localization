@@ -67,12 +67,12 @@ export class WebUiService {
         {
           id :1,
           name: 'Floor map A',
-          image: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Blue_rectangle.png'
+          image: 'https://wpmedia.roomsketcher.com/content/uploads/2022/01/06145940/What-is-a-floor-plan-with-dimensions.png'
         },
         {
           id :2,
           name: 'Floor map B',
-          image: 'Image 2'
+          image: 'https://wpmedia.roomsketcher.com/content/uploads/2022/01/06145940/What-is-a-floor-plan-with-dimensions.png'
         },
         {
           id :3,
@@ -97,20 +97,21 @@ export class WebUiService {
     }
 
     public getAssetPositionHistory(FloorMapId: number): Observable<IAssetPositionHistory[]>  {
+      if(FloorMapId==1){
       const mockAssetPositionHistory: IAssetPositionHistory[] = [
         {
           id: 1,
           assetId: 1,
-          x: 34.56,
-          y: 78.90,
+          x: 100,
+          y: 100,
           dateTime: new Date('2024-12-09T10:00:00Z'),
           floorMapId: 1,
       },
       {
           id: 2,
           assetId: 1,
-          x: 40.12,
-          y: 85.67,
+          x: 200,
+          y: 150,
           dateTime: new Date('2024-12-09T10:05:00Z'),
           floorMapId: 1,
       },
@@ -125,6 +126,19 @@ export class WebUiService {
       ];
 
       return of(mockAssetPositionHistory);
-    }
+    }else{
+      const mockAssetPositionHistory: IAssetPositionHistory[] = [
+        {
+          id: 6,
+          assetId: 2,
+          x: 100,
+          y: 100,
+          dateTime: new Date('2024-12-09T10:00:00Z'),
+          floorMapId: 1,
+      },
+      ];
+
+      return of(mockAssetPositionHistory);
+    }}
   }
 

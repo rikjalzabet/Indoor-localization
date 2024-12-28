@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, OnInit,ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -14,6 +14,8 @@ import {MatCardModule} from '@angular/material/card';
 import { IAsset } from '../models/iasset';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatRadioModule } from '@angular/material/radio';
+import * as h337 from 'heatmap.js';
+
 @Component({
   selector: 'app-reports',
   standalone: true,
@@ -31,7 +33,7 @@ import { MatRadioModule } from '@angular/material/radio';
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.css'
 })
-export class ReportsComponent implements OnInit{
+export class ReportsComponent implements OnInit,AfterViewInit,AfterViewChecked{
   floorMaps? : IFloorMap[];
   assets? : IAsset[];
   dataSource = new MatTableDataSource<IAssetPositionHistory>([]);
@@ -41,6 +43,7 @@ export class ReportsComponent implements OnInit{
   assetPositionHistory? : IAssetPositionHistory[];
   assetMap = new Map<number,string>();
   selection = new SelectionModel<IAsset>(false, []);
+  heatmap: any;
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -51,7 +54,38 @@ export class ReportsComponent implements OnInit{
     this.fetchFloorMaps();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewChecked() : void{
+    if (!this.heatmap) {
+      this.createHeatmap();
+    }
+
+    // Prepare the data for the heatmap
+    const data = {
+      min: 0,
+      max: 100,
+      data: this.assetPositionHistory?.map(item => ({
+        x: item.x,
+        y: item.y,
+        value: 10,  // Adjust the value as needed
+      })) ?? [],
+    };
+
+    console.log("PODACI", data);
+    // Clear the existing data
+    this.heatmap.setData({ data: [] });
+
+    // Set the new data to the heatmap
+    this.heatmap.setData(data);
+  }
+
+  createHeatmap(): void {
+    this.heatmap = h337.create({
+      container: document.getElementById('heatmapContainer') as HTMLElement,
+    });
+  }
+
+
+  ngAfterViewInit() : void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
 }
