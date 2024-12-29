@@ -15,6 +15,10 @@ import { IAsset } from '../models/iasset';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatRadioModule } from '@angular/material/radio';
 import * as h337 from 'heatmap.js';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+import { title } from 'process';
+
 
 @Component({
   selector: 'app-reports',
@@ -146,5 +150,19 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
       error: (err) => console.error('Error fetching data', err),
     });
     console.log(this.assetPositionHistory);
+  }
+
+  downloadPdf(): void{
+
+    const doc = new jsPDF();
+
+    (doc as any).autoTable({
+      head: [['Asset Name','X', 'Y', 'Date']],
+      body: this.assetPositionHistory?.map(item => [this.getAssetName(item.assetId),item.x, item.y, item.dateTime]),
+    });
+
+  
+    doc.save('Assets_'+ this.selectedFloorMapId + '_' + Date.now() +'.pdf');
+
   }
 }
