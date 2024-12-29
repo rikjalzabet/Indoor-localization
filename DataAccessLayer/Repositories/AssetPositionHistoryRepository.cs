@@ -19,7 +19,7 @@ namespace DataAccessLayer.Repositories
         }
         public async Task<IEnumerable<AssetPositionHistory>> GetAssetPositionHistoryByFloorMapId(int floorMapId)
         {
-            return await Entities.Include("Asset").Include("FloorMap").ToListAsync();
+            return await Entities.Include("Asset").Include("FloorMap").Where(a => a.FloorMapId == floorMapId).ToListAsync();
         }
     }
 }

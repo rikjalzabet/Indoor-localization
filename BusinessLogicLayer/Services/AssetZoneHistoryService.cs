@@ -1,5 +1,6 @@
 ﻿using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Interfaces;
+using DataAccessLayer.Repositories;
 using EntityLayer.Entities;
 using Newtonsoft.Json;
 using System;
@@ -124,5 +125,22 @@ namespace BusinessLogicLayer.Services
             return (intersections % 2) != 0;
         }
 
+        public async Task<List<AssetZoneHistory>> GetAssetZoneHistory()
+        {
+            var assetZoneHistories = await _assetZoneHistoryRepository.GetAllAsync();
+            return assetZoneHistories.ToList();
+        }
+
+        public async Task<List<AssetZoneHistory>> GetAssetZoneHistoryByAssetId(int assetId)
+        {
+            var assetZoneHistoriesByAssetId = await _assetZoneHistoryRepository.GetAssetZoneHistoryByAssetId(assetId);
+            return assetZoneHistoriesByAssetId.ToList();
+        }
+
+        public async Task<List<AssetZoneHistory>> GetAssetZoneHistoryByZoneId(int zoneId)
+        {
+            var assetZoneHistoriesByZoneId = await _assetZoneHistoryRepository.GetAssetZoneHistoryByZoneId(zoneId);
+            return assetZoneHistoriesByZoneId.ToList();
+        }
     }
 }

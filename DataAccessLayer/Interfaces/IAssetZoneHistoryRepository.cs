@@ -11,5 +11,8 @@ namespace DataAccessLayer.Interfaces
     {
         Task<int> UpdateZoneHistory(AssetZoneHistory assetZoneHistory);
         Task<AssetZoneHistory> GetLatesByAssetId(int assetId);
+        Task<IEnumerable<AssetZoneHistory>> GetAssetZoneHistoryByAssetId(int assetId);
+        Task<IEnumerable<AssetZoneHistory>> GetAssetZoneHistoryByZoneId(int zoneId);
+
     }
 }

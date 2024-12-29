@@ -16,6 +16,16 @@ namespace DataAccessLayer.Repositories
 
         }
 
+        public async Task<IEnumerable<AssetZoneHistory>> GetAssetZoneHistoryByAssetId(int assetId)
+        {
+            return await Entities.Include("Asset").Include("Zone").Where(a => a.AssetId == assetId).ToListAsync();
+        }
+
+        public async Task<IEnumerable<AssetZoneHistory>> GetAssetZoneHistoryByZoneId(int zoneId)
+        {
+            return await Entities.Include("Asset").Include("Zone").Where(a => a.ZoneId == zoneId).ToListAsync();
+        }
+
         public async Task<AssetZoneHistory> GetLatesByAssetId(int assetId)
         {
             return await Entities.Where(a => a.AssetId == assetId).OrderByDescending(a => a.EnterDateTime).FirstOrDefaultAsync();
