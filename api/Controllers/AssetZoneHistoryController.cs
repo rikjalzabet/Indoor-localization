@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Interfaces;
+using BusinessLogicLayer.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,7 +27,33 @@ namespace api.Controllers
             {
                 return BadRequest();
             }
+        }
 
+        [HttpGet("{assetId}")]
+        public async Task<IActionResult> GetAssetZoneHistoriesByAssetId(int assetId)
+        {
+            var assetZoneHistoriesByAssetId = await _assetZoneHistoryService.GetAssetZoneHistoryByAssetId(assetId);
+            if (assetZoneHistoriesByAssetId != null)
+            {
+                return Ok(assetZoneHistoriesByAssetId);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("{zoneId}")]
+        public async Task<IActionResult> GetAssetZoneHistoriesByZoneId(int zoneId)
+        {
+            var assetZoneHistoriesByZoneId = await _assetZoneHistoryService.GetAssetZoneHistoryByAssetId(zoneId);
+            if (assetZoneHistoriesByZoneId != null)
+            {
+                return Ok(assetZoneHistoriesByZoneId);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }
