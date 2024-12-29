@@ -49,6 +49,10 @@ namespace DataAccessLayer.Repositories
             {
                 return await Entities.Include("Asset").Include("FloorMap").ToListAsync();
             }
+            else if (typeof(T) == typeof(AssetZoneHistory))
+            {
+                return await Entities.Include("Asset").Include("Zone").ToListAsync();
+            }
             else return await Entities.ToListAsync();
         }
 

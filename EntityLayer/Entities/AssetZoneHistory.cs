@@ -15,7 +15,7 @@ namespace EntityLayer.Entities
         public DateTime? ExitDateTime { get; set; }
         public TimeSpan? RetentionTime { get; set; }
 
-        public virtual Asset Asset { get; set; }
-        public virtual Zone Zone { get; set; }
+        public virtual Asset Asset { get; set; } = null!;
+        public virtual Zone Zone { get; set; } = null!;
     }
 }

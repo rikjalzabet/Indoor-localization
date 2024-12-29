@@ -42,7 +42,8 @@ namespace api.Controllers
                 return BadRequest();
             }
         }
-        [HttpGet("{zoneId}")]
+
+        /*[HttpGet("{zoneId}")]
         public async Task<IActionResult> GetAssetZoneHistoriesByZoneId(int zoneId)
         {
             var assetZoneHistoriesByZoneId = await _assetZoneHistoryService.GetAssetZoneHistoryByAssetId(zoneId);
@@ -54,6 +55,6 @@ namespace api.Controllers
             {
                 return BadRequest();
             }
-        }
+        }*/
     }
 }
