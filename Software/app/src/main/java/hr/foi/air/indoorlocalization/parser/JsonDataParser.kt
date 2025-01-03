@@ -38,7 +38,9 @@ class JsonDataParser(): DataParser {
             .setDateFormat("yyyy-MM-dd HH:mm:ss")
             .create()
         val assets: List<Asset> = gson.fromJson(data, object : TypeToken<List<Asset>>() {}.type)
+        Log.d("JsonDataParser", "Parsed ${assets.size} assets")
         assets.forEach { newAsset ->
+            Log.d("JsonDataParserAB", "Asset: ${newAsset.id}, x = ${newAsset.x}, y = ${newAsset.y}")
             if (liveAssetPositionList.none { it.id == newAsset.id }) {
                 liveAssetPositionList.add(newAsset)
             }

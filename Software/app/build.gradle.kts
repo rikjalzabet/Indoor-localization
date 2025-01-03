@@ -72,6 +72,8 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.11.0")
 
+    //implementation("ca.heartlandsoftware:androidheatmap:1.2.0")
+
     implementation(project(":core"))
     implementation(project(":ws"))
 }

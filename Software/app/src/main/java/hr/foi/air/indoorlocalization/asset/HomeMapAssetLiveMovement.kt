@@ -21,12 +21,12 @@ class HomeMapAssetLiveMovement(): ILiveAssetMovement {
             return
         }
 
-        Log.i("AssetLiveMovement", "Found ${liveAssetPositions.size} asset positions for floor map $floorMapId")
+        //Log.i("AssetLiveMovement", "Found ${liveAssetPositions.size} asset positions for floor map $floorMapId")
 
         var index = 0
         while (true) {
             val assetPosition = liveAssetPositions[index]
-            Log.i("AssetLiveMovement", "Moving asset ${assetPosition.id} to position (${assetPosition.x}, ${assetPosition.y})")
+            //Log.i("AssetLiveMovement", "Moving asset ${assetPosition.id} to position (${assetPosition.x}, ${assetPosition.y})")
             withContext(Dispatchers.Main) {
                 currentPosition.value = Offset(assetPosition.x, assetPosition.y)
             }
