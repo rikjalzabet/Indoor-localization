@@ -1,0 +1,9 @@
+<div *ngIf="floorMaps && floorMaps.length > 0">
+    <h2>Floor Maps</h2>
+    <mat-list>
+      <mat-list-item *ngFor="let floorMap of floorMaps">
+        <button mat-button (click)="selectedFloorMapId = floorMap.id">{{ floorMap.name }}</button>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  
