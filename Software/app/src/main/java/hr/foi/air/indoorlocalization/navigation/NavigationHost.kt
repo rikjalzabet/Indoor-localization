@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import hr.foi.air.core.movements.ILiveAssetMovement
 import hr.foi.air.core.parser.floorMapList
+import hr.foi.air.indoorlocalization.asset.HeatmapAssetLiveMovement
 import hr.foi.air.indoorlocalization.asset.HomeMapAssetLiveMovement
 import hr.foi.air.ws.TestData.*
 import hr.foi.air.indoorlocalization.navigation.items.Heatmap
@@ -32,7 +33,11 @@ fun NavigationHost(
             MapHome(floorMap = floorMap, HomeMapAssetLiveMovement())
         }
         composable(BottomNavigationItem.Heatmap.route) {
-            Heatmap()
+            JsonDataParser().updateFloorMaps(testDataJSONMap)
+            val floorMap = floorMapList[0]
+            JsonDataParser().updateZones(testDataJSONZones)
+            JsonDataParser().updateLiveAssetPositions(testAssetPositionJSON)
+            Heatmap(floorMap = floorMap, HeatmapAssetLiveMovement())
         }
         composable(BottomNavigationItem.Reports.route) {
             Reports()
