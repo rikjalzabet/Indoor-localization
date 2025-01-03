@@ -21,7 +21,7 @@ namespace DataAccessLayer
         public DbSet<FloorMap> FloorMaps { get; set; }
 
         public DbSet<AssetPositionHistory> AssetPositionHistory { get; set; }
-        //public DbSet<AssetZoneHistory> AssetZoneHistory { get; set; }
+        public DbSet<AssetZoneHistory> AssetZoneHistory { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -65,19 +65,19 @@ namespace DataAccessLayer
             });
 
             // AssetZoneHistory konfiguracija
-            /*modelBuilder.Entity<AssetZoneHistory>(entity =>
+            modelBuilder.Entity<AssetZoneHistory>(entity =>
             {
                 entity.HasKey(a => a.Id);
-                entity.HasOne(a => a.Asset)
+                /*entity.HasOne(a => a.Asset)
                       .WithMany()
                       .HasForeignKey(a => a.AssetId)
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(a => a.Zone)
                       .WithMany()
-                      .HasForeignKey(a => a.ZoneId);
+                      .HasForeignKey(a => a.ZoneId);*/
             });
-            */
+            
             base.OnModelCreating(modelBuilder);
 
         }

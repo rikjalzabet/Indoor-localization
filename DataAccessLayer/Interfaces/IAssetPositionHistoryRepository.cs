@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Interfaces
 {
-    public interface IAssetPositionHistoryRepository
+    public interface IAssetPositionHistoryRepository : IRepository<AssetPositionHistory>
     {
-        Task<List<AssetPositionHistory>> GetAssetPositionHistory();
-        Task<List<AssetPositionHistory>> GetAssetPositionHistoryByFloorMapId(int floorMapId);
-        Task<int> AddAssetPositionHistory(AssetPositionHistory assetPositionHistory);
+        Task<IEnumerable<AssetPositionHistory>> GetAssetPositionHistoryByFloorMapId(int floorMapId);
     }
 }

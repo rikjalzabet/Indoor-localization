@@ -19,21 +19,21 @@ namespace BusinessLogicLayer.Services
 
         public async Task<bool> AddAssetPositionHistory(AssetPositionHistory assetPositionHistory)
         {
-            int affectedRow = await _assetPositionHistoryRepository.AddAssetPositionHistory(assetPositionHistory);
+            int affectedRow = await _assetPositionHistoryRepository.AddAsync(assetPositionHistory);
 
             return affectedRow > 0;
         }
 
         public async Task<List<AssetPositionHistory>> GetAssetPositionHistory()
         {
-            var assetPositionHistories = await _assetPositionHistoryRepository.GetAssetPositionHistory();
-            return assetPositionHistories;
+            var assetPositionHistories = await _assetPositionHistoryRepository.GetAllAsync();
+            return assetPositionHistories.ToList();
         }
 
         public async Task<List<AssetPositionHistory>> GetAssetPositionHistoryByFloorMapId(int floorMapId)
         {
             var assetPositionHistoriesByFloorMapId = await _assetPositionHistoryRepository.GetAssetPositionHistoryByFloorMapId(floorMapId);
-            return assetPositionHistoriesByFloorMapId;
+            return assetPositionHistoriesByFloorMapId.ToList();
         }
     }
 }

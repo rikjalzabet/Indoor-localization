@@ -27,19 +27,26 @@ builder.Services.AddSwaggerGen();
 //builder.Services.AddScoped<IRepository<Asset>, MockAssetRepository>();
 //builder.Services.AddScoped<IRepository<FloorMap>, MockFloorMapRepository>();
 //builder.Services.AddScoped<IRepository<Zone>, MockZoneRepository>();
+//builder.Services.AddScoped<IAssetPositionHistoryRepository, MockAssetPositionHistoryRepository>();
+
 
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 builder.Services.AddScoped<IFloorMapRepository, FloorMapRepository>();
 builder.Services.AddScoped<IZoneRepository, ZoneRepository>();
+builder.Services.AddScoped<IAssetPositionHistoryRepository, AssetPositionHistoryRepository>();
+builder.Services.AddScoped<IAssetZoneHistoryRepository, AssetZoneHistoryRepository>();
 
-builder.Services.AddSingleton<IAssetPositionHistoryRepository, MockAssetPositionHistoryRepository>();
 
 //////// SERVICES
 
 builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddScoped<IZoneService, ZoneService>();
 builder.Services.AddScoped<IFloorMapService, FloorMapService>();
-builder.Services.AddSingleton<IAssetPositionHistoryService, AssetPositionHistoryService>();
+builder.Services.AddScoped<IAssetPositionHistoryService, AssetPositionHistoryService>();
+builder.Services.AddScoped<IAssetZoneHistoryService, AssetZoneHistoryService>();
+
+builder.Services.AddHostedService<MqttBackgroundService>();
+
 
 var app = builder.Build();
 
