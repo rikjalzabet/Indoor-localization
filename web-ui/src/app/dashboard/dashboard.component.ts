@@ -43,4 +43,8 @@ export class DashboardComponent implements OnInit {
     const floorMap = this.floorMaps?.find((fm) => fm.id === floorMapId);
     return floorMap?.image;
   }
+
+  selectFloorMap(floorMapId: number): void {
+    this.selectedFloorMapId = floorMapId;
+  }
 }

@@ -1,0 +1,8 @@
+.floor-map-container {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+.floor-map-image{
+    padding: 5%;
+}

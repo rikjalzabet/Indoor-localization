@@ -66,7 +66,7 @@ export class WebUiService {
         {
           id :1,
           name: 'Floor map A',
-          image: 'Image 1'
+          image: 'https://wpmedia.roomsketcher.com/content/uploads/2022/01/06145940/What-is-a-floor-plan-with-dimensions.png'
         },
         {
           id :2,
