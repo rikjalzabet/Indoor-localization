@@ -4,13 +4,16 @@ import { WebUiService } from '../services/web-ui.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
+import { IAsset } from '../models/iasset';
+import { MatIcon,MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule,
     MatButtonModule,
-    MatListModule
+    MatListModule,
+    MatIconModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -19,6 +22,7 @@ export class DashboardComponent implements OnInit {
   floorMaps? : IFloorMap[];
   floorMapMap = new Map<number, string>();
   selectedFloorMapId?: number;
+  assets? : IAsset[];
 
   constructor(private webUiService: WebUiService){}
   
@@ -41,7 +45,18 @@ export class DashboardComponent implements OnInit {
       return undefined;
     }
     const floorMap = this.floorMaps?.find((fm) => fm.id === floorMapId);
+    this.getAssets(floorMapId);
     return floorMap?.image;
+  }
+
+  getAssets(floorMapId?: number): void {
+    this.webUiService.getAssets().subscribe({
+      next:(data)=>{
+        this.assets = data.filter(asset => asset.floorMapId == floorMapId );
+      },
+      error: (err) => console.error('Error fetching data', err)
+    })
+    console.log("ASSETI:" , this.assets);
   }
 
   selectFloorMap(floorMapId: number): void {

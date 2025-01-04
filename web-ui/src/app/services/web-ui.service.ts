@@ -23,8 +23,8 @@ export class WebUiService {
         {
           id: 2,
           name: 'Asset B',
-          x: 34.56,
-          y: 78.90,
+          x: 100,
+          y: 200,
           lastSync: new Date('2024-11-10T15:30:00Z'),
           floorMapId: 1,
           active: false,
@@ -54,6 +54,15 @@ export class WebUiService {
           y: 12.34,
           lastSync: new Date('2024-11-12T09:00:00Z'),
           floorMapId: 3,
+          active: false,
+        },
+        {
+          id: 6,
+          name: 'Asset Z',
+          x: 0,
+          y: 0,
+          lastSync: new Date('2024-11-10T15:30:00Z'),
+          floorMapId: 1,
           active: false,
         },
       ];
