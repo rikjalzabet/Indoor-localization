@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
 import hr.foi.air.core.models.IAsset
+import hr.foi.air.core.models.IAssetPositionHistory
 import hr.foi.air.core.models.IFloorMap
 import hr.foi.air.core.models.IZone
 
@@ -13,6 +14,7 @@ import hr.foi.air.core.models.IZone
 val floorMapList = mutableStateListOf<IFloorMap>()
 val zonesList = mutableStateListOf<IZone>()
 val liveAssetPositionList = mutableStateListOf<IAsset>()
+val historyAssetPositionList = mutableStateListOf<IAssetPositionHistory>()
 
 
 

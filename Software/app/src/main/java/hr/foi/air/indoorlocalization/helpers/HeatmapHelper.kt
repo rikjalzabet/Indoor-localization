@@ -1,7 +1,15 @@
 package hr.foi.air.indoorlocalization.helpers
 
+import android.icu.text.DateFormat
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import hr.foi.air.core.models.HeatmapDot
+import hr.foi.air.core.models.impl.Asset
+import hr.foi.air.core.models.impl.AssetPositionHistory
+import hr.foi.air.core.parser.historyAssetPositionList
+import hr.foi.air.core.parser.liveAssetPositionList
+import java.util.Date
+
 
 fun calculateColorForFrequency(frequency: Int): Color {
     return when {
@@ -23,4 +31,20 @@ fun calculateSizeForColor(color: Color, dot: HeatmapDot): Float {
         Color.Yellow -> dot.minSize
         else -> dot.liveMovementSize
     }
+}
+
+fun calculateDotFrequency() {
+    // TODO
+}
+
+fun groupAssetPositionHistoryByTime(data: List<AssetPositionHistory>): Map<Date, List<AssetPositionHistory>>{
+    return data.groupBy { it.dateTime }
+}
+
+fun convertAssetPositionHistoryToHeatmapPoints(floorMapId : Int, data: List<AssetPositionHistory>) : List<HeatmapDot>{
+
+    val historyAssetPositions = historyAssetPositionList.filter { it.floorMapId == floorMapId }
+
+   // TODO
+
 }

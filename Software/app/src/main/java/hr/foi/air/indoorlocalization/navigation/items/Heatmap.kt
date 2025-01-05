@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalContext
@@ -145,7 +146,8 @@ fun Heatmap(
                     heatmapDots.forEach { dot ->
                         val color = calculateColorForFrequency(dot.frequency)
 
-                        val size = calculateSizeForColor(color,dot)//calculateSizeForFrequency(dot.frequency)
+                        //val size = calculateSizeForColor(color,dot)
+                        val size = calculateSizeForFrequency(dot.frequency)
 
                         drawCircle(
                             color = color.copy(alpha = 0.5f),
@@ -167,8 +169,24 @@ fun Heatmap(
 }
 
 @Composable
-fun HistoryHeatmap(){
-    //TODO
+fun HistoryHeatmap(
+    modifier: Modifier = Modifier,
+    points: List<HeatmapDot>
+){
+    Canvas(
+        modifier = modifier.fillMaxSize()
+    ) {
+        drawIntoCanvas { canvas ->
+            points.forEach { point ->
+
+               drawCircle(
+                   color = calculateColorForFrequency(point.frequency),
+                   center = point.position,
+                   radius = calculateSizeForFrequency(point.frequency)
+               )
+            }
+        }
+    }
 }
 
 @Composable
