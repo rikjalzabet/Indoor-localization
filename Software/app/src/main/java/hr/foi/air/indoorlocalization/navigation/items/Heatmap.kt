@@ -9,6 +9,7 @@ import hr.foi.air.indoorlocalization.asset.HeatmapAssetLiveMovement
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.foundation.*
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import hr.foi.air.indoorlocalization.parser.*
 import hr.foi.air.core.parser.floorMapList
@@ -42,6 +44,27 @@ fun Heatmap(
 
     LaunchedEffect(Unit) {
         ILiveAssetMovement.simulateLiveMovement(currentPosition, floorMap.id)
+    }
+
+    // live heatmap or history heatmap toggle
+    val radioOptions = listOf("Live", "History")
+    val selectedOption = remember { mutableStateOf(radioOptions[0]) }
+
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(5.dp)
+       ,
+        horizontalArrangement = Arrangement.SpaceEvenly){
+        radioOptions.forEach { text ->
+                ToggleButton(
+                    text = text,
+                    isSelected = selectedOption.value == text,
+                    onClick = { selectedOption.value = text}
+                )
+
+
+
+        }
     }
 
     Box(modifier = Modifier
@@ -73,14 +96,14 @@ fun Heatmap(
             painter = painter,
             contentDescription = "Floor Map",
             modifier= Modifier
-                .onGloballyPositioned { coordinates->
+                .onGloballyPositioned { coordinates ->
                     val bounds = coordinates.size
                     val position = coordinates.positionInRoot()
                     imageSize.value = Size(
                         bounds.width.toFloat(),
                         bounds.height.toFloat()
                     )
-                    imageOffset.value=position
+                    imageOffset.value = position
                 }
                 .fillMaxWidth()
                 .padding(5.dp)
@@ -121,6 +144,7 @@ fun Heatmap(
 
                     heatmapDots.forEach { dot ->
                         val color = calculateColorForFrequency(dot.frequency)
+
                         val size = calculateSizeForColor(color,dot)//calculateSizeForFrequency(dot.frequency)
 
                         drawCircle(
@@ -142,6 +166,31 @@ fun Heatmap(
     }
 }
 
+@Composable
+fun HistoryHeatmap(){
+    //TODO
+}
+
+@Composable
+fun LiveHeatmap(){
+    //TODO
+}
+
+@Composable
+fun ToggleButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable { onClick() }
+    ) {
+        RadioButton(
+            selected = isSelected,
+            onClick = null
+        )
+        Text(
+            text = text
+        )
+    }
+}
 
 
 @Preview
