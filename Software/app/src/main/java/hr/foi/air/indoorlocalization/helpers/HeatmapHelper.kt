@@ -45,12 +45,12 @@ fun calculateHeatmapDotsInDateRange(floorMapId : Int, size : Size, fromDate: Dat
     }
 
     val historyWithinRange = historyAssetPositions.filter { it.dateTime in fromDate..toDate}
-    val areaSizeToGroupBy = 32f
+    val areaSizeToGroupBy = 32
 
     val groupedHistory = historyWithinRange.groupBy {
         Offset(
-            x = ((it.x / areaSizeToGroupBy).toInt() * areaSizeToGroupBy),
-            y = ((it.y / areaSizeToGroupBy).toInt() * areaSizeToGroupBy)
+            x = ((it.x / areaSizeToGroupBy).toInt() * areaSizeToGroupBy) - areaSizeToGroupBy/2f,
+            y = ((it.y / areaSizeToGroupBy).toInt() * areaSizeToGroupBy) - areaSizeToGroupBy/2f
         )
     }
     val heatmapDots = groupedHistory.map{ (position, items) ->
@@ -58,9 +58,9 @@ fun calculateHeatmapDotsInDateRange(floorMapId : Int, size : Size, fromDate: Dat
         val frequency = rawFrequency.coerceIn(0, maxFrequency)
 
         HeatmapDot(
-            position =  Offset(position.x + areaSizeToGroupBy/2, position.y + areaSizeToGroupBy/2),
+            position =  Offset(position.x, position.y),
             frequency = frequency,
-            size = areaSizeToGroupBy
+            size = areaSizeToGroupBy.toFloat()
         )
     }
     return heatmapDots

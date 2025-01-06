@@ -1,5 +1,6 @@
 package hr.foi.air.indoorlocalization.navigation.items
 
+
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,21 +10,19 @@ import hr.foi.air.indoorlocalization.asset.HeatmapAssetLiveMovement
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.foundation.*
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.BlendMode
+
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.clipRect
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import androidx.core.text.util.LocalePreferences.FirstDayOfWeek.Days
+import androidx.compose.ui.unit.max
 import hr.foi.air.indoorlocalization.parser.*
 import hr.foi.air.core.parser.floorMapList
 import hr.foi.air.core.movements.*
@@ -34,14 +33,8 @@ import hr.foi.air.core.parser.zonesList
 import hr.foi.air.indoorlocalization.helpers.*
 import hr.foi.air.indoorlocalization.zones.ZoneOverlay
 import hr.foi.air.ws.TestData.testDataJSONMap
-import java.time.Duration
 import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.Year
 import java.time.temporal.ChronoUnit
-import java.time.temporal.TemporalAmount
-import java.time.temporal.TemporalUnit
 import java.util.Date
 
 @Composable
@@ -140,13 +133,14 @@ fun Heatmap(
             }
             //Log.d("Heatmap", "Dots size: ${heatmapDots.size}")
             HeatmapView(
+                heatmapOffset = imageOffset.value,
                 maxFrequency = maxHeatmapDotFrequency,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxWidth(),
                 dots = if (selectedOption.value == "Live") {
                     calculateHeatmapDotsInDateRange(
                         floorMapId = floorMap.id,
-                        from_date = Date.from(liveDateRange[0]),
-                        to_date = Date.from(liveDateRange[1]),
+                        fromDate = Date.from(liveDateRange[0]),
+                        toDate = Date.from(liveDateRange[1]),
                         maxFrequency = maxHeatmapDotFrequency,
                         size = imageSize.value
                     )
@@ -155,8 +149,8 @@ fun Heatmap(
                 } else {
                     calculateHeatmapDotsInDateRange(
                         floorMapId = floorMap.id,
-                        from_date = Date.from(historicDateRange[0]),
-                        to_date = Date.from(historicDateRange[1]),
+                        fromDate = Date.from(historicDateRange[0]),
+                        toDate = Date.from(historicDateRange[1]),
                         maxFrequency = maxHeatmapDotFrequency,
                         size = imageSize.value
                     )
@@ -177,35 +171,25 @@ fun Heatmap(
 
 @Composable
 fun HeatmapView(
+    heatmapOffset : Offset,
     modifier: Modifier = Modifier,
     dots: List<HeatmapDot>,
-    maxFrequency: Int
+    maxFrequency: Int,
 ){
     Canvas(
         modifier = modifier.fillMaxSize()
-            .onSizeChanged { Log.d("Heatmap", "Canvas size: ${it.width}x${it.height}") }
+
     ) {
-        Log.d("Heatmap", "Dots size: ${dots.size}")
-
-
+        //Log.d("Heatmap", "Dots size: ${dots.size}")
 
         dots.forEach{ dot ->
-            val clampedPosition = Offset(
-                x = dot.position.x.coerceIn(0f, size.width),
-                y = dot.position.y.coerceIn(0f, size.height)
-            )
-            drawCircle(
-                color = calculateColorForFrequency(dot.frequency, maxFrequency).copy(alpha = dot.alpha),
-                radius = dot.size,
-                center = clampedPosition,
-                blendMode = BlendMode.Plus
-            )
-
-            val spreadRadius = dot.size * 2f
-            drawCircle(
-                color = calculateColorForFrequency(dot.frequency, maxFrequency).copy(alpha = dot.alpha * 0.5f),
-                radius = spreadRadius,
-                center = dot.position
+            val leftOffset = dot.position.plus(heatmapOffset)
+                .minus(Offset(0f, 64f))
+            drawRect(
+                color = calculateColorForFrequency(dot.frequency, maxFrequency).copy(alpha = 0.25f),
+                topLeft = leftOffset,
+                size = Size(dot.size, dot.size),
+                blendMode = BlendMode.SrcOver
             )
         }
     }
