@@ -1,19 +1,28 @@
 package hr.foi.air.indoorlocalization.helpers
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import hr.foi.air.core.models.HeatmapDot
+import hr.foi.air.core.models.impl.AssetPositionHistory
+import java.time.Instant
+import java.util.Date
 
-fun calculateColorForFrequency(frequency: Int): Color {
+fun calculateColorForFrequency(frequency: Int, maxFrequency: Int): Color {
     return when {
-        frequency < 10 -> Color.Blue.copy(alpha = 0.5f)
-        frequency < 20 -> Color.Green.copy(alpha = 0.5f)
-        frequency < 30 -> Color.Yellow.copy(alpha = 0.5f)
-        else -> Color.Red.copy(alpha = 0.5f)
+        frequency > 0.8 * maxFrequency -> Color.Red
+        frequency > 0.6 * maxFrequency -> Color(0xFFFF8400) // Orange
+        frequency > 0.4 * maxFrequency -> Color.Yellow
+        frequency > 0.2 * maxFrequency -> Color.Green
+        else -> Color.Blue
     }
 }
+// unused, leaving for legacy
 
-fun calculateSizeForFrequency(frequency: Int): Float {
-    return 35f - (frequency * 2).coerceIn(5, 30)
+/*
+fun calculateSizeForFrequency(frequency: Int, maxFrequency: Int): Float {
+    // (minsize + (maxsize - minsize) * noramlizedfrequency).coerceIn(minsize, maxsize)
+    return ((frequency.toFloat() / maxFrequency) * 20f).coerceIn(30f, 50f)
 }
 
 fun calculateSizeForColor(color: Color, dot: HeatmapDot): Float {
@@ -21,6 +30,90 @@ fun calculateSizeForColor(color: Color, dot: HeatmapDot): Float {
         Color.Blue -> dot.maxSize
         Color.Green -> dot.maxSize-10
         Color.Yellow -> dot.minSize
-        else -> dot.liveMovementSize
+        else -> dot.maxSize
     }
+}
+*/
+
+fun calculateHeatmapDotsInDateRange(floorMapId : Int, size : Size, fromDate: Date, toDate: Date,
+                                    maxFrequency : Int) : List<HeatmapDot> {
+
+    // currently using dummy data; to-refactor
+
+    val historyAssetPositions = List(10000){
+        generateRandomAssetPositionHistory(floorMapId, size)
+    }
+
+    val historyWithinRange = historyAssetPositions.filter { it.dateTime in fromDate..toDate}
+    val areaSizeToGroupBy = 32
+
+    val groupedHistory = historyWithinRange.groupBy {
+        Offset(
+            x = ((it.x / areaSizeToGroupBy).toInt() * areaSizeToGroupBy) - areaSizeToGroupBy/2f,
+            y = ((it.y / areaSizeToGroupBy).toInt() * areaSizeToGroupBy) - areaSizeToGroupBy/2f
+        )
+    }
+    val heatmapDots = groupedHistory.map{ (position, items) ->
+        val rawFrequency = items.size
+        val frequency = rawFrequency.coerceIn(0, maxFrequency)
+
+        HeatmapDot(
+            position =  Offset(position.x, position.y),
+            frequency = frequency,
+            size = areaSizeToGroupBy.toFloat()
+        )
+    }
+    return heatmapDots
+}
+
+
+// FOR TESTING PURPOSES
+// generates dummy data
+fun generateRandomAssetPositionHistory(floormapId : Int, maxSize : Size) : AssetPositionHistory {
+    return AssetPositionHistory(
+        id = kotlin.random.Random.nextInt(0, 100),
+        assetId = 1,
+        dateTime = generateRandomDate(),
+        x = kotlin.random.Random.nextInt(0, maxSize.width.toInt()).toFloat(),
+        y = kotlin.random.Random.nextInt(0, maxSize.height.toInt()).toFloat(),
+        floorMapId = floormapId
+    )
+}
+
+// FOR TESTING PURPOSES
+// generates dummy data
+fun generateRandomDate() : Date { // for live testing purposes
+    val year = kotlin.random.Random.nextInt(2023, 2025)
+    val month = kotlin.random.Random.nextInt(1, 12)
+    val day = kotlin.random.Random.nextInt(1,28) // february safety
+    val hour = kotlin.random.Random.nextInt(0, 23)
+    val second = kotlin.random.Random.nextInt(0, 59)
+
+    val monthString : String
+    val dayString : String
+    val hourString : String
+    val secondString : String
+
+    if (month < 10){
+        monthString = "0$month"
+    } else monthString = month.toString()
+    if (day < 10){
+        dayString = "0$day"
+    } else dayString = day.toString()
+    if (hour < 10){
+        hourString = "0$hour"
+    } else hourString = hour.toString()
+    if (second < 10){
+        secondString = "0$second"
+    }
+    else secondString = second.toString()
+
+    val dateString = year.toString() + "-" +
+            monthString + "-" +
+            dayString + "T" +
+            hourString + ":"+
+            secondString + ":" +
+            "00.00Z"
+
+    return Date.from(Instant.parse(dateString))
 }

@@ -1,5 +1,6 @@
 package hr.foi.air.indoorlocalization.navigation.items
 
+
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,13 +13,16 @@ import androidx.compose.foundation.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.*
+import androidx.compose.ui.graphics.BlendMode
+
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.clipRect
+
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import hr.foi.air.indoorlocalization.parser.*
 import hr.foi.air.core.parser.floorMapList
 import hr.foi.air.core.movements.*
@@ -29,6 +33,9 @@ import hr.foi.air.core.parser.zonesList
 import hr.foi.air.indoorlocalization.helpers.*
 import hr.foi.air.indoorlocalization.zones.ZoneOverlay
 import hr.foi.air.ws.TestData.testDataJSONMap
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.util.Date
 
 @Composable
 fun Heatmap(
@@ -39,9 +46,38 @@ fun Heatmap(
     val imageOffset = remember { mutableStateOf(Offset.Zero) }
     val currentPosition = remember { mutableStateOf(Offset.Zero) }
     val heatmapDots = remember { mutableStateListOf<HeatmapDot>() }
+    val maxHeatmapDotFrequency = 10;
 
     LaunchedEffect(Unit) {
         ILiveAssetMovement.simulateLiveMovement(currentPosition, floorMap.id)
+    }
+
+    // live heatmap or history heatmap toggle
+    val radioOptions = listOf("Live", "History")
+    val selectedOption = remember { mutableStateOf(radioOptions[0]) }
+
+    // which history frequency to use for displaying live heatmap
+    val liveDateRange = listOf(Instant.now().minusSeconds(1500), Instant.now())
+    val historicDateRange = listOf(Instant.from(Instant.now().minus(356, ChronoUnit.DAYS)),
+                        Instant.now())
+
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(5.dp)
+       ,
+        horizontalArrangement = Arrangement.SpaceEvenly){
+        radioOptions.forEach { text ->
+                ToggleButton(
+                    text = text,
+                    isSelected = selectedOption.value == text,
+                    onClick = {
+                        selectedOption.value = text
+                    }
+                )
+
+
+
+        }
     }
 
     Box(modifier = Modifier
@@ -73,21 +109,20 @@ fun Heatmap(
             painter = painter,
             contentDescription = "Floor Map",
             modifier= Modifier
-                .onGloballyPositioned { coordinates->
+                .onGloballyPositioned { coordinates ->
                     val bounds = coordinates.size
                     val position = coordinates.positionInRoot()
                     imageSize.value = Size(
                         bounds.width.toFloat(),
                         bounds.height.toFloat()
                     )
-                    imageOffset.value=position
+                    imageOffset.value = position
                 }
                 .fillMaxWidth()
                 .padding(5.dp)
                 .border(2.dp, Color.Black),
             contentScale = ContentScale.Crop
         )
-
         if (imageSize.value.width > 0 && imageSize.value.height > 0) {
             zonesList.forEach { zone ->
                 ZoneOverlay(
@@ -96,41 +131,33 @@ fun Heatmap(
                     imageOffset = imageOffset.value
                 )
             }
-
-            Canvas(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                clipRect(
-                    left = imageOffset.value.x,
-                    top = imageOffset.value.y,
-                    right = imageOffset.value.x + imageSize.value.width,
-                    bottom = imageOffset.value.y + imageSize.value.height
-                ) {
-                    val newDotPosition = Offset(
-                        x = imageOffset.value.x + currentPosition.value.x * imageSize.value.width,
-                        y = imageOffset.value.y + currentPosition.value.y * imageSize.value.height
+            //Log.d("Heatmap", "Dots size: ${heatmapDots.size}")
+            HeatmapView(
+                heatmapOffset = imageOffset.value,
+                maxFrequency = maxHeatmapDotFrequency,
+                modifier = Modifier.fillMaxWidth(),
+                dots = if (selectedOption.value == "Live") {
+                    calculateHeatmapDotsInDateRange(
+                        floorMapId = floorMap.id,
+                        fromDate = Date.from(liveDateRange[0]),
+                        toDate = Date.from(liveDateRange[1]),
+                        maxFrequency = maxHeatmapDotFrequency,
+                        size = imageSize.value
                     )
 
-                    val existingDot = heatmapDots.find { it.position == newDotPosition }
-                    if (existingDot != null) {
-                        existingDot.frequency += 1
-                    } else {
-                        val liveMovementSize = 30f
-                        heatmapDots.add(HeatmapDot(newDotPosition, 1, liveMovementSize=liveMovementSize))
-                    }
 
-                    heatmapDots.forEach { dot ->
-                        val color = calculateColorForFrequency(dot.frequency)
-                        val size = calculateSizeForColor(color,dot)//calculateSizeForFrequency(dot.frequency)
-
-                        drawCircle(
-                            color = color.copy(alpha = 0.5f),
-                            radius = size,
-                            center = dot.position
-                        )
-                    }
+                } else {
+                    calculateHeatmapDotsInDateRange(
+                        floorMapId = floorMap.id,
+                        fromDate = Date.from(historicDateRange[0]),
+                        toDate = Date.from(historicDateRange[1]),
+                        maxFrequency = maxHeatmapDotFrequency,
+                        size = imageSize.value
+                    )
                 }
-            }
+
+            )
+
         }
 
         Text(
@@ -142,6 +169,52 @@ fun Heatmap(
     }
 }
 
+@Composable
+fun HeatmapView(
+    heatmapOffset : Offset,
+    modifier: Modifier = Modifier,
+    dots: List<HeatmapDot>,
+    maxFrequency: Int,
+){
+    Canvas(
+        modifier = modifier.fillMaxSize()
+
+    ) {
+        //Log.d("Heatmap", "Dots size: ${dots.size}")
+
+        dots.forEach{ dot ->
+            val leftOffset = dot.position.plus(heatmapOffset)
+                .minus(Offset(0f, 64f))
+            drawRect(
+                color = calculateColorForFrequency(dot.frequency, maxFrequency).copy(alpha = 0.25f),
+                topLeft = leftOffset,
+                size = Size(dot.size, dot.size),
+                blendMode = BlendMode.SrcOver
+            )
+        }
+    }
+}
+
+@Composable
+fun LiveHeatmap(){
+    //TODO
+}
+
+@Composable
+fun ToggleButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable { onClick() }
+    ) {
+        RadioButton(
+            selected = isSelected,
+            onClick = null
+        )
+        Text(
+            text = text
+        )
+    }
+}
 
 
 @Preview
