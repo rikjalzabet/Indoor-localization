@@ -21,8 +21,6 @@ class HomeMapAssetLiveMovement(): ILiveAssetMovement {
             return
         }
 
-        //Log.i("AssetLiveMovement", "Found ${liveAssetPositions.size} asset positions for floor map $floorMapId")
-
         var index = 0
         while (true) {
             val assetPosition = liveAssetPositions[index]

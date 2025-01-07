@@ -7,6 +7,7 @@ import hr.foi.air.core.models.HeatmapDot
 import hr.foi.air.core.models.impl.AssetPositionHistory
 import java.time.Instant
 import java.util.Date
+import hr.foi.air.core.models.HeatmapLiveDot
 
 fun calculateColorForFrequency(frequency: Int, maxFrequency: Int): Color {
     return when {
@@ -34,6 +35,27 @@ fun calculateSizeForColor(color: Color, dot: HeatmapDot): Float {
     }
 }
 */
+fun calculateColorForFrequencyLiveAsset(frequency: Int): Color {
+    return when {
+        frequency < 10 -> Color.Blue.copy(alpha = 0.5f)
+        frequency < 20 -> Color.Green.copy(alpha = 0.5f)
+        frequency < 30 -> Color.Yellow.copy(alpha = 0.5f)
+        else -> Color.Red.copy(alpha = 0.5f)
+    }
+}
+
+/*fun calculateSizeForFrequencyLiveAsset(frequency: Int): Float {
+    return 35f - (frequency * 2).coerceIn(5, 30)
+}*/
+
+fun calculateSizeForColorLiveAsset(color: Color, dot: HeatmapLiveDot): Float {
+    return when (color) {
+        Color.Blue -> dot.maxSize
+        Color.Green -> dot.maxSize-10
+        Color.Yellow -> dot.minSize
+        else -> dot.liveMovementSize
+    }
+}
 
 fun calculateHeatmapDotsInDateRange(floorMapId : Int, size : Size, fromDate: Date, toDate: Date,
                                     maxFrequency : Int) : List<HeatmapDot> {

@@ -14,9 +14,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.BlendMode
-
 import androidx.compose.ui.graphics.Color
-
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +28,7 @@ import hr.foi.air.core.movements.*
 import coil.request.ImageRequest
 import coil3.compose.rememberAsyncImagePainter
 import hr.foi.air.core.models.HeatmapDot
+import hr.foi.air.core.models.HeatmapLiveDot
 import hr.foi.air.core.parser.zonesList
 import hr.foi.air.indoorlocalization.helpers.*
 import hr.foi.air.indoorlocalization.zones.ZoneOverlay
@@ -46,6 +46,7 @@ fun Heatmap(
     val imageOffset = remember { mutableStateOf(Offset.Zero) }
     val currentPosition = remember { mutableStateOf(Offset.Zero) }
     val heatmapDots = remember { mutableStateListOf<HeatmapDot>() }
+    val heatmapLiveDots = remember { mutableStateListOf<HeatmapLiveDot>() }
     val maxHeatmapDotFrequency = 10;
 
     LaunchedEffect(Unit) {
@@ -74,9 +75,6 @@ fun Heatmap(
                         selectedOption.value = text
                     }
                 )
-
-
-
         }
     }
 
@@ -132,11 +130,48 @@ fun Heatmap(
                 )
             }
             //Log.d("Heatmap", "Dots size: ${heatmapDots.size}")
+            if(selectedOption.value == "Live"){
+                Canvas(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    clipRect(
+                        left = imageOffset.value.x,
+                        top = imageOffset.value.y,
+                        right = imageOffset.value.x + imageSize.value.width,
+                        bottom = imageOffset.value.y + imageSize.value.height
+                    ) {
+                        val newDotPosition = Offset(
+                            x = imageOffset.value.x + currentPosition.value.x * imageSize.value.width,
+                            y = imageOffset.value.y + currentPosition.value.y * imageSize.value.height
+                        )
+
+                        val existingDot = heatmapLiveDots.find { it.position == newDotPosition }
+                        if (existingDot != null) {
+                            existingDot.frequency += 1
+                        } else {
+                            val liveMovementSize = 30f
+                            heatmapLiveDots.add(HeatmapLiveDot(newDotPosition, 1, liveMovementSize=liveMovementSize))
+                        }
+
+                        heatmapLiveDots.forEach { dot ->
+                            val color = calculateColorForFrequencyLiveAsset(dot.frequency)
+                            val size = calculateSizeForColorLiveAsset(color,dot) //calculateSizeForColor(dot.frequency)//
+
+                            drawCircle(
+                                color = color.copy(alpha = 0.5f),
+                                radius = size,
+                                center = dot.position
+                            )
+                        }
+                    }
+                }
+            }
+            else{
             HeatmapView(
                 heatmapOffset = imageOffset.value,
                 maxFrequency = maxHeatmapDotFrequency,
                 modifier = Modifier.fillMaxWidth(),
-                dots = if (selectedOption.value == "Live") {
+                /*dots = if (selectedOption.value == "Live") {
                     calculateHeatmapDotsInDateRange(
                         floorMapId = floorMap.id,
                         fromDate = Date.from(liveDateRange[0]),
@@ -146,18 +181,17 @@ fun Heatmap(
                     )
 
 
-                } else {
-                    calculateHeatmapDotsInDateRange(
+                } else {*/
+                  dots = calculateHeatmapDotsInDateRange(
                         floorMapId = floorMap.id,
                         fromDate = Date.from(historicDateRange[0]),
                         toDate = Date.from(historicDateRange[1]),
                         maxFrequency = maxHeatmapDotFrequency,
                         size = imageSize.value
                     )
-                }
-
+                //}
             )
-
+            }
         }
 
         Text(
