@@ -7,6 +7,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import hr.foi.air.core.models.impl.Asset
+import hr.foi.air.core.models.impl.AssetPositionHistory
+import hr.foi.air.core.models.impl.AssetZoneHistory
 import hr.foi.air.core.parser.DataParser
 import hr.foi.air.core.parser.*
 import kotlinx.serialization.json.*
@@ -46,5 +48,31 @@ class JsonDataParser(): DataParser {
             }
         }
         Log.i("JsonDataParser", "Updated live asset positions has ${liveAssetPositionList.size} assets")
+    }
+
+    fun updateAssetPositionHistory(data: String) {
+        val gson: Gson = GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            .create()
+        val assetPositionHistory: List<AssetPositionHistory> = gson.fromJson(data, object : TypeToken<List<AssetPositionHistory>>() {}.type)
+        assetPositionHistory.forEach { newHistory ->
+            if (assetPositionHistoryList.none { it.id == newHistory.id }) {
+                assetPositionHistoryList.add(newHistory)
+            }
+        }
+        Log.i("JsonDataParser", "Updated asset position history has ${assetPositionHistoryList.size} entries")
+    }
+
+    fun updateAssetZoneHistory(data: String) {
+        val gson: Gson = GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            .create()
+        val assetZoneHistory: List<AssetZoneHistory> = gson.fromJson(data, object : TypeToken<List<AssetZoneHistory>>() {}.type)
+        assetZoneHistory.forEach { newHistory ->
+            if (assetZoneHistoryList.none { it.id == newHistory.id }) {
+                assetZoneHistoryList.add(newHistory)
+            }
+        }
+        Log.i("JsonDataParser", "Updated asset zone history has ${assetZoneHistoryList.size} entries")
     }
 }
