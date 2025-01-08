@@ -40,6 +40,8 @@ fun NavigationHost(
             Heatmap(floorMap = floorMap, HeatmapAssetLiveMovement())
         }
         composable(BottomNavigationItem.Reports.route) {
+            JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJSON)
+            JsonDataParser().updateAssetPositionHistory(assetPositionHistoryJSON)
             Reports()
         }
     }

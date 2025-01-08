@@ -64,3 +64,45 @@ val testAssetPositionJSON = """
     { "id": 20, "name": "Asset 4", "x": 0.01, "y": 0.01, "lastSync": "2024-12-02 00:01:30", "floorMapId": 1, "active": true }
 ]
 """
+
+val assetPositionHistoryJSON = """
+    [
+        {
+            "id": 1,
+            "assetId": 101,
+            "x": 12.34,
+            "y": 56.78,
+            "dateTime": "2025-01-01T10:00:00Z",
+            "floorMapId": 1
+        },
+        {
+            "id": 2,
+            "assetId": 102,
+            "x": 98.76,
+            "y": 54.32,
+            "dateTime": "2025-01-02T11:30:00Z",
+            "floorMapId": 2
+        }
+    ]
+"""
+
+val assetZoneHistoryJSON = """
+    [
+        {
+            "id": 1,
+            "assetId": 101,
+            "zoneId": 201,
+            "enterDateTime": "2025-01-01T09:00:00Z",
+            "exitDateTime": "2025-01-01T10:00:00Z",
+            "retentionTime": 3600
+        },
+        {
+            "id": 2,
+            "assetId": 102,
+            "zoneId": 202,
+            "enterDateTime": "2025-01-02T11:00:00Z",
+            "exitDateTime": null,
+            "retentionTime": 1800
+        }
+    ]
+"""
