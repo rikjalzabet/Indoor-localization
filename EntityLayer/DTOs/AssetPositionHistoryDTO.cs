@@ -8,7 +8,6 @@ namespace EntityLayer.DTOs
 {
     public class AssetPositionHistoryDTO
     {
-        public int Id { get; set; }
         public int AssetId { get; set; }
         public double X { get; set; }
         public double Y { get; set; }

@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Interfaces;
+using EntityLayer.DTOs;
 using EntityLayer.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,9 +41,15 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] FloorMap floorMap)
+        public async Task<IActionResult> Add([FromBody] FloorMapDTO floorMapDTO)
         {
             bool isAdded = false;
+            var floorMap = new FloorMap
+            {
+                Name = floorMapDTO.Name,
+                Image = floorMapDTO.Image
+            };
+
             if (floorMap != null)
             {
                 isAdded = await _floorMapService.AddFloorMap(floorMap);

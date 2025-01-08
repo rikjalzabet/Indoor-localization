@@ -54,7 +54,6 @@ namespace api.Controllers
 
             var zone = new Zone
             {
-                Id = zoneDTO.Id,
                 Name = zoneDTO.Name,
                 Points = pointsJson
             };

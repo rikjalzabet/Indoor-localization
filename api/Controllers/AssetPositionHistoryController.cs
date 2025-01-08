@@ -53,7 +53,6 @@ namespace api.Controllers
             bool isAdded = false;
             var assetPositionHistory = new AssetPositionHistory
             {
-                Id = assetPositionHistoryDTO.Id,
                 AssetId = assetPositionHistoryDTO.AssetId,
                 X = assetPositionHistoryDTO.X,
                 Y = assetPositionHistoryDTO.Y,
