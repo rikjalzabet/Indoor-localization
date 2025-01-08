@@ -60,9 +60,15 @@ namespace api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromBody] FloorMap floorMap, [FromRoute] int id)
+        public async Task<IActionResult> Update([FromBody] FloorMapDTO floorMapDTO, [FromRoute] int id)
         {
             bool isUpdated = false;
+            var floorMap = new FloorMap
+            {
+                Name = floorMapDTO.Name,
+                Image = floorMapDTO.Image
+            };
+
             if (floorMap != null)
             {
                 isUpdated = await _floorMapService.UpdateFloorMap(floorMap, id);
