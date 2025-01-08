@@ -23,8 +23,8 @@ export class WebUiService {
         {
           id: 2,
           name: 'Asset B',
-          x: 34.56,
-          y: 78.90,
+          x: 100,
+          y: 200,
           lastSync: new Date('2024-11-10T15:30:00Z'),
           floorMapId: 1,
           active: false,
@@ -56,6 +56,15 @@ export class WebUiService {
           floorMapId: 3,
           active: false,
         },
+        {
+          id: 6,
+          name: 'Asset Z',
+          x: 0,
+          y: 0,
+          lastSync: new Date('2024-11-10T15:30:00Z'),
+          floorMapId: 1,
+          active: false,
+        },
       ];
   
       return of(mockAssets);
@@ -66,7 +75,7 @@ export class WebUiService {
         {
           id :1,
           name: 'Floor map A',
-          image: 'Image 1'
+          image: 'https://wpmedia.roomsketcher.com/content/uploads/2022/01/06145940/What-is-a-floor-plan-with-dimensions.png'
         },
         {
           id :2,
