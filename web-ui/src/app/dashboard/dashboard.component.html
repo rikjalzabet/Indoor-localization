@@ -10,18 +10,25 @@
     </mat-list>
   </div>
 
-  <div *ngIf="selectedFloorMapId" class="floor-map-image" style="position: relative;">
-    <img [src]="getFloorMapImage(selectedFloorMapId)" alt="Floor Map" *ngIf="getFloorMapImage(selectedFloorMapId)" />
-    
-    <!-- Asset markers -->
-    <div *ngFor="let asset of assets"
-         class="asset-marker"
-         [ngStyle]="{
-           top: asset.y + 'px',
-           left: asset.x + 'px'
-         }">
-      <!-- Material Icon for assets -->
-      <mat-icon class="asset-icon">location_on</mat-icon> <!-- You can change the icon here -->
+  <div
+    *ngIf="selectedFloorMapId"
+    class="floor-map-image"
+    style="position: relative"
+  >
+    <img
+      [src]="getFloorMapImage(selectedFloorMapId)"
+      alt="Floor Map"
+      *ngIf="getFloorMapImage(selectedFloorMapId)"
+    />
+
+    <div
+      *ngFor="let asset of assets; trackBy: trackByAssetId"
+      class="asset-marker"
+      [ngStyle]="{ top: asset.y + 'px', left: asset.x + 'px' }"
+      matTooltip="{{ asset.name }} (X: {{ asset.x }}, Y: {{ asset.y }})"
+      matTooltipPosition="above"
+    >
+      <mat-icon class="asset-icon">location_on</mat-icon>
     </div>
   </div>
 </div>

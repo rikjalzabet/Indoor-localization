@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { IAsset } from '../models/iasset';
 import { MatIcon,MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +15,8 @@ import { MatIcon,MatIconModule } from '@angular/material/icon';
   imports: [CommonModule,
     MatButtonModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -61,5 +64,9 @@ export class DashboardComponent implements OnInit {
 
   selectFloorMap(floorMapId: number): void {
     this.selectedFloorMapId = floorMapId;
+  }
+
+  trackByAssetId(index: number, asset: IAsset): number {
+    return asset.id; 
   }
 }
