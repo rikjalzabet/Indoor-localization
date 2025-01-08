@@ -1,5 +1,4 @@
-# Extend the official Node-RED Docker image
-FROM nodered/node-red:latest
 
-# Install additional modules using npm
+FROM nodered/node-red:latest
 RUN npm install --no-optional --unsafe-perm node-red-contrib-postgresql
+COPY .flows.json /data/flows.json

@@ -1,101 +1,172 @@
 [
     {
-        "id": "28686cc3313ecabf",
+        "id": "inject_start",
+        "type": "inject",
+        "z": "83880ec35ffe5d88",
+        "name": "Start",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 80,
+        "wires": [
+            [
+                "query_random_asset"
+            ]
+        ]
+    },
+    {
+        "id": "query_random_asset",
+        "type": "postgresql",
+        "z": "83880ec35ffe5d88",
+        "name": "Random Asset",
+        "query": "SELECT id \nFROM assets \nORDER BY RANDOM() \nLIMIT 1;",
+        "postgreSQLConfig": "521e2c9b19c962e2",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 140,
+        "y": 140,
+        "wires": [
+            [
+                "a96300320d2bd0a8"
+            ]
+        ]
+    },
+    {
+        "id": "query_random_floor_map",
+        "type": "postgresql",
+        "z": "83880ec35ffe5d88",
+        "name": "Random FloorMap",
+        "query": "SELECT id FROM floorMaps ORDER BY RANDOM() LIMIT 1;",
+        "postgreSQLConfig": "521e2c9b19c962e2",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 410,
+        "y": 100,
+        "wires": [
+            [
+                "function_generate_position"
+            ]
+        ]
+    },
+    {
+        "id": "query_random_zone",
+        "type": "postgresql",
+        "z": "83880ec35ffe5d88",
+        "name": "Random Zone",
+        "query": "SELECT id FROM zones ORDER BY RANDOM() LIMIT 1;",
+        "postgreSQLConfig": "521e2c9b19c962e2",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 420,
+        "y": 180,
+        "wires": [
+            [
+                "function_generate_zone"
+            ]
+        ]
+    },
+    {
+        "id": "function_generate_position",
         "type": "function",
-        "z": "49454b1d9f2fc071",
-        "name": "Generate random asset data",
-        "func": "// Assuming msg.payload contains the random id from the query\nconst randomAssetId = Math.floor(Math.random() * 10000); // Random asset id\nconst name = `Asset${randomAssetId}`;\nconst x = (Math.random() * 100).toFixed(6); // Random x coordinate\nconst y = (Math.random() * 100).toFixed(6); // Random y coordinate\nconst lastSync = new Date().toISOString(); // Current timestamp\n\n// Convert the floorMapId from msg.payload to an integer\n//const floorMapId = parseInt(msg.payload[0].id, 10); // Ensure it's an integer\nconst floorMapId = msg.payload[0].id;\nconst active = Math.random() > 0.5; // Random active status\n\n// Update msg.params with the new values\nmsg.params = [name, x, y, lastSync, floorMapId, active];\n\nreturn msg;\n",
+        "z": "83880ec35ffe5d88",
+        "name": "Generate Asset Position",
+        "func": "const assetId = msg.assetPayload[0].id;\nconst floorMapId = msg.payload[0].id;\nconst x = (Math.random() * 100).toFixed(6);\nconst y = (Math.random() * 100).toFixed(6);\nconst secondsAgo = Math.floor(Math.random() * 120) + 1; // Random between 1-120 seconds\nconst dateTime = new Date(Date.now() - secondsAgo * 1000).toISOString();\n\nmsg.params = [assetId, x, y, dateTime, floorMapId];\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 660,
-        "y": 260,
+        "x": 650,
+        "y": 100,
         "wires": [
             [
-                "a1c848f631eca0be"
+                "insert_position"
             ]
         ]
     },
     {
-        "id": "a1c848f631eca0be",
+        "id": "function_generate_zone",
+        "type": "function",
+        "z": "83880ec35ffe5d88",
+        "name": "Generate Asset Zone",
+        "func": "\nfunction formatDateToCustom(date) {\n    const year = date.getFullYear();\n    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based\n    const day = String(date.getDate()).padStart(2, '0');\n    const hours = String(date.getHours()).padStart(2, '0');\n    const minutes = String(date.getMinutes()).padStart(2, '0');\n    const seconds = String(date.getSeconds()).padStart(2, '0');\n    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;\n}\n\nconst now = formatDateToCustom(new Date());\n\nconst assetId = msg.assetPayload[0].id;\nconst zoneId = msg.payload[0].id;\n\nconst enterTimeOffset = Math.floor(Math.random() * 60) + 1; // Random between 1-60 minutes ago\nconst retentionMinutes = Math.floor(Math.random() * 30) + 1; // Random retention time 1-30 minutes\n\nconst enterDateTime = new Date(Date.now() - enterTimeOffset * 60000).toISOString();\nconst exitDateTime = new Date(Date.now() - (enterTimeOffset - retentionMinutes) * 60000).toISOString();\n\nconst retentionTime = `${retentionMinutes} minutes`;\n\nmsg.params = [assetId, zoneId, enterDateTime, exitDateTime, retentionTime];\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 180,
+        "wires": [
+            [
+                "insert_zone"
+            ]
+        ]
+    },
+    {
+        "id": "insert_position",
         "type": "postgresql",
-        "z": "49454b1d9f2fc071",
-        "name": "Insert asset",
-        "query": "INSERT INTO assets (name, x, y, lastSync, floorMapId, active) \nVALUES ($1, $2, $3, $4, $5, $6);",
+        "z": "83880ec35ffe5d88",
+        "name": "Insert Position History",
+        "query": "INSERT INTO assetPositionHistory (assetId, x, y, dateTime, floorMapId) VALUES ($1, $2, $3, $4, $5);",
         "postgreSQLConfig": "521e2c9b19c962e2",
         "split": false,
         "rowsPerMsg": "",
-        "x": 930,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "02f95b2fde228170",
-        "type": "inject",
-        "z": "49454b1d9f2fc071",
-        "name": "Start",
-        "props": [],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": "1",
-        "topic": "",
-        "x": 170,
-        "y": 260,
+        "outputs": 1,
+        "x": 900,
+        "y": 100,
         "wires": [
-            [
-                "228113cc613ba360"
-            ]
+            []
         ]
     },
     {
-        "id": "228113cc613ba360",
+        "id": "insert_zone",
         "type": "postgresql",
-        "z": "49454b1d9f2fc071",
-        "name": "Random floorMapsId",
-        "query": "SELECT id \nFROM floorMaps \nORDER BY RANDOM() \nLIMIT 1;",
-        "postgreSQLConfig": "0585a90e498522aa",
+        "z": "83880ec35ffe5d88",
+        "name": "Insert Zone History",
+        "query": "INSERT INTO assetZoneHistory (assetId, zoneId, enterDateTime, exitDateTime, retentionTime) VALUES ($1, $2, $3, $4, $5);",
+        "postgreSQLConfig": "521e2c9b19c962e2",
         "split": false,
-        "rowsPerMsg": 1,
+        "rowsPerMsg": "",
         "outputs": 1,
-        "x": 380,
-        "y": 260,
+        "x": 890,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a96300320d2bd0a8",
+        "type": "function",
+        "z": "83880ec35ffe5d88",
+        "name": "Save AssetInfo",
+        "func": "msg.assetPayload = msg.payload\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 140,
+        "y": 220,
         "wires": [
             [
-                "28686cc3313ecabf"
+                "query_random_floor_map",
+                "query_random_zone"
             ]
         ]
     },
     {
         "id": "521e2c9b19c962e2",
-        "type": "postgreSQLConfig",
-        "name": "",
-        "host": "postgres_db",
-        "hostFieldType": "str",
-        "port": "5432",
-        "portFieldType": "num",
-        "database": "il_database",
-        "databaseFieldType": "str",
-        "ssl": "false",
-        "sslFieldType": "bool",
-        "applicationName": "",
-        "applicationNameType": "str",
-        "max": "10",
-        "maxFieldType": "num",
-        "idle": "1000",
-        "idleFieldType": "num",
-        "connectionTimeout": "10000",
-        "connectionTimeoutFieldType": "num",
-        "user": "DB_USER",
-        "userFieldType": "env",
-        "password": "DB_PASSWORD",
-        "passwordFieldType": "env"
-    },
-    {
-        "id": "0585a90e498522aa",
         "type": "postgreSQLConfig",
         "name": "",
         "host": "postgres_db",
