@@ -40,17 +40,11 @@ namespace BusinessLogicLayer.Services
 
                 if (lastAssetZoneHistory != null && lastAssetZoneHistory.ExitDateTime == null)
                 {
+                    DateTime enterDateTime = lastAssetZoneHistory.EnterDateTime;
                     lastAssetZoneHistory.ExitDateTime = DateTime.UtcNow;
-                    if(lastAssetZoneHistory.EnterDateTime > lastAssetZoneHistory.ExitDateTime)
-                    {
-                        lastAssetZoneHistory.RetentionTime = lastAssetZoneHistory.EnterDateTime - lastAssetZoneHistory.ExitDateTime;
-                    }
-                    else
-                        lastAssetZoneHistory.RetentionTime = lastAssetZoneHistory.ExitDateTime - lastAssetZoneHistory.EnterDateTime;
+                    DateTime exitDateTime = DateTime.UtcNow.AddHours(1);
 
-                    Console.WriteLine($"Enter: {lastAssetZoneHistory.EnterDateTime}");
-                    Console.WriteLine($"Exit: {lastAssetZoneHistory.ExitDateTime}");
-                    Console.WriteLine($"Retention Time: {lastAssetZoneHistory.RetentionTime}");
+                    lastAssetZoneHistory.RetentionTime = exitDateTime - enterDateTime;
 
                     await _assetZoneHistoryRepository.UpdateZoneHistory(lastAssetZoneHistory);
                 }
@@ -67,14 +61,12 @@ namespace BusinessLogicLayer.Services
                     // Zatvori prethodnu zonu (ako postoji)
                     if (lastAssetZoneHistory != null && lastAssetZoneHistory.ExitDateTime == null)
                     {
+                        DateTime enterDateTime = lastAssetZoneHistory.EnterDateTime;
                         lastAssetZoneHistory.ExitDateTime = DateTime.UtcNow;
-                        if (lastAssetZoneHistory.EnterDateTime > lastAssetZoneHistory.ExitDateTime)
-                        {
-                            lastAssetZoneHistory.RetentionTime = lastAssetZoneHistory.EnterDateTime - lastAssetZoneHistory.ExitDateTime;
-                        }
-                        else
-                            lastAssetZoneHistory.RetentionTime = lastAssetZoneHistory.ExitDateTime - lastAssetZoneHistory.EnterDateTime;
-                        
+                        DateTime exitDateTime = DateTime.UtcNow.AddHours(1);
+                     
+                        lastAssetZoneHistory.RetentionTime = exitDateTime - enterDateTime;
+
                         await _assetZoneHistoryRepository.UpdateZoneHistory(lastAssetZoneHistory);
                     }
 

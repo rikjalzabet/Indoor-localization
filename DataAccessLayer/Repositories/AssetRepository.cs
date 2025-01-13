@@ -20,7 +20,6 @@ namespace DataAccessLayer.Repositories
             var existingAsset = await Entities.FindAsync(id);
             if (existingAsset != null)
             {
-                existingAsset.Id = asset.Id;
                 existingAsset.Name = asset.Name;
                 existingAsset.X = asset.X;
                 existingAsset.Y = asset.Y;

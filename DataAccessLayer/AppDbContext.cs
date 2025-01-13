@@ -34,12 +34,16 @@ namespace DataAccessLayer
                       .WithMany(/*f => f.Assets*/)
                       .HasForeignKey(a => a.FloorMapId)
                       .OnDelete(DeleteBehavior.Cascade);
+                entity.Property(a => a.Id)
+                .ValueGeneratedOnAdd();
             });
 
             // FloorMap konfiguracija
             modelBuilder.Entity<FloorMap>(entity =>
             {
                 entity.HasKey(f => f.Id);
+                entity.Property(f => f.Id)
+                .ValueGeneratedOnAdd();
             });
 
             // Zone konfiguracija
@@ -47,12 +51,16 @@ namespace DataAccessLayer
             {
                 entity.HasKey(z => z.Id);
                 entity.Property(z => z.Points).HasColumnType("json");
+                entity.Property(z => z.Id)
+                .ValueGeneratedOnAdd();
             });
 
             // AssetPositionHistory konfiguracija
             modelBuilder.Entity<AssetPositionHistory>(entity =>
             {
                 entity.HasKey(a => a.Id);
+                entity.Property(a => a.Id)
+                .ValueGeneratedOnAdd();
                 /*
                 entity.HasOne(a => a.Asset)
                       .WithMany()
@@ -68,6 +76,8 @@ namespace DataAccessLayer
             modelBuilder.Entity<AssetZoneHistory>(entity =>
             {
                 entity.HasKey(a => a.Id);
+                entity.Property(a => a.Id)
+                .ValueGeneratedOnAdd();
                 /*entity.HasOne(a => a.Asset)
                       .WithMany()
                       .HasForeignKey(a => a.AssetId)

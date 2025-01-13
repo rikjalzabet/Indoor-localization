@@ -52,7 +52,6 @@ namespace api.Controllers
             bool isAdded = false;
             var asset = new Asset
             {
-                Id = assetDto.Id,
                 Name = assetDto.Name,
                 X = assetDto.X,
                 Y = assetDto.Y,
@@ -78,7 +77,6 @@ namespace api.Controllers
             bool isUpdated = false;
             var asset = new Asset
             {
-                Id = assetDto.Id,
                 Name = assetDto.Name,
                 X = assetDto.X,
                 Y = assetDto.Y,
