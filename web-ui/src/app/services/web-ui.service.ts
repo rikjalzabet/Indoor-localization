@@ -2,13 +2,18 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { IAsset } from '../models/iasset';
 import { IFloorMap } from '../models/IFloorMap';
+import { HttpClient } from '@angular/common/http';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebUiService {
 
+  private apiUrl = 'https://localhost:8000';
+
   constructor() { }
+
     public getAssets(): Observable<IAsset[]> {
       const mockAssets: IAsset[] = [
         {
