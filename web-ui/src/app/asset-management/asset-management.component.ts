@@ -14,6 +14,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { AddAssetDialogComponent } from '../add-asset-dialog/add-asset-dialog.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { NotificationService } from '../services/notification.service';
+import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
+
 
 @Component({
   selector: 'app-asset-management',
@@ -26,7 +28,8 @@ import { NotificationService } from '../services/notification.service';
     MatIconModule,
     MatButtonModule,
     MatRadioModule,
-    MatDialogModule
+    MatDialogModule,
+    HttpClientModule
   ],
   templateUrl: './asset-management.component.html',
   styleUrl: './asset-management.component.css'
