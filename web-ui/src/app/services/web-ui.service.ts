@@ -23,7 +23,14 @@ export class WebUiService {
     }
 
     public deleteAsset(Id: number): void {
-      return this.http.delete<void>(`${this.apiUrl}/assets/${Id}`);
+      this.http.delete(`${this.apiUrl}/assets/${Id}`).subscribe({
+        next: () => {
+          console.log(`Asset with id ${Id} deleted successfully.`);
+        },
+        error: (err) => {
+          console.error('Error deleting asset:', err);
+        }
+      });    
     }
 
     public addAsset(Asset: IAsset): void{
