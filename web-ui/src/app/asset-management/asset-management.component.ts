@@ -113,7 +113,7 @@ export class AssetManagementComponent implements OnInit {
     editAsset(): void{
       const selectedAsset = this.selection.selected[0];
       if(selectedAsset){
-      console.log("Selected assit", selectedAsset);
+      console.log("Selected asset", selectedAsset);
       const dialogRef = this.dialog.open(AddAssetDialogComponent,{
         width: '400px',
         data: {floorMaps: this.floorMaps,

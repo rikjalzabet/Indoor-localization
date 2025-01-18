@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class WebUiService {
 
-  private apiUrl = 'https://localhost:8000';
+  private apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) { }
 
@@ -23,11 +23,19 @@ export class WebUiService {
     }
 
     public deleteAsset(Id: number): void {
-          console.log('Asset is deleted: ', Id)
+      return this.http.delete<void>(`${this.apiUrl}/assets/${Id}`);
     }
 
     public addAsset(Asset: IAsset): void{
-      console.log('Asset is added',Asset);
+      this.http.post(`${this.apiUrl}/assets`, Asset)
+      .subscribe({
+        next: (response) => {
+          console.log('Asset added successfully', response);
+        },
+        error: (err) => {
+          console.error('Error adding asset:', err);
+        }
+      });
     }
 
     public updateAsset(Asset: IAsset): void{
