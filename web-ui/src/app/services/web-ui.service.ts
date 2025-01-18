@@ -26,6 +26,7 @@ export class WebUiService {
       this.http.delete(`${this.apiUrl}/assets/${Id}`).subscribe({
         next: () => {
           console.log(`Asset with id ${Id} deleted successfully.`);
+          this.getAssets();
         },
         error: (err) => {
           console.error('Error deleting asset:', err);
@@ -38,6 +39,7 @@ export class WebUiService {
       .subscribe({
         next: (response) => {
           console.log('Asset added successfully', response);
+          this.getAssets();
         },
         error: (err) => {
           console.error('Error adding asset:', err);
@@ -46,7 +48,14 @@ export class WebUiService {
     }
 
     public updateAsset(Asset: IAsset): void{
-      console.log('Asset is updated',Asset);
-    }
+      this.http.put(`${this.apiUrl}/assets/${Asset.id}`, Asset).subscribe({
+        next: () => {
+          console.log(`Asset with id ${Asset.id} updated successfully.`);
+          this.getAssets();
+        },
+        error: (err) => {
+          console.error('Error updating asset:', err);
+        }
+      });    }
   }
 
