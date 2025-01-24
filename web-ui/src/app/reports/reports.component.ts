@@ -15,9 +15,13 @@ import { IAsset } from '../models/iasset';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatRadioModule } from '@angular/material/radio';
 import * as h337 from 'heatmap.js';
+import { MatButtonModule } from '@angular/material/button';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import { Observable } from 'rxjs';
 import { title } from 'process';
+import { IZones } from '../models/IZones';
+import { IAssetZoneHistory } from '../models/IAssetZoneHistory';
 
 
 @Component({
@@ -34,6 +38,7 @@ import { title } from 'process';
     MatTableModule,
     MatPaginatorModule,
     MatRadioModule,
+    MatButtonModule
   ],
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.css'],
@@ -49,6 +54,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
   assetMap = new Map<number, string>();
   selection = new SelectionModel<IAsset>(false, []);
   heatmap: any;
+  zones?: IZones[];
+  assetZoneHistory?: IAssetZoneHistory[];
+  zoneMap = new Map<number, string>();
+
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -57,16 +66,18 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
 
   ngOnInit(): void {
     this.fetchFloorMaps();
+    this.fetchZones();
+    this.fetchAssetZoneHistory();
   }
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-    this.createHeatmap(); // Ensure it's created after the view is initialized
+
+   // Ensure it's created after the view is initialized
   }
 
-  ngAfterViewChecked(): void {
-    // Ensure that the element is available before trying to update the heatmap
+  onImageLoad(): void{
     const heatmapContainer = document.getElementById('heatmapContainer');
     if (heatmapContainer && !this.heatmap) {
       this.createHeatmap();  // Only create once
@@ -83,7 +94,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
         })),
       };
 
-      console.log('PODACI', data);
+
 
       // Clear the existing data before setting new data
       this.heatmap.setData({ data: [] });
@@ -93,18 +104,40 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
   }
 
+  ngAfterViewChecked(): void {
+    console.log("ULAZI");
+    // Ensure that the element is available before trying to update the heatmap
+  
+  }
+
   createHeatmap(): void {
     const heatmapContainer = document.getElementById('heatmapContainer');
     if (heatmapContainer) {
+      console.log("Heatmap created");
       this.heatmap = h337.create({
         container: heatmapContainer,
       });
+    }
+    else{
+      console.error("HEATMAP");
     }
   }
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  getAssetZoneHistory(assetId: number): any[] {
+    // Merge `assetZoneHistory` with zone names for easier rendering
+    return (
+      this.assetZoneHistory
+        ?.filter((zone) => zone.assetId === assetId)
+        .map((zone) => ({
+          ...zone,
+          name: this.zones?.find((z) => z.id === zone.zoneId)?.name || 'Unknown Zone',
+        })) || []
+    );
   }
 
   fetchFloorMaps(): void {
@@ -117,10 +150,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
     });
   }
 
-  fetchAssets(): void {
+  fetchAssets(floorMapId: Number): void {
     this.webUiService.getAssets().subscribe({
       next: (data) => {
-        this.assets = data;
+        this.assets = data.filter((asset) => asset.floorMapId === floorMapId);
         this.assets.forEach((ass) => this.assetMap.set(ass.id, ass.name));
       },
       error: (err) => console.error('Error fetching data', err),
@@ -137,8 +170,12 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
     const floorMap = this.floorMaps?.find((fm) => fm.id === floorMapId);
     this.fetchAssetPositionHistory(floorMapId);
-    this.fetchAssets();
+    this.fetchAssets(floorMapId);
     return floorMap?.image;
+  }
+
+  getAssetPositionHistory(assetId: number): IAssetPositionHistory[] {
+    return this.assetPositionHistory?.filter((position) => position.assetId === assetId) || [];
   }
 
   fetchAssetPositionHistory(floorMapId: number): void {
@@ -146,23 +183,93 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
       next: (data) => {
         this.assetPositionHistory = data;
         this.dataSource.data = data;
+
+        if (this.heatmap) {
+          const heatmapData = {
+            min: 0,
+            max: 100,
+            data: data.map(item => ({
+              x: item.x,
+              y: item.y,
+              value: 100, // Adjust based on your logic
+            })),
+          };
+          this.heatmap.setData(heatmapData);
+        }
+
       },
       error: (err) => console.error('Error fetching data', err),
     });
-    console.log(this.assetPositionHistory);
   }
 
-  downloadPdf(): void{
-
-    const doc = new jsPDF();
-
-    (doc as any).autoTable({
-      head: [['Asset Name','X', 'Y', 'Date']],
-      body: this.assetPositionHistory?.map(item => [this.getAssetName(item.assetId),item.x, item.y, item.dateTime]),
+  fetchZones(): void {
+    this.webUiService.getZones().subscribe({
+      next: (data) => {
+        this.zones = data;
+      },
+      error: (err) => console.error('Error fetching zones', err),
     });
+  }
 
+  fetchAssetZoneHistory(): void {
+    this.webUiService.getAssetZoneHistory().subscribe({
+      next: (data) => {
+        this.assetZoneHistory = data;
+      },
+      error: (err) => console.error('Error fetching asset zone history', err),
+    });
+  }
+
+  getZoneName(zoneId: number): string {
+    return this.zoneMap.get(zoneId) || 'Unknown';
+  }
+
+  downloadPdf(): void {
+    const doc = new jsPDF();
   
-    doc.save('Assets_'+ this.selectedFloorMapId + '_' + Date.now() +'.pdf');
-
+    // Asset Table
+    doc.text('Assets', 10, 10);
+    (doc as any).autoTable({
+      startY: 15,
+      head: [['ID', 'Name', 'X', 'Y', 'Last Sync', 'Active']],
+      body: this.assets?.map((asset) => [
+        asset.id,
+        asset.name,
+        asset.x,
+        asset.y,
+        asset.lastSync,
+        asset.active ? 'Yes' : 'No',
+      ]),
+    });
+  
+    // Asset Position History Table
+    doc.text('Asset Position History', 10, (doc as any).lastAutoTable.finalY + 10);
+    (doc as any).autoTable({
+      startY: (doc as any).lastAutoTable.finalY + 15,
+      head: [['Asset Name', 'X', 'Y', 'Date']],
+      body: this.assetPositionHistory?.map((item) => [
+        this.getAssetName(item.assetId),
+        item.x,
+        item.y,
+        item.dateTime,
+      ]),
+    });
+  
+    // Asset Zone History Table
+    doc.text('Asset Zone History', 10, (doc as any).lastAutoTable.finalY + 10);
+    (doc as any).autoTable({
+      startY: (doc as any).lastAutoTable.finalY + 15,
+      head: [['Asset Name', 'Zone', 'Enter Time', 'Exit Time', 'Retention Time']],
+      body: this.assetZoneHistory?.map((item) => [
+        this.getAssetName(item.assetId),
+        this.getZoneName(item.zoneId),
+        item.enterDateTime,
+        item.exitDateTime,
+        item.retentionTime,
+      ]),
+    });
+  
+    // Save PDF
+    doc.save('Assets_' + this.selectedFloorMapId + '_' + Date.now() + '.pdf');
   }
 }

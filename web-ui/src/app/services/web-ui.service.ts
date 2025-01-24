@@ -3,6 +3,8 @@ import { Observable, of } from 'rxjs';
 import { IAsset } from '../models/iasset';
 import { IFloorMap } from '../models/IFloorMap';
 import { IAssetPositionHistory } from '../models/IAssetPositionHistory';
+import { IAssetZoneHistory } from '../models/IAssetZoneHistory';
+import { IZones } from '../models/IZones';
 
 @Injectable({
   providedIn: 'root'
@@ -84,6 +86,28 @@ export class WebUiService {
       return of(mockFloorMaps);
     }
 
+    public getZones(): Observable<IZones[]> {
+      const mockFloorMaps: IZones[] = [
+        {
+          id :1,
+          name: 'Zone A',
+          points: '1'
+        },
+        {
+          id :3,
+          name: 'Zone B',
+          points: '1'
+        },
+        {
+          id :3,
+          name: 'Zone C',
+          points: '1'
+        }
+      ];
+
+      return of(mockFloorMaps);
+    }
+
     public deleteAsset(Id: number): void {
           console.log('Asset is deleted: ', Id)
     }
@@ -140,5 +164,28 @@ export class WebUiService {
 
       return of(mockAssetPositionHistory);
     }}
+
+    public getAssetZoneHistory(): Observable<IAssetZoneHistory[]>  {
+      const mockAssetPositionHistory: IAssetZoneHistory[] = [
+        {
+          id: 1,
+          assetId: 1,
+          zoneId : 1,
+        enterDateTime :new Date('2024-12-09T10:00:00Z'),
+          exitDateTime: new Date('2024-12-09T10:00:00Z'),
+          retentionTime: 1,
+      },
+      {
+        id: 2,
+        assetId: 1,
+        zoneId : 1,
+      enterDateTime :new Date('2024-12-09T10:00:00Z'),
+        exitDateTime: new Date('2024-12-09T10:00:00Z'),
+        retentionTime: 1,
+      },
+      ];
+
+      return of(mockAssetPositionHistory);
+    }
   }
 
