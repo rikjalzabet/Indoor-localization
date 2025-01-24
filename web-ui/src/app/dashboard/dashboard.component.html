@@ -22,13 +22,14 @@
     />
 
     <div
-      *ngFor="let asset of assets; trackBy: trackByAssetId"
-      class="asset-marker"
-      [ngStyle]="{ top: asset.y + 'px', left: asset.x + 'px' }"
-      matTooltip="{{ asset.name }} (X: {{ asset.x }}, Y: {{ asset.y }})"
-      matTooltipPosition="above"
-    >
-      <mat-icon class="asset-icon">location_on</mat-icon>
-    </div>
+    *ngFor="let asset of assets; trackBy: trackByAssetId"
+    class="asset-marker"
+    [ngStyle]="{ top: getAssetPosition(asset).top + 'px', left: getAssetPosition(asset).left + 'px' }"
+    matTooltip="{{ asset.name }} (X: {{ asset.x }}, Y: {{ asset.y }})"
+    matTooltipPosition="above"
+  >
+    <mat-icon class="asset-icon">location_on</mat-icon>
+  </div>
+  
   </div>
 </div>

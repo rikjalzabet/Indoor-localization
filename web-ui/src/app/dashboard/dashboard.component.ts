@@ -7,6 +7,8 @@ import { MatListModule } from '@angular/material/list';
 import { IAsset } from '../models/iasset';
 import { MatIcon,MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { interval, Observable, Subscription, switchMap } from 'rxjs';
+import { IAssetPositionHistory } from '../models/IAssetPositionHistory';
 
 
 @Component({
@@ -22,6 +24,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
+
+  private updateSubscription!: Subscription;
   floorMaps? : IFloorMap[];
   floorMapMap = new Map<number, string>();
   selectedFloorMapId?: number;
@@ -31,8 +35,39 @@ export class DashboardComponent implements OnInit {
   
   ngOnInit(): void {
     this.fetchFloorMaps();
+
+    this.updateSubscription = interval(2000) 
+    .pipe(
+      switchMap(() => {
+        if (!this.selectedFloorMapId) return []; 
+        return this.webUiService.getAssets(); 
+      })
+    )
+    .subscribe((data: IAsset[] | undefined) => {
+      if (data) {
+        this.assets = data.filter(asset => asset.floorMapId === this.selectedFloorMapId);
+      }
+    });
+
   }
 
+  getAssetPosition(asset: IAsset): { top: number, left: number } {
+
+    const imageWidth = 1200; 
+    const imageHeight = 800;  
+
+    const gridColumns = 50;
+    const gridRows = 50;
+
+    const zoneWidth = imageWidth / gridColumns; 
+    const zoneHeight = imageHeight / gridRows;  
+
+    const left = asset.x * zoneWidth;  
+    const top = asset.y * zoneHeight;  
+
+    return { top, left };
+  }
+  
   fetchFloorMaps(): void {
     this.webUiService.getFloorMaps().subscribe({
       next: (data) => {
