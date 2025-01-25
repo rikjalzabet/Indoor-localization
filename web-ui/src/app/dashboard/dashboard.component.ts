@@ -55,22 +55,30 @@ export class DashboardComponent implements OnInit {
       window.location.reload();
     }, 1000);
 */
-  this.updateSubscription = interval(1000) // Svake 1 sekunde
-  .pipe(
-    switchMap(() => {
-      if (!this.selectedFloorMapId) return []; // Ako nema izabrane mape, ne radi ništa
-      return this.webUiService.getAssets();
-    })
-  )
-  .subscribe((data: IAsset[] | undefined) => {
-    if (data) {
-      this.assets = data.filter(
-        (asset) => asset.floorMapId === this.selectedFloorMapId
-      );
-    }
-  });
+
+
+    this.updateSubscription = interval(1000)
+    .pipe(
+      switchMap(() => this.webUiService.getAssets())
+    )
+    .subscribe((data: IAsset[] | undefined) => {
+      if (data) {
+        this.assets = [...data.filter(
+          (asset) => asset.floorMapId === this.selectedFloorMapId
+        )];
+        console.log('Ažurirani assets:', this.assets);
+        this.cdr.detectChanges(); 
+      }
+    });
 
   }
+
+  ngOnDestroy(): void {
+    if (this.updateSubscription) {
+      this.updateSubscription.unsubscribe();
+    }
+  }
+  
   getAssetPosition(asset: IAsset): { top: number, left: number } {
     const imageWidth = 1200;
     const imageHeight = 800; 
@@ -107,7 +115,6 @@ export class DashboardComponent implements OnInit {
       return undefined;
     }
     const floorMap = this.floorMaps?.find((fm) => fm.id === floorMapId);
-    this.getAssets(floorMapId);
     return floorMap?.image;
   }
 
