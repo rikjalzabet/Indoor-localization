@@ -8,7 +8,8 @@ import { IAsset } from '../models/iasset';
 import { MatIcon,MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { interval, Observable, Subscription, switchMap } from 'rxjs';
-import { IAssetPositionHistory } from '../models/IAssetPositionHistory';
+import { ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -31,42 +32,65 @@ export class DashboardComponent implements OnInit {
   selectedFloorMapId?: number;
   assets? : IAsset[];
 
-  constructor(private webUiService: WebUiService){}
+  constructor(
+    private webUiService: WebUiService,
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute, 
+    private router: Router 
+  ){}
   
   ngOnInit(): void {
-    this.fetchFloorMaps();
 
-    this.updateSubscription = interval(2000) 
-    .pipe(
-      switchMap(() => {
-        if (!this.selectedFloorMapId) return []; 
-        return this.webUiService.getAssets(); 
-      })
-    )
-    .subscribe((data: IAsset[] | undefined) => {
-      if (data) {
-        this.assets = data.filter(asset => asset.floorMapId === this.selectedFloorMapId);
+    this.route.paramMap.subscribe((params) => {
+      const floorMapId = params.get('floorMapId');
+      if (floorMapId) {
+        this.selectedFloorMapId = +floorMapId;
+        this.getAssets(this.selectedFloorMapId);
       }
     });
 
-  }
+    this.fetchFloorMaps();
+/*
+    setInterval(() => {
+      window.location.reload();
+    }, 1000);
+*/
+  this.updateSubscription = interval(1000) // Svake 1 sekunde
+  .pipe(
+    switchMap(() => {
+      if (!this.selectedFloorMapId) return []; // Ako nema izabrane mape, ne radi ništa
+      return this.webUiService.getAssets();
+    })
+  )
+  .subscribe((data: IAsset[] | undefined) => {
+    if (data) {
+      this.assets = data.filter(
+        (asset) => asset.floorMapId === this.selectedFloorMapId
+      );
+    }
+  });
 
+  }
   getAssetPosition(asset: IAsset): { top: number, left: number } {
-
-    const imageWidth = 1200; 
-    const imageHeight = 800;  
-
-    const gridColumns = 50;
-    const gridRows = 50;
-
-    const zoneWidth = imageWidth / gridColumns; 
-    const zoneHeight = imageHeight / gridRows;  
-
-    const left = asset.x * zoneWidth;  
-    const top = asset.y * zoneHeight;  
-
+    const imageWidth = 1200;
+    const imageHeight = 800; 
+  
+    const gridColumns = 50; 
+    const gridRows = 50; 
+  
+    const marginTop = 50;
+    const marginBottom = 50;
+    const marginLeft = 50;
+    const marginRight = 50; 
+  
+    const adjustedWidth = imageWidth - marginLeft - marginRight;
+    const adjustedHeight = imageHeight - marginTop - marginBottom;
+  
+    const left = marginLeft + (asset.x / gridColumns) * adjustedWidth;
+    const top = marginTop + (asset.y / gridRows) * adjustedHeight;
+  
     return { top, left };
-  }
+  }  
   
   fetchFloorMaps(): void {
     this.webUiService.getFloorMaps().subscribe({
@@ -99,6 +123,7 @@ export class DashboardComponent implements OnInit {
 
   selectFloorMap(floorMapId: number): void {
     this.selectedFloorMapId = floorMapId;
+    this.router.navigate(['/dashboard', floorMapId]);
   }
 
   trackByAssetId(index: number, asset: IAsset): number {

@@ -3,7 +3,6 @@ import { Observable, of } from 'rxjs';
 import { IAsset } from '../models/iasset';
 import { IFloorMap } from '../models/IFloorMap';
 import { HttpClient } from '@angular/common/http';
-import { IAssetPositionHistory } from '../models/IAssetPositionHistory';
 
 @Injectable({
   providedIn: 'root'
@@ -56,9 +55,6 @@ export class WebUiService {
           console.error('Error updating asset:', err);
         }
       });    
-    }
-    public getAssetPositions(floorMapId: number): Observable<IAssetPositionHistory[]> {
-      return this.http.get<IAssetPositionHistory[]>(`${this.apiUrl}/assetPositionHistory/${floorMapId}`);
     }
   }
 
