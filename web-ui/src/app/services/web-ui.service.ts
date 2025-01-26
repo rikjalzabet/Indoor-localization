@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { IAsset } from '../models/iasset';
 import { IFloorMap } from '../models/IFloorMap';
 import { HttpClient } from '@angular/common/http';
+import { IZone } from '../models/IZone';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,10 @@ export class WebUiService {
 
     public getFloorMaps(): Observable<IFloorMap[]> {
       return this.http.get<IFloorMap[]>(`${this.apiUrl}/floormaps`);
+    }
+
+    public getZones(): Observable<IZone[]> {
+      return this.http.get<IZone[]>(`${this.apiUrl}/zones`);
     }
 
     public deleteAsset(Id: number): void {

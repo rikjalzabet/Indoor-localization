@@ -10,6 +10,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { interval, Observable, Subscription, switchMap } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IZone } from '../models/IZone';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class DashboardComponent implements OnInit {
   floorMapMap = new Map<number, string>();
   selectedFloorMapId?: number;
   assets? : IAsset[];
+  zones? : IZone[];
 
   constructor(
     private webUiService: WebUiService,
@@ -50,12 +52,8 @@ export class DashboardComponent implements OnInit {
     });
 
     this.fetchFloorMaps();
-/*
-    setInterval(() => {
-      window.location.reload();
-    }, 1000);
-*/
 
+    this.fetchZones();
 
     this.updateSubscription = interval(1000)
     .pipe(
@@ -63,10 +61,11 @@ export class DashboardComponent implements OnInit {
     )
     .subscribe((data: IAsset[] | undefined) => {
       if (data) {
+        this.assets = [];
         this.assets = [...data.filter(
           (asset) => asset.floorMapId === this.selectedFloorMapId
         )];
-        console.log('Ažurirani assets:', this.assets);
+        console.log('Ažurirani assets:', this.assets[0]);
         this.cdr.detectChanges(); 
       }
     });
@@ -80,8 +79,8 @@ export class DashboardComponent implements OnInit {
   }
   
   getAssetPosition(asset: IAsset): { top: number, left: number } {
-    const imageWidth = 1200;
-    const imageHeight = 800; 
+    const imageWidth = 780;
+    const imageHeight = 610; 
   
     const gridColumns = 50; 
     const gridRows = 50; 
@@ -99,12 +98,60 @@ export class DashboardComponent implements OnInit {
   
     return { top, left };
   }  
+
+  scaleZonePoints(points: {X: number, Y: number }[]): { X: number, Y: number }[] {
+    
+    const imageWidth = 780;
+    const imageHeight = 610; 
+
+    const gridColumns = 50; 
+    const gridRows = 50; 
   
+    const marginTop = 50;
+    const marginBottom = 50;
+    const marginLeft = 50;
+    const marginRight = 50; 
+
+    const adjustedWidth = imageWidth - marginLeft - marginRight;
+    const adjustedHeight = imageHeight - marginTop - marginBottom;
+
+    const scalled = points.map(point => ({
+      X: marginLeft + (Number(point.X) / gridColumns) * adjustedWidth,
+      Y: marginTop + (Number(point.Y) / gridRows) * adjustedHeight,
+    }));
+    
+    return scalled;
+  }
+  
+  formatZonePoints(points: { X: number, Y: number }[]): string {
+    if (!points || points.length === 0) {
+      console.error('Invalid or empty points array:', points);
+      return '';
+    }
+    const formattedPoints = points.map(point => `${point.X},${point.Y}`).join(' ');
+    return formattedPoints;
+  }
+
+  getZoneColor(zoneId: number): string {
+    const colors = ['rgba(255, 0, 0, 0.3)', 'rgba(0, 255, 0, 0.3)', 'rgba(0, 0, 255, 0.3)', 'rgba(255, 255, 0, 0.3)'];
+    return colors[zoneId % colors.length];
+  }
+    
   fetchFloorMaps(): void {
     this.webUiService.getFloorMaps().subscribe({
       next: (data) => {
         this.floorMaps = data;
         this.floorMaps.forEach(fm => this.floorMapMap.set(fm.id, fm.name));
+      },
+      error: (err) => console.error('Error fetching data', err)
+    });
+  }
+
+  fetchZones(): void {
+    this.webUiService.getZones().subscribe({
+      next: (data) => {
+        this.zones = data;
+        console.log('Dohvaćene zone:', this.zones);
       },
       error: (err) => console.error('Error fetching data', err)
     });
