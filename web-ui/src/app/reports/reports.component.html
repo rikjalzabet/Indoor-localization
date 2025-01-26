@@ -2,7 +2,7 @@
     
     <mat-form-field appearance="fill">
       <mat-label>Select Floor Map</mat-label>
-      <mat-select [(value)]="selectedFloorMapId">
+      <mat-select [(value)]="selectedFloorMapId" (selectionChange)="updateFloorMapSelection()">
         <mat-option *ngFor="let floorMap of floorMaps" [value]="floorMap.id">
           {{ floorMap.name }}
         </mat-option>

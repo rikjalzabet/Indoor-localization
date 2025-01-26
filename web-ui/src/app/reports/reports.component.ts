@@ -14,6 +14,7 @@ import { MatCardModule } from '@angular/material/card';
 import { IAsset } from '../models/iasset';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatRadioModule } from '@angular/material/radio';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as h337 from 'heatmap.js';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
@@ -53,9 +54,22 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private webUiService: WebUiService) {}
+  constructor(
+    private webUiService: WebUiService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+
+    this.route.paramMap.subscribe((params) => {
+      const floorMapId = params.get('floorMapId');
+      if (floorMapId) {
+        this.selectedFloorMapId = +floorMapId;
+        this.fetchAssetPositionHistory(this.selectedFloorMapId);
+      }
+    });
+
     this.fetchFloorMaps();
   }
 
@@ -151,7 +165,17 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
     });
     console.log(this.assetPositionHistory);
   }
-
+  
+  updateFloorMapSelection(): void {
+    if (this.selectedFloorMapId) {
+      this.router.navigate(['/reports', this.selectedFloorMapId], {
+        queryParamsHandling: 'merge',
+      });
+  
+      this.fetchAssetPositionHistory(this.selectedFloorMapId);
+    }
+  }
+  
   downloadPdf(): void{
 
     const doc = new jsPDF();
