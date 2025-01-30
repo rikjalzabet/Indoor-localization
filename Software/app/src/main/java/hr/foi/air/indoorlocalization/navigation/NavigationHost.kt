@@ -49,9 +49,13 @@ fun NavigationHost(
             Heatmap(floorMap = floorMap, HeatmapAssetLiveMovement())
         }
         composable(BottomNavigationItem.Reports.route) {
-            /*JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJSON)
+            /*
+            //USE THIS FOR LOCAL TEST DATA
+            JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJSON)
             JsonDataParser().updateAssetPositionHistory(assetPositionHistoryJSON)
             Reports()*/
+
+            //USE THIS FOR FETCHING DATA FROM API
             LaunchedEffect(Unit) {
                 val apiService = getApiService()
                 val gson = Gson()
