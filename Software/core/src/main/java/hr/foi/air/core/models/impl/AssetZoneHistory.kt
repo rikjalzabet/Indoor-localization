@@ -4,7 +4,7 @@ import hr.foi.air.core.models.IAssetZoneHistory
 import java.util.Date
 
 class AssetZoneHistory(
-    override val id: Int,
+    override var id: Int,
     override val assetId: Int,
     override val zoneId: Int,
     override val enterDateTime: Date,

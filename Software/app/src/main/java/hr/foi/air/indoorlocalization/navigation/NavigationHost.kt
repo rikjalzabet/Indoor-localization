@@ -2,6 +2,7 @@ package hr.foi.air.indoorlocalization.navigation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,6 +21,7 @@ import hr.foi.air.ws.getApiService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun NavigationHost(
@@ -47,8 +49,27 @@ fun NavigationHost(
             Heatmap(floorMap = floorMap, HeatmapAssetLiveMovement())
         }
         composable(BottomNavigationItem.Reports.route) {
-            JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJSON)
+            /*JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJSON)
             JsonDataParser().updateAssetPositionHistory(assetPositionHistoryJSON)
+            Reports()*/
+            LaunchedEffect(Unit) {
+                val apiService = getApiService()
+                val gson = Gson()
+
+                val assetZoneHistory = withContext(Dispatchers.IO) {
+                    apiService.getAllAssetZoneHistory()
+                }
+                val assetZoneHistoryJson = gson.toJson(assetZoneHistory)
+                Log.d("ApiService321", "Fetched ZoneHist: $assetZoneHistoryJson")
+                val assetPositionHistory = withContext(Dispatchers.IO) {
+                    apiService.getAllAssetPositionHistory()
+                }
+                val assetPositionHistoryJson = gson.toJson(assetPositionHistory)
+                Log.d("ApiService321", "Fetched PosHist: $assetPositionHistoryJson")
+
+                JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJson)
+                JsonDataParser().updateAssetPositionHistory(assetPositionHistoryJson)
+            }
             Reports()
         }
     }

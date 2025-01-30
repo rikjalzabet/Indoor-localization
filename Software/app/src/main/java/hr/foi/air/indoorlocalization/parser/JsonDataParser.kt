@@ -12,6 +12,7 @@ import hr.foi.air.core.models.impl.AssetZoneHistory
 import hr.foi.air.core.parser.DataParser
 import hr.foi.air.core.parser.*
 import kotlinx.serialization.json.*
+import java.util.UUID
 
 
 class JsonDataParser(): DataParser {
@@ -52,12 +53,16 @@ class JsonDataParser(): DataParser {
 
     fun updateAssetPositionHistory(data: String) {
         val gson: Gson = GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            //.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
             .create()
         val assetPositionHistory: List<AssetPositionHistory> = gson.fromJson(data, object : TypeToken<List<AssetPositionHistory>>() {}.type)
         assetPositionHistory.forEach { newHistory ->
+            if (newHistory.id == 0) {
+                newHistory.id = UUID.randomUUID().hashCode()
+            }
             if (assetPositionHistoryList.none { it.id == newHistory.id }) {
                 assetPositionHistoryList.add(newHistory)
+                Log.i("YIPPI123","$assetPositionHistoryList")
             }
         }
         Log.i("JsonDataParser", "Updated asset position history has ${assetPositionHistoryList.size} entries")
@@ -65,10 +70,13 @@ class JsonDataParser(): DataParser {
 
     fun updateAssetZoneHistory(data: String) {
         val gson: Gson = GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            //.setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
             .create()
         val assetZoneHistory: List<AssetZoneHistory> = gson.fromJson(data, object : TypeToken<List<AssetZoneHistory>>() {}.type)
         assetZoneHistory.forEach { newHistory ->
+            if (newHistory.id == 0) {
+                newHistory.id = UUID.randomUUID().hashCode()
+            }
             if (assetZoneHistoryList.none { it.id == newHistory.id }) {
                 assetZoneHistoryList.add(newHistory)
             }
