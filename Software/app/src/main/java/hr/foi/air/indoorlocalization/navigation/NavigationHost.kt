@@ -1,10 +1,12 @@
 package hr.foi.air.indoorlocalization.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.google.gson.Gson
 import hr.foi.air.core.movements.ILiveAssetMovement
 import hr.foi.air.core.parser.floorMapList
 import hr.foi.air.indoorlocalization.asset.HeatmapAssetLiveMovement
@@ -14,6 +16,10 @@ import hr.foi.air.indoorlocalization.navigation.items.Heatmap
 import hr.foi.air.indoorlocalization.navigation.items.MapHome
 import hr.foi.air.indoorlocalization.navigation.items.Reports
 import hr.foi.air.indoorlocalization.parser.*
+import hr.foi.air.ws.getApiService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun NavigationHost(
@@ -30,6 +36,7 @@ fun NavigationHost(
             val floorMap = floorMapList[0]
             JsonDataParser().updateZones(testDataJSONZones)
             JsonDataParser().updateLiveAssetPositions(testAssetPositionJSON)
+            fetchAndLogAssets()
             MapHome(floorMap = floorMap, HomeMapAssetLiveMovement())
         }
         composable(BottomNavigationItem.Heatmap.route) {
@@ -43,6 +50,19 @@ fun NavigationHost(
             JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJSON)
             JsonDataParser().updateAssetPositionHistory(assetPositionHistoryJSON)
             Reports()
+        }
+    }
+}
+fun fetchAndLogAssets() {
+    val apiService = getApiService()
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val assets = apiService.getAllAssets()
+            val gson = Gson()
+            val assetsJson = gson.toJson(assets)
+            Log.d("ApiService123", "Fetched assets: $assetsJson")
+        } catch (e: Exception) {
+            Log.e("ApiService123", "Error fetching assets", e)
         }
     }
 }
