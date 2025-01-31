@@ -7,7 +7,7 @@ import retrofit2.http.*
 
 interface ApiService {
     @GET("Assets")
-    suspend fun getAllAssets(): Asset
+    suspend fun getAllAssets(): List<Asset>
 
     @GET("AssetPositionHistory")
     suspend fun getAllAssetPositionHistory(): List<AssetPositionHistory>

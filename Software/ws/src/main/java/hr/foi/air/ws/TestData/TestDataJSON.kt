@@ -31,19 +31,14 @@ val testDataJSONMap = """
             "id": 1,
             "name": "Floor 1 (local)",
             "image": "local_floor_map_test_1"
-        }
-    ]
-"""
-
-/*
-,
+        },
         {
             "id": 2,
             "name": "Floor 2 (online)",
             "image": "https://cdn.sick.com/media/content/he4/h01/10666047406110.jpg"
         }
-
-        */
+    ]
+"""
 
 val testAssetPositionJSON = """
 [

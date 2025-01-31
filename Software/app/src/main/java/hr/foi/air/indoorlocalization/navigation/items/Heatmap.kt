@@ -56,7 +56,6 @@ fun Heatmap(
     // live heatmap or history heatmap toggle
     val radioOptions = listOf("Live", "History")
     val selectedOption = remember { mutableStateOf(radioOptions[0]) }
-
     // which history frequency to use for displaying live heatmap
     val liveDateRange = listOf(Instant.now().minusSeconds(1500), Instant.now())
     val historicDateRange = listOf(Instant.from(Instant.now().minus(356, ChronoUnit.DAYS)),

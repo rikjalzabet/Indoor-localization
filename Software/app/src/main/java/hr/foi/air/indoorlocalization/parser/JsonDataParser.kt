@@ -44,11 +44,14 @@ class JsonDataParser(): DataParser {
 
     override fun updateLiveAssetPositions(data: String) {
         val gson: Gson = GsonBuilder()
-            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+            //.setDateFormat("yyyy-MM-dd HH:mm:ss")
             .create()
         val assets: List<Asset> = gson.fromJson(data, object : TypeToken<List<Asset>>() {}.type)
         Log.d("JsonDataParser", "Parsed ${assets.size} assets")
         assets.forEach { newAsset ->
+            if (newAsset.id == 0) {
+                newAsset.id = UUID.randomUUID().hashCode()
+            }
             Log.d("JsonDataParserAB", "Asset: ${newAsset.id}, x = ${newAsset.x}, y = ${newAsset.y}")
             if (liveAssetPositionList.none { it.id == newAsset.id }) {
                 liveAssetPositionList.add(newAsset)

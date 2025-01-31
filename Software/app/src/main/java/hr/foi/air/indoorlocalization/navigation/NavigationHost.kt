@@ -3,6 +3,7 @@ package hr.foi.air.indoorlocalization.navigation
 import android.util.Log
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,7 +15,7 @@ import androidx.navigation.compose.composable
 import com.google.gson.Gson
 import hr.foi.air.core.models.IFloorMap
 import hr.foi.air.core.movements.ILiveAssetMovement
-import hr.foi.air.core.parser.floorMapList
+import hr.foi.air.core.parser.*
 import hr.foi.air.indoorlocalization.asset.HeatmapAssetLiveMovement
 import hr.foi.air.indoorlocalization.asset.HomeMapAssetLiveMovement
 import hr.foi.air.ws.TestData.*
@@ -28,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.floor
 
 @Composable
 fun NavigationHost(
@@ -40,6 +42,11 @@ fun NavigationHost(
         modifier = modifier
     ) {
         composable(BottomNavigationItem.Map.route) {
+            /*DisposableEffect(Unit) {
+                onDispose {
+                    liveAssetPositionList.clear()
+                }
+            }*/
             //USE THIS FOR LOCAL TEST DATA
             /*JsonDataParser().updateFloorMaps(testDataJSONMap)
             val floorMap = floorMapList[0]
@@ -47,59 +54,67 @@ fun NavigationHost(
             JsonDataParser().updateLiveAssetPositions(testAssetPositionJSON)
             fetchAndLogAssets()
             MapHome(floorMap = floorMap, HomeMapAssetLiveMovement())*/
-            //USE THIS FOR LIVE TEST DATA (for now only zones)
-            //JsonDataParser().updateFloorMaps(testDataJSONMap)
-           // var floorMap: IFloorMap
+            //USE THIS FOR LIVE TEST DATA
             var floorMap = remember { mutableStateOf<IFloorMap?>(null) }
             var isDataLoaded = remember { mutableStateOf(false) }
             LaunchedEffect(Unit) {
-                /*val apiService = getApiService()
-                val gson = Gson()
-
-                val getZones = withContext(Dispatchers.IO) {
-                    apiService.getAllZones()
-                }
-                val getZonesToJson = gson.toJson(getZones)
-                Log.d("ApiService333", "Fetched ZoneHist: $getZonesToJson")
-
-                val getMaps = withContext(Dispatchers.IO) {
-                    apiService.getAllFloorMaps()
-                }
-                val getMapsToJson = gson.toJson(getMaps)
-                Log.d("ApiService333", "Fetched Maps: $getMapsToJson")
-
-
-                JsonDataParser().updateZones(getZonesToJson)
-                JsonDataParser().updateFloorMaps(getMapsToJson)
-                Log.d("ApiService333", "SAved Maps: $floorMapList")
-
-                if (floorMapList.isNotEmpty()) {
-                    floorMap.value = floorMapList[1] // Assign the fetched floorMap
-                }*/
+                /*
+                Keep in mind, that every floorMapId has to have at least 1 asset.
+                Example json on "server":
+                Asset:[
+                  {
+                    id: Math.floor(Math.random()),
+                    name: "Asset" + Math.floor(Math.random() * 100.0),
+                    x: 0.2,
+                    y: 0.5,
+                    lastSync: new Date().toISOString(),
+                    floorMapId: 2,
+                    active: true,
+                  },
+                  {
+                    id: Math.floor(Math.random()),
+                    name: "Asset" + Math.floor(Math.random() * 100.0),
+                    x: Number((Math.random() * 2.0).toFixed(1)),
+                    y: Number((Math.random() * 2.0).toFixed(1)),
+                    lastSync: new Date().toISOString(),
+                    floorMapId: 1,
+                    active: true,
+                  }
+                ]
+                */
                 try {
                     val apiService = getApiService()
                     val gson = Gson()
+                    clearDataListsIfTheyNotEmpty()
 
+                    //Get zones
                     val getZones = withContext(Dispatchers.IO) {
                         apiService.getAllZones()
                     }
                     val getZonesToJson = gson.toJson(getZones)
                     Log.d("ApiService44", "Fetched Zones: $getZonesToJson")
-
+                    //get maps
                     val getMaps = withContext(Dispatchers.IO) {
-                        apiService.getAllFloorMaps() // Ensure this actually fetches maps
+                        apiService.getAllFloorMaps()
                     }
                     val getMapsToJson = gson.toJson(getMaps)
                     Log.d("ApiService44", "Fetched Maps: $getMapsToJson")
+                    //get live movement
+                    val getLiveMovement = withContext(Dispatchers.IO) {
+                        apiService.getAllAssets()
+                    }
+                    val getLiveMovementToJson = gson.toJson(getLiveMovement)
+                    Log.d("ApiService44", "Fetched Live Movement: $getLiveMovementToJson")
 
                     JsonDataParser().updateZones(getZonesToJson)
                     JsonDataParser().updateFloorMaps(getMapsToJson)
+                    JsonDataParser().updateLiveAssetPositions(getLiveMovementToJson)
 
                     delay(3000L)
 
                     if (floorMapList.size > 1) {
                         floorMap.value = floorMapList[1]
-                        isDataLoaded.value = true // Mark data as loaded
+                        isDataLoaded.value = true
                     } else {
                         Log.e("ApiService", "floorMapList is empty or too small!")
                     }
@@ -108,30 +123,88 @@ fun NavigationHost(
                 }
             }
             if (!isDataLoaded.value) {
-                CircularProgressIndicator() // Or any other loading UI
+                CircularProgressIndicator()
             } else {
                 floorMap?.let {
-                    JsonDataParser().updateLiveAssetPositions(testAssetPositionJSON)
                     fetchAndLogAssets()
                     MapHome(floorMap = floorMap.value!!, HomeMapAssetLiveMovement())
                 }
             }
-
-            /*JsonDataParser().updateLiveAssetPositions(testAssetPositionJSON)
-            fetchAndLogAssets()
-
-            floorMap?.let {
-                MapHome(floorMap = floorMap.value!!, HomeMapAssetLiveMovement())
-            }*/
         }
         composable(BottomNavigationItem.Heatmap.route) {
-            JsonDataParser().updateFloorMaps(testDataJSONMap)
+            /*DisposableEffect(Unit) {
+                onDispose {
+                    liveAssetPositionList.clear()
+                    assetPositionHistoryList.clear()
+                    assetZoneHistoryList.clear()
+                }
+            }*/
+            /*JsonDataParser().updateFloorMaps(testDataJSONMap)
             val floorMap = floorMapList[0]
             JsonDataParser().updateZones(testDataJSONZones)
             JsonDataParser().updateLiveAssetPositions(testAssetPositionJSON)
-            Heatmap(floorMap = floorMap, HeatmapAssetLiveMovement())
+            Heatmap(floorMap = floorMap, HeatmapAssetLiveMovement())*/
+            var floorMap = remember { mutableStateOf<IFloorMap?>(null) }
+            var isDataLoaded = remember { mutableStateOf(false) }
+            LaunchedEffect(Unit) {
+                try {
+                    val apiService = getApiService()
+                    val gson = Gson()
+
+                    clearDataListsIfTheyNotEmpty()
+
+                    //Get zones
+                    val getZones = withContext(Dispatchers.IO) {
+                        apiService.getAllZones()
+                    }
+                    val getZonesToJson = gson.toJson(getZones)
+                    Log.d("ApiService44", "Fetched Zones: $getZonesToJson")
+
+                    //get maps
+                    val getMaps = withContext(Dispatchers.IO) {
+                        apiService.getAllFloorMaps()
+                    }
+                    val getMapsToJson = gson.toJson(getMaps)
+                    Log.d("ApiService44", "Fetched Maps: $getMapsToJson")
+
+                    //get live movement
+
+                    val getLiveMovement = withContext(Dispatchers.IO) {
+                        apiService.getAllAssets()
+                    }
+                    val getLiveMovementToJson = gson.toJson(getLiveMovement)
+                    Log.d("ApiService44", "Fetched Live Movement: $getLiveMovementToJson")
+
+                    JsonDataParser().updateZones(getZonesToJson)
+                    JsonDataParser().updateFloorMaps(getMapsToJson)
+                    JsonDataParser().updateLiveAssetPositions(getLiveMovementToJson)
+
+                    delay(3000L)
+
+                        floorMap.value = floorMapList[1]
+                        isDataLoaded.value = true // Mark data as loaded
+
+                } catch (e: Exception) {
+                    Log.e("ApiService", "Error fetching data: ${e.message}")
+                }
+            }
+            if (!isDataLoaded.value) {
+                CircularProgressIndicator() // Or any other loading UI
+            } else {
+                floorMap?.let {
+                    //JsonDataParser().updateLiveAssetPositions(testAssetPositionJSON)
+                    fetchAndLogAssets()
+                    Heatmap(floorMap = floorMap.value!!, HeatmapAssetLiveMovement())
+                }
+            }
         }
         composable(BottomNavigationItem.Reports.route) {
+            /*DisposableEffect(Unit) {
+                onDispose {
+                    assetPositionHistoryList.clear()
+                    assetZoneHistoryList.clear()
+                }
+            }*/
             /*
             //USE THIS FOR LOCAL TEST DATA
             JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJSON)
@@ -142,6 +215,8 @@ fun NavigationHost(
             LaunchedEffect(Unit) {
                 val apiService = getApiService()
                 val gson = Gson()
+
+                clearDataListsIfTheyNotEmpty()
 
                 val assetZoneHistory = withContext(Dispatchers.IO) {
                     apiService.getAllAssetZoneHistory()
@@ -172,5 +247,18 @@ fun fetchAndLogAssets() {
         } catch (e: Exception) {
             Log.e("ApiService123", "Error fetching assets", e)
         }
+    }
+}
+fun clearDataListsIfTheyNotEmpty() {
+    if (floorMapList.isNotEmpty()
+        || zonesList.isNotEmpty()
+        || liveAssetPositionList.isNotEmpty()
+        || assetPositionHistoryList.isNotEmpty()
+        || assetZoneHistoryList.isNotEmpty()) {
+        floorMapList.clear()
+        zonesList.clear()
+        liveAssetPositionList.clear()
+        assetPositionHistoryList.clear()
+        assetZoneHistoryList.clear()
     }
 }
