@@ -132,13 +132,6 @@ fun NavigationHost(
             }
         }
         composable(BottomNavigationItem.Heatmap.route) {
-            /*DisposableEffect(Unit) {
-                onDispose {
-                    liveAssetPositionList.clear()
-                    assetPositionHistoryList.clear()
-                    assetZoneHistoryList.clear()
-                }
-            }*/
             /*JsonDataParser().updateFloorMaps(testDataJSONMap)
             val floorMap = floorMapList[0]
             JsonDataParser().updateZones(testDataJSONZones)
@@ -150,7 +143,6 @@ fun NavigationHost(
                 try {
                     val apiService = getApiService()
                     val gson = Gson()
-
                     clearDataListsIfTheyNotEmpty()
 
                     //Get zones
@@ -158,32 +150,38 @@ fun NavigationHost(
                         apiService.getAllZones()
                     }
                     val getZonesToJson = gson.toJson(getZones)
-                    Log.d("ApiService44", "Fetched Zones: $getZonesToJson")
-
+                    Log.d("ApiService551", "Fetched Zones: $getZonesToJson")
                     //get maps
                     val getMaps = withContext(Dispatchers.IO) {
                         apiService.getAllFloorMaps()
                     }
                     val getMapsToJson = gson.toJson(getMaps)
-                    Log.d("ApiService44", "Fetched Maps: $getMapsToJson")
-
-                    //get live movement
-
+                    Log.d("ApiService551", "Fetched Maps: $getMapsToJson")
+                    //get live movement - live heatmap
                     val getLiveMovement = withContext(Dispatchers.IO) {
                         apiService.getAllAssets()
                     }
                     val getLiveMovementToJson = gson.toJson(getLiveMovement)
-                    Log.d("ApiService44", "Fetched Live Movement: $getLiveMovementToJson")
-
+                    Log.d("ApiService551", "Fetched Live Movement: $getLiveMovementToJson")
+                    //get position history - history heatmap
+                    val assetPositionHistory = withContext(Dispatchers.IO) {
+                        apiService.getAllAssetPositionHistory()
+                    }
+                    val assetPositionHistoryJson = gson.toJson(assetPositionHistory)
+                    Log.d("ApiService551", "Fetched PosHist: $assetPositionHistoryJson")
+                    //transform data
+                    JsonDataParser().updateAssetPositionHistory(assetPositionHistoryJson)
                     JsonDataParser().updateZones(getZonesToJson)
                     JsonDataParser().updateFloorMaps(getMapsToJson)
                     JsonDataParser().updateLiveAssetPositions(getLiveMovementToJson)
 
                     delay(3000L)
-
+                    if (floorMapList.size > 1) {
                         floorMap.value = floorMapList[1]
-                        isDataLoaded.value = true // Mark data as loaded
-
+                        isDataLoaded.value = true
+                    } else {
+                        Log.e("ApiService", "floorMapList is empty or too small!")
+                    }
                 } catch (e: Exception) {
                     Log.e("ApiService", "Error fetching data: ${e.message}")
                 }
@@ -192,19 +190,11 @@ fun NavigationHost(
                 CircularProgressIndicator() // Or any other loading UI
             } else {
                 floorMap?.let {
-                    //JsonDataParser().updateLiveAssetPositions(testAssetPositionJSON)
-                    fetchAndLogAssets()
                     Heatmap(floorMap = floorMap.value!!, HeatmapAssetLiveMovement())
                 }
             }
         }
         composable(BottomNavigationItem.Reports.route) {
-            /*DisposableEffect(Unit) {
-                onDispose {
-                    assetPositionHistoryList.clear()
-                    assetZoneHistoryList.clear()
-                }
-            }*/
             /*
             //USE THIS FOR LOCAL TEST DATA
             JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJSON)
