@@ -10,5 +10,7 @@ namespace DataAccessLayer.Interfaces
     public interface IAssetRepository : IRepository<Asset>
     {
         Task<int> UpdateAsset(Asset asset, int id);
+        Task<int> UpdateAssetPosition(AssetPositionHistory assetPositionHistory);
+
     }
 }

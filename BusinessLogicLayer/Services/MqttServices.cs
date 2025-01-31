@@ -72,9 +72,10 @@ namespace BusinessLogicLayer.Services
                     using var scope = _serviceProvider.CreateScope();
                     var positionService = scope.ServiceProvider.GetRequiredService<IAssetPositionHistoryService>();
                     var zoneService = scope.ServiceProvider.GetRequiredService<IAssetZoneHistoryService>();
+                    var assetService = scope.ServiceProvider.GetRequiredService<IAssetService>();
 
 
-                    await SavePositionToDatabaseAsync(positionService, zoneService, positionData, stoppingToken);
+                    await SavePositionToDatabaseAsync(positionService, zoneService, assetService, positionData, stoppingToken);
                 }
             }
             catch (Exception ex)
@@ -83,11 +84,13 @@ namespace BusinessLogicLayer.Services
             }
         }
 
-        private async Task SavePositionToDatabaseAsync(IAssetPositionHistoryService positionService, IAssetZoneHistoryService zoneService, AssetPositionHistory positionData, CancellationToken stoppingToken)
+        private async Task SavePositionToDatabaseAsync(IAssetPositionHistoryService positionService, IAssetZoneHistoryService zoneService, IAssetService assetService, AssetPositionHistory positionData, CancellationToken stoppingToken)
         {
             await positionService.AddAssetPositionHistory(positionData);
 
             await UpdateZoneHistory(zoneService, positionData);
+
+            await UpdateAssetPosition(assetService, positionData);
 
             Console.WriteLine("Spremam poziciju u bazu i ažuriram povijest zona!");
             await Task.CompletedTask;
@@ -97,6 +100,10 @@ namespace BusinessLogicLayer.Services
         {
             await zoneService.UpdateZoneHistory(positionData);
             await Task.CompletedTask;
+        }
+        private async Task UpdateAssetPosition(IAssetService assetService, AssetPositionHistory positionData)
+        {
+            await assetService.UpdateAssetPosition(positionData);
         }
     }
 }

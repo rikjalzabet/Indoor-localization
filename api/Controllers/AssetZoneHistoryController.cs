@@ -42,19 +42,5 @@ namespace api.Controllers
                 return BadRequest();
             }
         }
-
-        /*[HttpGet("{zoneId}")]
-        public async Task<IActionResult> GetAssetZoneHistoriesByZoneId(int zoneId)
-        {
-            var assetZoneHistoriesByZoneId = await _assetZoneHistoryService.GetAssetZoneHistoryByAssetId(zoneId);
-            if (assetZoneHistoriesByZoneId != null)
-            {
-                return Ok(assetZoneHistoriesByZoneId);
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }*/
     }
 }

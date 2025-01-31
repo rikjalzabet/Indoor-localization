@@ -51,5 +51,13 @@ namespace BusinessLogicLayer.Services
             isSuccessful = affectedRow > 0;
             return isSuccessful;
         }
+        public async Task<bool> UpdateAssetPosition(AssetPositionHistory assetPositionHistory)
+        {
+            bool isSuccessful = false;
+            int affectedRow = await _assetRepository.UpdateAssetPosition(assetPositionHistory);
+
+            isSuccessful = affectedRow > 0;
+            return isSuccessful;
+        }
     }
 }
