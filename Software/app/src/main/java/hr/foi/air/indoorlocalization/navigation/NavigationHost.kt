@@ -34,9 +34,29 @@ fun NavigationHost(
         modifier = modifier
     ) {
         composable(BottomNavigationItem.Map.route) {
-            JsonDataParser().updateFloorMaps(testDataJSONMap)
+            //USE THIS FOR LOCAL TEST DATA
+            /*JsonDataParser().updateFloorMaps(testDataJSONMap)
             val floorMap = floorMapList[0]
             JsonDataParser().updateZones(testDataJSONZones)
+            JsonDataParser().updateLiveAssetPositions(testAssetPositionJSON)
+            fetchAndLogAssets()
+            MapHome(floorMap = floorMap, HomeMapAssetLiveMovement())*/
+            //USE THIS FOR LIVE TEST DATA (for now only zones)
+            LaunchedEffect(Unit) {
+                val apiService = getApiService()
+                val gson = Gson()
+
+                val getZones = withContext(Dispatchers.IO) {
+                    apiService.getAllZones()
+                }
+                val getZonesToJson = gson.toJson(getZones)
+                Log.d("ApiService321", "Fetched ZoneHist: $getZonesToJson")
+
+                JsonDataParser().updateZones(getZonesToJson)
+            }
+
+            JsonDataParser().updateFloorMaps(testDataJSONMap)
+            val floorMap = floorMapList[0]
             JsonDataParser().updateLiveAssetPositions(testAssetPositionJSON)
             fetchAndLogAssets()
             MapHome(floorMap = floorMap, HomeMapAssetLiveMovement())

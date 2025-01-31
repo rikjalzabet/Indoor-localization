@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class Zone(
-    override val id: Int,
+    override var id: Int,
     override val name: String,
     override val points: List<Point>
 ): IZone {

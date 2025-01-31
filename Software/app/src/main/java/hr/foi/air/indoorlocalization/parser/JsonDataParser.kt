@@ -20,6 +20,9 @@ class JsonDataParser(): DataParser {
         val gson = Gson()
         val newZones = gson.fromJson(data, Array<Zone>::class.java).toList()
         newZones.forEach { newZone ->
+            if (newZone.id == 0) {
+                newZone.id = UUID.randomUUID().hashCode()
+            }
             if (zonesList.none { it.id == newZone.id }) {
                 zonesList.add(newZone)
             }
