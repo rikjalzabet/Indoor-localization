@@ -31,24 +31,29 @@ val testDataJSONMap = """
             "id": 1,
             "name": "Floor 1 (local)",
             "image": "local_floor_map_test_1"
-        },
+        }
+    ]
+"""
+
+/*
+,
         {
             "id": 2,
             "name": "Floor 2 (online)",
             "image": "https://cdn.sick.com/media/content/he4/h01/10666047406110.jpg"
         }
-    ]
-"""
+
+        */
 
 val testAssetPositionJSON = """
 [
-    { "id": 1, "name": "Asset 1", "x": 0.2, "y": 0.2, "lastSync": "2024-12-02 00:00:00", "floorMapId": 1, "active": true },
-    { "id": 2, "name": "Asset 2", "x": 0.5, "y": 0.4, "lastSync": "2024-12-02 00:00:05", "floorMapId": 1, "active": true },
-    { "id": 3, "name": "Asset 3", "x": 0.1, "y": 0.1, "lastSync": "2024-12-02 00:00:10", "floorMapId": 1, "active": true },
-    { "id": 4, "name": "Asset 4", "x": 0.01, "y": 0.01, "lastSync": "2024-12-02 00:00:15", "floorMapId": 1, "active": true },
-    { "id": 5, "name": "Asset 1", "x": 0.2, "y": 0.2, "lastSync": "2024-12-02 00:00:20", "floorMapId": 1, "active": true },
-    { "id": 6, "name": "Asset 2", "x": 0.5, "y": 0.4, "lastSync": "2024-12-02 00:00:25", "floorMapId": 1, "active": true },
-    { "id": 7, "name": "Asset 3", "x": 0.1, "y": 0.1, "lastSync": "2024-12-02 00:00:30", "floorMapId": 1, "active": true },
+    { "id": 1, "name": "Asset 1", "x": 0.2, "y": 0.2, "lastSync": "2024-12-02 00:00:00", "floorMapId": 2, "active": true },
+    { "id": 2, "name": "Asset 2", "x": 0.5, "y": 0.4, "lastSync": "2024-12-02 00:00:05", "floorMapId": 2, "active": true },
+    { "id": 3, "name": "Asset 3", "x": 0.1, "y": 0.1, "lastSync": "2024-12-02 00:00:10", "floorMapId": 2, "active": true },
+    { "id": 4, "name": "Asset 4", "x": 0.01, "y": 0.01, "lastSync": "2024-12-02 00:00:15", "floorMapId": 2, "active": true },
+    { "id": 5, "name": "Asset 1", "x": 0.2, "y": 0.2, "lastSync": "2024-12-02 00:00:20", "floorMapId": 2, "active": true },
+    { "id": 6, "name": "Asset 2", "x": 0.5, "y": 0.4, "lastSync": "2024-12-02 00:00:25", "floorMapId": 2, "active": true },
+    { "id": 7, "name": "Asset 3", "x": 0.1, "y": 0.1, "lastSync": "2024-12-02 00:00:30", "floorMapId": 2, "active": true },
     { "id": 8, "name": "Asset 4", "x": 0.01, "y": 0.01, "lastSync": "2024-12-02 00:00:35", "floorMapId": 1, "active": true },
     { "id": 9, "name": "Asset 1", "x": 0.2, "y": 0.2, "lastSync": "2024-12-02 00:00:40", "floorMapId": 1, "active": true },
     { "id": 10, "name": "Asset 2", "x": 0.5, "y": 0.4, "lastSync": "2024-12-02 00:00:45", "floorMapId": 1, "active": true },

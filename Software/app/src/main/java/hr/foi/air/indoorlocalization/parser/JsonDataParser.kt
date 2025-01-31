@@ -33,6 +33,9 @@ class JsonDataParser(): DataParser {
         val gson = Gson()
         val newFloorMaps = gson.fromJson(data, Array<FloorMap>::class.java).toList()
         newFloorMaps.forEach { newFloorMap ->
+            if (newFloorMap.id == 0) {
+                newFloorMap.id = UUID.randomUUID().hashCode()
+            }
             if (floorMapList.none { it.id == newFloorMap.id }) {
                 floorMapList.add(newFloorMap)
             }
