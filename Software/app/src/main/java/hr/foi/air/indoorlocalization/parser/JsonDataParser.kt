@@ -44,7 +44,7 @@ class JsonDataParser(): DataParser {
 
     override fun updateLiveAssetPositions(data: String) {
         val gson: Gson = GsonBuilder()
-            //.setDateFormat("yyyy-MM-dd HH:mm:ss")
+            .setDateFormat("yyyy-MM-dd HH:mm:ss")
             .create()
         val assets: List<Asset> = gson.fromJson(data, object : TypeToken<List<Asset>>() {}.type)
         Log.d("JsonDataParser", "Parsed ${assets.size} assets")
@@ -92,4 +92,27 @@ class JsonDataParser(): DataParser {
         }
         Log.i("JsonDataParser", "Updated asset zone history has ${assetZoneHistoryList.size} entries")
     }
+
+    ////////////////////////////////////////////////////////
+
+    /*fun parseLiveAssetPositions(data: String): List<Asset> {
+        val gson: Gson = GsonBuilder()
+            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+            .create()
+        return gson.fromJson(data, object : TypeToken<List<Asset>>() {}.type)
+    }
+
+    fun parseAssetPositionHistory(data: String): List<AssetPositionHistory> {
+        val gson: Gson = GsonBuilder()
+            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+            .create()
+        return gson.fromJson(data, object : TypeToken<List<AssetPositionHistory>>() {}.type)
+    }
+
+    fun parseAssetZoneHistory(data: String): List<AssetZoneHistory> {
+        val gson: Gson = GsonBuilder()
+            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+            .create()
+        return gson.fromJson(data, object : TypeToken<List<AssetZoneHistory>>() {}.type)
+    }*/
 }

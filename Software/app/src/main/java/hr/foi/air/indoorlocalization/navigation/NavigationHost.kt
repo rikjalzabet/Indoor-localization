@@ -195,12 +195,12 @@ fun NavigationHost(
             }
         }
         composable(BottomNavigationItem.Reports.route) {
-            /*
+
             //USE THIS FOR LOCAL TEST DATA
             JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJSON)
             JsonDataParser().updateAssetPositionHistory(assetPositionHistoryJSON)
-            Reports()*/
-
+            Reports()
+/*
             //USE THIS FOR FETCHING DATA FROM API
             LaunchedEffect(Unit) {
                 val apiService = getApiService()
@@ -222,7 +222,7 @@ fun NavigationHost(
                 JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJson)
                 JsonDataParser().updateAssetPositionHistory(assetPositionHistoryJson)
             }
-            Reports()
+            Reports()*/
         }
     }
 }

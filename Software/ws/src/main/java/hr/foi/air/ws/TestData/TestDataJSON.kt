@@ -69,7 +69,7 @@ val assetPositionHistoryJSON = """
     [
         {
             "id": 1,
-            "assetId": 101,
+            "assetId": 1,
             "x": 12.34,
             "y": 56.78,
             "dateTime": "2025-01-01T10:00:00Z",
@@ -77,7 +77,7 @@ val assetPositionHistoryJSON = """
         },
         {
             "id": 2,
-            "assetId": 102,
+            "assetId": 1,
             "x": 98.76,
             "y": 54.32,
             "dateTime": "2025-01-02T11:30:00Z",
@@ -90,7 +90,7 @@ val assetZoneHistoryJSON = """
     [
         {
             "id": 1,
-            "assetId": 101,
+            "assetId": 1,
             "zoneId": 201,
             "enterDateTime": "2025-01-01T09:00:00Z",
             "exitDateTime": "2025-01-01T10:00:00Z",
@@ -98,7 +98,7 @@ val assetZoneHistoryJSON = """
         },
         {
             "id": 2,
-            "assetId": 102,
+            "assetId": 2,
             "zoneId": 202,
             "enterDateTime": "2025-01-02T11:00:00Z",
             "exitDateTime": null,
