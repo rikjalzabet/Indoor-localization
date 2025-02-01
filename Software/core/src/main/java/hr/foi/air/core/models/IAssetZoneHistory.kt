@@ -8,5 +8,5 @@ interface IAssetZoneHistory {
     val zoneId: Int
     val enterDateTime: String
     val exitDateTime: String?
-    val retentionTime: Long
+    val retentionTime: String
 }
