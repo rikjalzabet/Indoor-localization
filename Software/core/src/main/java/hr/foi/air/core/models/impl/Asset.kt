@@ -8,7 +8,7 @@ class Asset(
     override val name: String,
     override val x: Float,
     override val y: Float,
-    override val lastSync: Date,
+    override val lastSync: String,
     override val floorMapId: Int,
     override val active: Boolean
 ): IAsset {

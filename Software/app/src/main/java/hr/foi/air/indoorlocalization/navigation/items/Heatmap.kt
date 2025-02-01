@@ -32,6 +32,7 @@ import coil.request.ImageRequest
 import coil3.compose.rememberAsyncImagePainter
 import hr.foi.air.core.models.HeatmapDot
 import hr.foi.air.core.models.HeatmapLiveDot
+import hr.foi.air.core.parser.assetZoneHistoryList
 import hr.foi.air.core.parser.zonesList
 import hr.foi.air.indoorlocalization.helpers.*
 import hr.foi.air.indoorlocalization.zones.ZoneOverlay
@@ -43,6 +44,7 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
+import kotlin.math.floor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,7 +57,7 @@ fun Heatmap(
     val currentPosition = remember { mutableStateOf(Offset.Zero) }
     val heatmapDots = remember { mutableStateListOf<HeatmapDot>() }
     val heatmapLiveDots = remember { mutableStateListOf<HeatmapLiveDot>() }
-    val maxHeatmapDotFrequency = 10;
+    val maxHeatmapDotFrequency = 1;
 
     LaunchedEffect(Unit) {
         ILiveAssetMovement.simulateLiveMovement(currentPosition, floorMap.id)
@@ -64,13 +66,8 @@ fun Heatmap(
     // live heatmap or history heatmap toggle
     val radioOptions = listOf("Live", "History")
     val selectedOption = remember { mutableStateOf(radioOptions[0]) }
-    // which history frequency to use for displaying live heatmap
-    val liveDateRange = listOf(Instant.now().minusSeconds(1500), Instant.now())
-    val historicDateRange = listOf(Instant.from(Instant.now().minus(356, ChronoUnit.DAYS)),
-                        Instant.now())
 
     // date range picker
-    val context = LocalContext.current
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     var startDate by remember { mutableStateOf(LocalDate.now().minusDays(365)) }
@@ -79,6 +76,14 @@ fun Heatmap(
     var showStartDatePicker by remember { mutableStateOf(false) }
     var showEndDatePicker by remember { mutableStateOf(false) }
 
+    val mapsList = remember { floorMapList }
+
+
+    var selectedMap by remember { mutableIntStateOf(floorMap.id) }
+    var selectedMapText by remember { mutableStateOf(floorMap.name) }
+
+    var selectedFloorMap by remember { mutableStateOf(floorMap) }
+
 
     Column(
         modifier = Modifier
@@ -86,6 +91,43 @@ fun Heatmap(
             .padding(5.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+            ){
+
+            var expanded by remember { mutableStateOf(false) }
+            Text("Select a map:", modifier = Modifier.padding(5.dp).align(Alignment.CenterVertically))
+
+            Box {
+
+                Button(onClick = {expanded = true}) {
+                        Text(selectedMapText)
+                }
+                
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {expanded = false}
+                ) {
+
+
+
+                    mapsList.forEach { map ->
+                        DropdownMenuItem(
+                            text = { Text(map.name)},
+                            onClick = {
+                                selectedMap = map.id
+                                selectedMapText = map.name
+                                expanded = false
+                                selectedFloorMap = map
+                            }
+                        )
+                    }
+                }
+            }
+        }
+
         Row(modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
@@ -160,12 +202,12 @@ fun Heatmap(
             contentAlignment = Alignment.Center
         ){
             val painter: Painter =
-                if(!floorMap.image.startsWith("http")) {
+                if(!selectedFloorMap.image.startsWith("http")) {
                     val context = LocalContext.current
                     val resourceId = context
                         .resources
                         .getIdentifier(
-                            floorMap.image,
+                            selectedFloorMap.image,
                             "drawable",
                             context.packageName
                         )
@@ -174,7 +216,7 @@ fun Heatmap(
                 else{
                     rememberAsyncImagePainter(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(floorMap.image)
+                            .data(selectedFloorMap.image)
                             .build()
                     )
                 }
@@ -261,7 +303,7 @@ fun Heatmap(
 
                         } else {*/
                         dots = calculateHeatmapDotsInDateRange(
-                            floorMapId = floorMap.id,
+                            floorMapId = selectedFloorMap.id,
                             fromDate = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
                             toDate = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
                             maxFrequency = maxHeatmapDotFrequency,
@@ -273,7 +315,7 @@ fun Heatmap(
             }
 
             Text(
-                text = floorMap.name,
+                text = selectedFloorMap.name,
                 modifier = Modifier
                     .padding(16.dp)
                     .align(Alignment.TopCenter)

@@ -1,5 +1,7 @@
 package hr.foi.air.indoorlocalization.helpers
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -8,6 +10,12 @@ import hr.foi.air.core.models.impl.AssetPositionHistory
 import java.time.Instant
 import java.util.Date
 import hr.foi.air.core.models.HeatmapLiveDot
+import hr.foi.air.core.parser.assetPositionHistoryList
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 fun calculateColorForFrequency(frequency: Int, maxFrequency: Int): Color {
     return when {
@@ -57,17 +65,29 @@ fun calculateSizeForColorLiveAsset(color: Color, dot: HeatmapLiveDot): Float {
     }
 }
 
+@Composable
 fun calculateHeatmapDotsInDateRange(floorMapId : Int, size : Size, fromDate: Date, toDate: Date,
                                     maxFrequency : Int) : List<HeatmapDot> {
 
     // currently using dummy data; to-refactor
 
-    val historyAssetPositions = List(10000){
-        generateRandomAssetPositionHistory(floorMapId, size)
+    //val historyAssetPositions = List(10000){
+     //   generateRandomAssetPositionHistory(floorMapId, size)
+    //}
+
+    val historyAssetPositions = remember { assetPositionHistoryList }
+
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+
+    val historyWithinRange = historyAssetPositions.filter {
+        val date = LocalDateTime.parse(it.dateTime, formatter)
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .let { Date.from(it) }
+        date in fromDate..toDate
     }
 
-    val historyWithinRange = historyAssetPositions.filter { it.dateTime in fromDate..toDate}
-    val areaSizeToGroupBy = 32
+    val areaSizeToGroupBy = 1
 
     val groupedHistory = historyWithinRange.groupBy {
         Offset(
@@ -95,7 +115,7 @@ fun generateRandomAssetPositionHistory(floormapId : Int, maxSize : Size) : Asset
     return AssetPositionHistory(
         id = kotlin.random.Random.nextInt(0, 100),
         assetId = 1,
-        dateTime = generateRandomDate(),
+        dateTime = generateRandomDate().toString(),
         x = kotlin.random.Random.nextInt(0, maxSize.width.toInt()).toFloat(),
         y = kotlin.random.Random.nextInt(0, maxSize.height.toInt()).toFloat(),
         floorMapId = floormapId

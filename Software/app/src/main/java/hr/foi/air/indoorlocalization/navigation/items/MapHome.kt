@@ -36,34 +36,85 @@ fun MapHome(
     val imageOffset = remember { mutableStateOf(Offset.Zero) }
     val currentPosition = remember { mutableStateOf(Offset.Zero) }
 
+    var selectedMap by remember { mutableIntStateOf(floorMap.id) }
+    var selectedMapText by remember { mutableStateOf(floorMap.name) }
+
+    var selectedFloorMap by remember { mutableStateOf(floorMap) }
+
+    val mapsList = remember { floorMapList }
+
     LaunchedEffect(Unit) {
         ILiveAssetMovement.simulateLiveMovement(currentPosition, floorMap.id)
     }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(5.dp),
-        contentAlignment = Alignment.Center
-    ){
-        val painter: Painter =
-        if(!floorMap.image.startsWith("http")) {
-            val context = LocalContext.current
-            val resourceId = context
-                .resources
-                .getIdentifier(
-                    floorMap.image,
-                    "drawable",
-                    context.packageName
-                )
-            painterResource(id = resourceId)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ){
+
+            var expanded by remember { mutableStateOf(false) }
+            Text("Select a map:", modifier = Modifier.padding(5.dp).align(Alignment.CenterVertically))
+
+            Box {
+
+                Button(onClick = {expanded = true}) {
+                    Text(selectedMapText)
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {expanded = false}
+                ) {
+
+
+
+                    mapsList.forEach { map ->
+                        DropdownMenuItem(
+                            text = { Text(map.name)},
+                            onClick = {
+                                selectedMap = map.id
+                                selectedMapText = map.name
+                                expanded = false
+                                selectedFloorMap = map
+                            }
+                        )
+                    }
+                }
+            }
         }
-        else{
-            rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(floorMap.image)
-                    .build()
-            )
-        }
+
+
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(5.dp),
+            contentAlignment = Alignment.Center
+        ){
+            val painter: Painter =
+                if(!selectedFloorMap.image.startsWith("http")) {
+                    val context = LocalContext.current
+                    val resourceId = context
+                        .resources
+                        .getIdentifier(
+                            selectedFloorMap.image,
+                            "drawable",
+                            context.packageName
+                        )
+                    painterResource(id = resourceId)
+                }
+                else{
+                    rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(selectedFloorMap.image)
+                            .build()
+                    )
+                }
             Image(
                 painter = painter,
                 contentDescription = "Floor Map",
@@ -82,45 +133,48 @@ fun MapHome(
                     .border(2.dp, Color.Black),
                 contentScale = ContentScale.Crop
             )
-        if (imageSize.value.width > 0 && imageSize.value.height > 0) {
-            zonesList.forEach { zone ->
-                ZoneOverlay(
-                    zone = zone,
-                    imageSize = imageSize.value,
-                    imageOffset = imageOffset.value
-                )
-            }
-
-            Canvas(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                clipRect(
-                    left = imageOffset.value.x,
-                    top = imageOffset.value.y,
-                    right = imageOffset.value.x + imageSize.value.width,
-                    bottom = imageOffset.value.y + imageSize.value.height
-                ) {
-                    drawCircle(
-                        color = Color.Red,
-                        radius = 15f,
-                        center = Offset(
-                            x = imageOffset.value.x + currentPosition.value.x * imageSize.value.width,
-                            y = imageOffset.value.y + currentPosition.value.y * imageSize.value.height
-                        )
+            if (imageSize.value.width > 0 && imageSize.value.height > 0) {
+                zonesList.forEach { zone ->
+                    ZoneOverlay(
+                        zone = zone,
+                        imageSize = imageSize.value,
+                        imageOffset = imageOffset.value
                     )
                 }
+
+                Canvas(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    clipRect(
+                        left = imageOffset.value.x,
+                        top = imageOffset.value.y,
+                        right = imageOffset.value.x + imageSize.value.width,
+                        bottom = imageOffset.value.y + imageSize.value.height
+                    ) {
+                        drawCircle(
+                            color = Color.Red,
+                            radius = 15f,
+                            center = Offset(
+                                x = imageOffset.value.x + currentPosition.value.x * imageSize.value.width,
+                                y = imageOffset.value.y + currentPosition.value.y * imageSize.value.height
+                            )
+                        )
+                    }
+                }
+
             }
 
+            Text(
+                text=selectedFloorMap.name,
+                modifier=Modifier
+                    .padding(16.dp)
+                    .align(Alignment.TopCenter)
+            )
+
         }
-
-        Text(
-            text=floorMap.name,
-            modifier=Modifier
-                .padding(16.dp)
-                .align(Alignment.TopCenter)
-        )
-
     }
+
+
 }
 
 @Preview(showBackground = true)

@@ -7,8 +7,8 @@ class AssetZoneHistory(
     override var id: Int,
     override val assetId: Int,
     override val zoneId: Int,
-    override val enterDateTime: Date,
-    override val exitDateTime: Date?,
+    override val enterDateTime: String,
+    override val exitDateTime: String?,
     override val retentionTime: Long
 ):IAssetZoneHistory {
 }
