@@ -7,6 +7,7 @@ export const routes: Routes = [
     { path: '', redirectTo: 'asset-managment', pathMatch: 'full'},
     { path: 'asset-managment', component: AssetManagementComponent },
     { path: 'reports', component: ReportsComponent },
+    { path: 'reports/:floorMapId', component: ReportsComponent },
 ];
 
 @NgModule({
