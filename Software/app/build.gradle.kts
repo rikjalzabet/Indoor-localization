@@ -76,4 +76,5 @@ dependencies {
 
     implementation(project(":core"))
     implementation(project(":ws"))
+    implementation(project(":save_object_info"))
 }

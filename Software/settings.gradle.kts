@@ -24,3 +24,4 @@ rootProject.name = "IndoorLocalization"
 include(":app")
 include(":core")
 include(":ws")
+include(":save_object_info")
