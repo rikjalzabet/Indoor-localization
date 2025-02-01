@@ -1,7 +1,9 @@
 package hr.foi.air.indoorlocalization.navigation.items
 
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
+import androidx.compose.ui.zIndex
 import hr.foi.air.indoorlocalization.parser.*
 import hr.foi.air.core.parser.floorMapList
 import hr.foi.air.core.movements.*
@@ -34,9 +37,14 @@ import hr.foi.air.indoorlocalization.helpers.*
 import hr.foi.air.indoorlocalization.zones.ZoneOverlay
 import hr.foi.air.ws.TestData.testDataJSONMap
 import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.Calendar
 import java.util.Date
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Heatmap(
     floorMap: IFloorMap,
@@ -61,12 +69,29 @@ fun Heatmap(
     val historicDateRange = listOf(Instant.from(Instant.now().minus(356, ChronoUnit.DAYS)),
                         Instant.now())
 
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(5.dp)
-       ,
-        horizontalArrangement = Arrangement.SpaceEvenly){
-        radioOptions.forEach { text ->
+    // date range picker
+    val context = LocalContext.current
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+    var startDate by remember { mutableStateOf(LocalDate.now().minusDays(365)) }
+    var endDate by remember { mutableStateOf(LocalDate.now()) }
+
+    var showStartDatePicker by remember { mutableStateOf(false) }
+    var showEndDatePicker by remember { mutableStateOf(false) }
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            ,
+            horizontalArrangement = Arrangement.SpaceEvenly){
+            radioOptions.forEach { text ->
                 ToggleButton(
                     text = text,
                     isSelected = selectedOption.value == text,
@@ -74,133 +99,194 @@ fun Heatmap(
                         selectedOption.value = text
                     }
                 )
+            }
         }
-    }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(5.dp),
-        contentAlignment = Alignment.Center
-    ){
-        val painter: Painter =
-            if(!floorMap.image.startsWith("http")) {
-                val context = LocalContext.current
-                val resourceId = context
-                    .resources
-                    .getIdentifier(
-                        floorMap.image,
-                        "drawable",
-                        context.packageName
-                    )
-                painterResource(id = resourceId)
-            }
-            else{
-                rememberAsyncImagePainter(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(floorMap.image)
-                        .build()
-                )
-            }
-
-        Image(
-            painter = painter,
-            contentDescription = "Floor Map",
-            modifier= Modifier
-                .onGloballyPositioned { coordinates ->
-                    val bounds = coordinates.size
-                    val position = coordinates.positionInRoot()
-                    imageSize.value = Size(
-                        bounds.width.toFloat(),
-                        bounds.height.toFloat()
-                    )
-                    imageOffset.value = position
-                }
-                .fillMaxWidth()
-                .padding(5.dp)
-                .border(2.dp, Color.Black),
-            contentScale = ContentScale.Crop
-        )
-        if (imageSize.value.width > 0 && imageSize.value.height > 0) {
-            zonesList.forEach { zone ->
-                ZoneOverlay(
-                    zone = zone,
-                    imageSize = imageSize.value,
-                    imageOffset = imageOffset.value
-                )
-            }
-            //Log.d("Heatmap", "Dots size: ${heatmapDots.size}")
-            if(selectedOption.value == "Live"){
-                Canvas(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    clipRect(
-                        left = imageOffset.value.x,
-                        top = imageOffset.value.y,
-                        right = imageOffset.value.x + imageSize.value.width,
-                        bottom = imageOffset.value.y + imageSize.value.height
-                    ) {
-                        val newDotPosition = Offset(
-                            x = imageOffset.value.x + currentPosition.value.x * imageSize.value.width,
-                            y = imageOffset.value.y + currentPosition.value.y * imageSize.value.height
-                        )
-
-                        val existingDot = heatmapLiveDots.find { it.position == newDotPosition }
-                        if (existingDot != null) {
-                            existingDot.frequency += 1
-                        } else {
-                            val liveMovementSize = 30f
-                            heatmapLiveDots.add(HeatmapLiveDot(newDotPosition, 1, liveMovementSize=liveMovementSize))
+        if (showStartDatePicker) {
+            val datePickerState = rememberDatePickerState()
+            DatePickerDialog(
+                onDismissRequest = { showStartDatePicker = false },
+                confirmButton = {
+                    TextButton(onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            startDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
                         }
+                        showStartDatePicker = false
+                    }) {
+                        Text("OK")
+                    }
+                }
+            ) {
+                DatePicker(state = datePickerState)
+            }
+        }
 
-                        heatmapLiveDots.forEach { dot ->
-                            val color = calculateColorForFrequencyLiveAsset(dot.frequency)
-                            val size = calculateSizeForColorLiveAsset(color,dot) //calculateSizeForColor(dot.frequency)//
+        if (showEndDatePicker) {
+            val datePickerState = rememberDatePickerState()
+            DatePickerDialog(
+                onDismissRequest = { showEndDatePicker = false },
+                confirmButton = {
+                    TextButton(onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            endDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+                        }
+                        showEndDatePicker = false
+                    }) {
+                        Text("OK")
+                    }
+                }
+            ) {
+                DatePicker(state = datePickerState)
+            }
+        }
 
-                            drawCircle(
-                                color = color.copy(alpha = 0.5f),
-                                radius = size,
-                                center = dot.position
+        if (selectedOption.value == "History")  {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(5.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(onClick = { showStartDatePicker = true }) {
+                    Text("Start: ${startDate.format(formatter)}")
+                }
+                Button(onClick = { showEndDatePicker = true }) {
+                    Text("End: ${endDate.format(formatter)}")
+                }
+            }
+        }
+
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(5.dp),
+            contentAlignment = Alignment.Center
+        ){
+            val painter: Painter =
+                if(!floorMap.image.startsWith("http")) {
+                    val context = LocalContext.current
+                    val resourceId = context
+                        .resources
+                        .getIdentifier(
+                            floorMap.image,
+                            "drawable",
+                            context.packageName
+                        )
+                    painterResource(id = resourceId)
+                }
+                else{
+                    rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(floorMap.image)
+                            .build()
+                    )
+                }
+
+            Image(
+                painter = painter,
+                contentDescription = "Floor Map",
+                modifier= Modifier
+                    .onGloballyPositioned { coordinates ->
+                        val bounds = coordinates.size
+                        val position = coordinates.positionInRoot()
+                        imageSize.value = Size(
+                            bounds.width.toFloat(),
+                            bounds.height.toFloat()
+                        )
+                        imageOffset.value = position
+                    }
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                    .border(2.dp, Color.Black),
+                contentScale = ContentScale.Fit
+            )
+            if (imageSize.value.width > 0 && imageSize.value.height > 0) {
+                zonesList.forEach { zone ->
+                    ZoneOverlay(
+                        zone = zone,
+                        imageSize = imageSize.value,
+                        imageOffset = imageOffset.value
+                    )
+                }
+                //Log.d("Heatmap", "Dots size: ${heatmapDots.size}")
+                if(selectedOption.value == "Live"){
+                    Canvas(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        clipRect(
+                            left = imageOffset.value.x,
+                            top = imageOffset.value.y,
+                            right = imageOffset.value.x + imageSize.value.width,
+                            bottom = imageOffset.value.y + imageSize.value.height
+                        ) {
+                            val newDotPosition = Offset(
+                                x = imageOffset.value.x + (currentPosition.value.x * imageSize.value.width),
+                                y = imageOffset.value.y + (currentPosition.value.y * imageSize.value.height)
                             )
+
+                            val existingDot = heatmapLiveDots.find { it.position == newDotPosition }
+                            if (existingDot != null) {
+                                existingDot.frequency += 1
+                            } else {
+                                val liveMovementSize = 30f
+                                heatmapLiveDots.add(HeatmapLiveDot(newDotPosition, 1, liveMovementSize=liveMovementSize))
+                            }
+
+                            heatmapLiveDots.forEach { dot ->
+                                val color = calculateColorForFrequencyLiveAsset(dot.frequency)
+                                val size = calculateSizeForColorLiveAsset(color,dot) //calculateSizeForColor(dot.frequency)//
+
+                                drawCircle(
+                                    color = color.copy(alpha = 0.5f),
+                                    radius = size,
+                                    center = dot.position
+                                )
+                            }
                         }
                     }
                 }
+                else{
+                    HeatmapView(
+                        imageSize = imageSize.value,
+                        imageOffset = imageOffset.value,
+                        heatmapOffset = imageOffset.value,
+                        maxFrequency = maxHeatmapDotFrequency,
+                        modifier = Modifier.fillMaxWidth(),
+                        /*dots = if (selectedOption.value == "Live") {
+                            calculateHeatmapDotsInDateRange(
+                                floorMapId = floorMap.id,
+                                fromDate = Date.from(liveDateRange[0]),
+                                toDate = Date.from(liveDateRange[1]),
+                                maxFrequency = maxHeatmapDotFrequency,
+                                size = imageSize.value
+                            )
+
+
+                        } else {*/
+                        dots = calculateHeatmapDotsInDateRange(
+                            floorMapId = floorMap.id,
+                            fromDate = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                            toDate = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                            maxFrequency = maxHeatmapDotFrequency,
+                            size = imageSize.value
+                        )
+                        //}
+                    )
+                }
             }
-            else{
-            HeatmapView(
-                heatmapOffset = imageOffset.value,
-                maxFrequency = maxHeatmapDotFrequency,
-                modifier = Modifier.fillMaxWidth(),
-                /*dots = if (selectedOption.value == "Live") {
-                    calculateHeatmapDotsInDateRange(
-                        floorMapId = floorMap.id,
-                        fromDate = Date.from(liveDateRange[0]),
-                        toDate = Date.from(liveDateRange[1]),
-                        maxFrequency = maxHeatmapDotFrequency,
-                        size = imageSize.value
-                    )
 
-
-                } else {*/
-                  dots = calculateHeatmapDotsInDateRange(
-                        floorMapId = floorMap.id,
-                        fromDate = Date.from(historicDateRange[0]),
-                        toDate = Date.from(historicDateRange[1]),
-                        maxFrequency = maxHeatmapDotFrequency,
-                        size = imageSize.value
-                    )
-                //}
+            Text(
+                text = floorMap.name,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.TopCenter)
             )
-            }
         }
-
-        Text(
-            text = floorMap.name,
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.TopCenter)
-        )
     }
-}
+    }
+
+
+
+
+
+
 
 @Composable
 fun HeatmapView(
@@ -208,23 +294,31 @@ fun HeatmapView(
     modifier: Modifier = Modifier,
     dots: List<HeatmapDot>,
     maxFrequency: Int,
+    imageSize: Size,
+    imageOffset: Offset
 ){
     Canvas(
         modifier = modifier.fillMaxSize()
 
     ) {
         //Log.d("Heatmap", "Dots size: ${dots.size}")
-
-        dots.forEach{ dot ->
-            val leftOffset = dot.position.plus(heatmapOffset)
-                .minus(Offset(0f, 64f))
-            drawRect(
-                color = calculateColorForFrequency(dot.frequency, maxFrequency).copy(alpha = 0.25f),
-                topLeft = leftOffset,
-                size = Size(dot.size, dot.size),
-                blendMode = BlendMode.SrcOver
-            )
+        clipRect(
+            left = imageOffset.x,
+            top = imageOffset.y,
+            right = imageOffset.x + imageSize.width,
+            bottom = imageOffset.y + imageSize.height
+        ) {
+            dots.forEach{ dot ->
+                val leftOffset = dot.position - imageOffset
+                drawRect(
+                    color = calculateColorForFrequency(dot.frequency, maxFrequency).copy(alpha = 0.25f),
+                    topLeft = leftOffset,
+                    size = Size(dot.size, dot.size),
+                    blendMode = BlendMode.SrcOver
+                )
+            }
         }
+
     }
 }
 
@@ -259,3 +353,6 @@ fun PreviewHeatmap(){
     JsonDataParser().updateLiveAssetPositions(hr.foi.air.ws.TestData.testAssetPositionJSON)
     Heatmap(floorMap = testFloorMap, HeatmapAssetLiveMovement())
 }
+
+
+
