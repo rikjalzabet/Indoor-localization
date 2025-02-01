@@ -4,6 +4,9 @@ import { IAsset } from '../models/iasset';
 import { IFloorMap } from '../models/IFloorMap';
 import { IAssetPositionHistory } from '../models/IAssetPositionHistory';
 import { HttpClient } from '@angular/common/http';
+import { IAssetZoneHistory } from '../models/IAssetZoneHistory';
+import { IZones } from '../models/IZones';
+
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +22,28 @@ export class WebUiService {
 
     public getFloorMaps(): Observable<IFloorMap[]> {
       return this.http.get<IFloorMap[]>(`${this.apiUrl}/floormaps`);
+    }
+
+    public getZones(): Observable<IZones[]> {
+      const mockFloorMaps: IZones[] = [
+        {
+          id :1,
+          name: 'Zone A',
+          points: '1'
+        },
+        {
+          id :3,
+          name: 'Zone B',
+          points: '1'
+        },
+        {
+          id :3,
+          name: 'Zone C',
+          points: '1'
+        }
+      ];
+
+      return of(mockFloorMaps);
     }
 
     public deleteAsset(Id: number): void {
@@ -60,6 +85,71 @@ export class WebUiService {
 
     public getAssetPositionHistory(FloorMapId: number): Observable<IAssetPositionHistory[]>  {
       return this.http.get<IAssetPositionHistory[]>(`${this.apiUrl}/assetPositionHistory/${FloorMapId}`);
+      if(FloorMapId==1){
+      const mockAssetPositionHistory: IAssetPositionHistory[] = [
+        {
+          id: 1,
+          assetId: 1,
+          x: 100,
+          y: 100,
+          dateTime: new Date('2024-12-09T10:00:00Z'),
+          floorMapId: 1,
+      },
+      {
+          id: 2,
+          assetId: 1,
+          x: 200,
+          y: 150,
+          dateTime: new Date('2024-12-09T10:05:00Z'),
+          floorMapId: 1,
+      },
+      {
+          id: 3,
+          assetId: 2,
+          x: 50.34,
+          y: 90.78,
+          dateTime: new Date('2024-12-09T10:10:00Z'),
+          floorMapId: 1,
+      }
+      ];
+
+      return of(mockAssetPositionHistory);
+    }else{
+      const mockAssetPositionHistory: IAssetPositionHistory[] = [
+        {
+          id: 6,
+          assetId: 2,
+          x: 100,
+          y: 100,
+          dateTime: new Date('2024-12-09T10:00:00Z'),
+          floorMapId: 1,
+      },
+      ];
+
+      return of(mockAssetPositionHistory);
+    }}
+
+    public getAssetZoneHistory(): Observable<IAssetZoneHistory[]>  {
+      const mockAssetPositionHistory: IAssetZoneHistory[] = [
+        {
+          id: 1,
+          assetId: 1,
+          zoneId : 1,
+        enterDateTime :new Date('2024-12-09T10:00:00Z'),
+          exitDateTime: new Date('2024-12-09T10:00:00Z'),
+          retentionTime: 1,
+      },
+      {
+        id: 2,
+        assetId: 1,
+        zoneId : 1,
+      enterDateTime :new Date('2024-12-09T10:00:00Z'),
+        exitDateTime: new Date('2024-12-09T10:00:00Z'),
+        retentionTime: 1,
+      },
+      ];
+
+      return of(mockAssetPositionHistory);
     }
   }
 
