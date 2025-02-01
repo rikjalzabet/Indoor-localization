@@ -1,5 +1,7 @@
 .floor-map-container {
   display: flex;
+  width: 1200px;
+  height: 800px;
 }
 
 .floor-map-image {

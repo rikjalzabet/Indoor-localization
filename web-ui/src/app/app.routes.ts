@@ -9,6 +9,7 @@ export const routes: Routes = [
     { path: 'asset-managment', component: AssetManagementComponent },
     { path: 'reports', component: ReportsComponent },
     { path: 'dashboard', component: DashboardComponent},
+    { path: 'dashboard/:floorMapId', component: DashboardComponent },
 ];
 
 @NgModule({

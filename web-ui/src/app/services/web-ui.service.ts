@@ -2,106 +2,64 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { IAsset } from '../models/iasset';
 import { IFloorMap } from '../models/IFloorMap';
+import { HttpClient } from '@angular/common/http';
+import { IZone } from '../models/IZone';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebUiService {
 
-  constructor() { }
+  private apiUrl = 'http://localhost:8080/api';
+
+  constructor(private http: HttpClient) { }
     public getAssets(): Observable<IAsset[]> {
-      const mockAssets: IAsset[] = [
-        {
-          id: 1,
-          name: 'Asset A',
-          x: 12.34,
-          y: 56.78,
-          lastSync: new Date('2024-11-01T10:00:00Z'),
-          floorMapId: 1,
-          active: true,
-        },
-        {
-          id: 2,
-          name: 'Asset B',
-          x: 100,
-          y: 200,
-          lastSync: new Date('2024-11-10T15:30:00Z'),
-          floorMapId: 1,
-          active: false,
-        },
-        {
-          id: 3,
-          name: 'Asset C',
-          x: 45.67,
-          y: 89.01,
-          lastSync: new Date('2024-11-11T12:45:00Z'),
-          floorMapId: 2,
-          active: true,
-        },
-        {
-          id: 4,
-          name: 'Asset D',
-          x: 23.45,
-          y: 67.89,
-          lastSync: new Date('2024-11-12T08:20:00Z'),
-          floorMapId: 2,
-          active: true,
-        },
-        {
-          id: 5,
-          name: 'Asset E',
-          x: 78.90,
-          y: 12.34,
-          lastSync: new Date('2024-11-12T09:00:00Z'),
-          floorMapId: 3,
-          active: false,
-        },
-        {
-          id: 6,
-          name: 'Asset Z',
-          x: 0,
-          y: 0,
-          lastSync: new Date('2024-11-10T15:30:00Z'),
-          floorMapId: 1,
-          active: false,
-        },
-      ];
-  
-      return of(mockAssets);
+      return this.http.get<IAsset[]>(`${this.apiUrl}/assets`);
     }
 
     public getFloorMaps(): Observable<IFloorMap[]> {
-      const mockFloorMaps: IFloorMap[] = [
-        {
-          id :1,
-          name: 'Floor map A',
-          image: 'https://wpmedia.roomsketcher.com/content/uploads/2022/01/06145940/What-is-a-floor-plan-with-dimensions.png'
-        },
-        {
-          id :2,
-          name: 'Floor map B',
-          image: 'Image 2'
-        },
-        {
-          id :3,
-          name: 'Floor map C',
-          image: 'Image 3'
-        }
-      ];
+      return this.http.get<IFloorMap[]>(`${this.apiUrl}/floormaps`);
+    }
 
-      return of(mockFloorMaps);
+    public getZones(): Observable<IZone[]> {
+      return this.http.get<IZone[]>(`${this.apiUrl}/zones`);
     }
 
     public deleteAsset(Id: number): void {
-          console.log('Asset is deleted: ', Id)
+      this.http.delete(`${this.apiUrl}/assets/${Id}`).subscribe({
+        next: () => {
+          console.log(`Asset with id ${Id} deleted successfully.`);
+          this.getAssets();
+        },
+        error: (err) => {
+          console.error('Error deleting asset:', err);
+        }
+      });    
     }
 
     public addAsset(Asset: IAsset): void{
-      console.log('Asset is added',Asset);
+      this.http.post(`${this.apiUrl}/assets`, Asset)
+      .subscribe({
+        next: (response) => {
+          console.log('Asset added successfully', response);
+          this.getAssets();
+        },
+        error: (err) => {
+          console.error('Error adding asset:', err);
+        }
+      });
     }
 
     public updateAsset(Asset: IAsset): void{
-      console.log('Asset is updated',Asset);
+      this.http.put(`${this.apiUrl}/assets/${Asset.id}`, Asset).subscribe({
+        next: () => {
+          console.log(`Asset with id ${Asset.id} updated successfully.`);
+          this.getAssets();
+        },
+        error: (err) => {
+          console.error('Error updating asset:', err);
+        }
+      });    
     }
   }
 
