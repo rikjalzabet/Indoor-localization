@@ -44,7 +44,7 @@ class JsonDataParser(): DataParser {
 
     override fun updateLiveAssetPositions(data: String) {
         val gson: Gson = GsonBuilder()
-            .setDateFormat("yyyy-MM-dd HH:mm:ss")
+            //.setDateFormat("yyyy-MM-dd HH:mm:ss")
             .create()
         val assets: List<Asset> = gson.fromJson(data, object : TypeToken<List<Asset>>() {}.type)
         Log.d("JsonDataParser", "Parsed ${assets.size} assets")
