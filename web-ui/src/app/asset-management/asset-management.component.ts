@@ -110,7 +110,7 @@ export class AssetManagementComponent implements OnInit {
     editAsset(): void{
       const selectedAsset = this.selection.selected[0];
       if(selectedAsset){
-      console.log("Selected assit", selectedAsset);
+      console.log("Selected asset", selectedAsset);
       const dialogRef = this.dialog.open(AddAssetDialogComponent,{
         width: '400px',
         data: {floorMaps: this.floorMaps,
@@ -121,7 +121,7 @@ export class AssetManagementComponent implements OnInit {
       dialogRef.afterClosed().subscribe((result) =>{
         if (result)
         {
-          this.webUiService.updateAsset(result);
+          this.webUiService.updateAsset(result, selectedAsset.id);
           this.fetchAssets();
           this.notificationService.showSuccess('Succcesfully updated asset!');
         }

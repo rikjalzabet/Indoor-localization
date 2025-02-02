@@ -6,6 +6,7 @@ import { IAssetPositionHistory } from '../models/IAssetPositionHistory';
 import { HttpClient } from '@angular/common/http';
 import { IAssetZoneHistory } from '../models/IAssetZoneHistory';
 import { IZone } from '../models/IZone';
+import { IAssetDTO } from '../models/iassetDTO';
 
 
 @Injectable({
@@ -53,10 +54,13 @@ export class WebUiService {
       });
     }
 
-    public updateAsset(Asset: IAsset): void{
-      this.http.put(`${this.apiUrl}/assets/${Asset.id}`, Asset).subscribe({
+    public updateAsset(Asset: IAssetDTO, id: Number): void{
+      console.log('Asset DTO:', Asset);
+      console.log('Asset ID:', id);
+
+      this.http.put(`${this.apiUrl}/assets/${id}`, Asset).subscribe({
         next: () => {
-          console.log(`Asset with id ${Asset.id} updated successfully.`);
+          console.log(`Asset with id ${id} updated successfully.`);
           this.getAssets();
         },
         error: (err) => {
