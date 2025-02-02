@@ -1,25 +1,26 @@
-
 <div>
-    
-    <mat-form-field appearance="fill">
-      <mat-label>Select Floor Map</mat-label>
-      <mat-select [(value)]="selectedFloorMapId" (selectionChange)="updateFloorMapSelection()">
-        <mat-option *ngFor="let floorMap of floorMaps" [value]="floorMap.id">
-          {{ floorMap.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-  <div *ngIf="selectedFloorMapId !== undefined">
+  <mat-form-field appearance="fill">
+    <mat-label>Select Floor Map</mat-label>
+    <mat-select [(value)]="selectedFloorMapId" (selectionChange)="updateFloorMapSelection()">
+      <mat-option *ngFor="let floorMap of floorMaps" [value]="floorMap.id">
+        {{ floorMap.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div *ngIf="selectedFloorMapId !== undefined">
   <mat-card appearance="outlined">
-    <mat-card-content> HeatMap</mat-card-content>
+    <mat-card-content> HeatMap </mat-card-content>
   </mat-card>
   <div id="heatmapContainer" *ngIf="getFloorMapImage(selectedFloorMapId)" style="width: 100%; height: auto;">
     <img [src]="getFloorMapImage(selectedFloorMapId)" alt="Selected Floor Map" style="max-width: 100%; height: auto; margin-top: 10px;" (load)="onImageLoad()" />
   </div>
-<mat-card appearance="outlined">
-    <mat-card-content> Asset History</mat-card-content>
+
+  <mat-card appearance="outlined">
+    <mat-card-content> Asset History </mat-card-content>
   </mat-card>
+  
   <div *ngFor="let asset of assets" class="asset-section">
     <mat-card>
       <mat-card-title>{{ asset.name }} (ID: {{ asset.id }})</mat-card-title>
@@ -51,40 +52,37 @@
       <tr mat-row *matRowDef="let row; columns: ['x', 'y', 'dateTime'];"></tr>
     </table>
 
-      <!-- Asset Zone History Table -->
-  <h4>Zone History</h4>
-  <table mat-table [dataSource]="getAssetZoneHistory(asset.id)" class="mat-elevation-z8">
-    <ng-container matColumnDef="zone">
-      <th mat-header-cell *matHeaderCellDef> Zone </th>
-      <td mat-cell *matCellDef="let zone"> {{ zone.name }} </td>
-    </ng-container>
+    <!-- Asset Zone History Table -->
+    <h4>Zone History</h4>
+    <table mat-table [dataSource]="getAssetZoneHistory(asset.id)" class="mat-elevation-z8">
+      <ng-container matColumnDef="zone">
+        <th mat-header-cell *matHeaderCellDef> Zone </th>
+        <td mat-cell *matCellDef="let zone"> {{ zone.name }} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="enterDateTime">
-      <th mat-header-cell *matHeaderCellDef> Enter Date & Time </th>
-      <td mat-cell *matCellDef="let zone"> {{ zone.enterDateTime | date: 'short' }} </td>
-    </ng-container>
+      <ng-container matColumnDef="enterDateTime">
+        <th mat-header-cell *matHeaderCellDef> Enter Date & Time </th>
+        <td mat-cell *matCellDef="let zone"> {{ zone.enterDateTime | date: 'short' }} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="exitDateTime">
-      <th mat-header-cell *matHeaderCellDef> Exit Date & Time </th>
-      <td mat-cell *matCellDef="let zone"> {{ zone.exitDateTime | date: 'short' }} </td>
-    </ng-container>
+      <ng-container matColumnDef="exitDateTime">
+        <th mat-header-cell *matHeaderCellDef> Exit Date & Time </th>
+        <td mat-cell *matCellDef="let zone"> {{ zone.exitDateTime | date: 'short' }} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="retentionTime">
-      <th mat-header-cell *matHeaderCellDef> Retention Time (seconds) </th>
-      <td mat-cell *matCellDef="let zone"> {{ zone.retentionTime }} </td>
-    </ng-container>
+      <ng-container matColumnDef="retentionTime">
+        <th mat-header-cell *matHeaderCellDef> Retention Time (seconds) </th>
+        <td mat-cell *matCellDef="let zone"> {{ zone.retentionTime }} </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['zone', 'enterDateTime', 'exitDateTime', 'retentionTime']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['zone', 'enterDateTime', 'exitDateTime', 'retentionTime'];"></tr>
-  </table>
+      <tr mat-header-row *matHeaderRowDef="['zone', 'enterDateTime', 'exitDateTime', 'retentionTime']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['zone', 'enterDateTime', 'exitDateTime', 'retentionTime'];"></tr>
+    </table>
   </div>
 
-  
-    <div>
+  <div>
     <button mat-raised-button color="primary" (click)="downloadPdf()">
       Download PDF
     </button>
   </div>
- 
-    
 </div>

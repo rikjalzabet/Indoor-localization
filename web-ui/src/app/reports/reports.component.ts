@@ -1,4 +1,3 @@
-
 import { AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -21,10 +20,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { Observable } from 'rxjs';
-import { title } from 'process';
-import { IZones } from '../models/IZones';
 import { IAssetZoneHistory } from '../models/IAssetZoneHistory';
-import { Component } from '@angular/core';
+import { IZone } from '../models/IZone';
 
 @Component({
   selector: 'app-reports',
@@ -56,10 +53,9 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   assetMap = new Map<number, string>();
   selection = new SelectionModel<IAsset>(false, []);
   heatmap: any;
-  zones?: IZones[];
+  zones?: IZone[];
   assetZoneHistory?: IAssetZoneHistory[];
   zoneMap = new Map<number, string>();
-
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -72,12 +68,15 @@ export class ReportsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.fetchFloorMaps();
+    this.fetchAssetZoneHistory();
     this.route.paramMap.subscribe(params => {
       const floorMapId = Number(params.get('floorMapId'));
       if (floorMapId) {
         this.selectedFloorMapId = floorMapId;
         this.fetchAssetPositionHistory(floorMapId);
         this.fetchAssets(floorMapId);
+        this.fetchZones();
+        this.getAssetZoneHistory(floorMapId);
       }
     });
   }
@@ -85,28 +84,23 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-
-   // Ensure it's created after the view is initialized
   }
 
-  onImageLoad(): void{
+  onImageLoad(): void {
     const heatmapContainer = document.getElementById('heatmapContainer');
     if (heatmapContainer && !this.heatmap) {
-      this.createHeatmap();  // Only create once
+      this.createHeatmap();
     }
-  
+
     if (this.heatmap && heatmapContainer && this.assetPositionHistory) {
       const data = {
         min: 0,
         max: 100,
         data: this.assetPositionHistory.map((item) => {
           const { left, top } = this.getAssetPosition(item);
-          return { x: left, y: 
-            top, value: 80 };
+          return { x: left, y: top, value: 80 };
         }),
       };
-
-
 
       // Clear the existing data before setting new data
       this.heatmap.setData({ data: [] });
@@ -116,8 +110,6 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-
   createHeatmap(): void {
     const heatmapContainer = document.getElementById('heatmapContainer');
     if (heatmapContainer) {
@@ -125,8 +117,7 @@ export class ReportsComponent implements OnInit, AfterViewInit {
       this.heatmap = h337.create({
         container: heatmapContainer,
       });
-    }
-    else{
+    } else {
       console.error("HEATMAP");
     }
   }
@@ -143,18 +134,15 @@ export class ReportsComponent implements OnInit, AfterViewInit {
         max: 100,
         data: this.assetPositionHistory.map((item) => {
           const { left, top } = this.getAssetPosition(item);
-          return { x: left, y: 
-            top, value: 80 };
+          return { x: left, y: top, value: 80 };
         }),
       };
       this.heatmap.setData(data);
       console.log(data);
     }
-  
   }
 
   getAssetZoneHistory(assetId: number): any[] {
-    // Merge `assetZoneHistory` with zone names for easier rendering
     return (
       this.assetZoneHistory
         ?.filter((zone) => zone.assetId === assetId)
@@ -204,7 +192,6 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     );
   }
 
-  
   updateFloorMapSelection(): void {
     if (this.selectedFloorMapId) {
       this.router.navigate(['/reports', this.selectedFloorMapId], {
@@ -214,9 +201,6 @@ export class ReportsComponent implements OnInit, AfterViewInit {
       this.fetchAssets(this.selectedFloorMapId);
     }
   }
-
-  
-
 
   fetchZones(): void {
     this.webUiService.getZones().subscribe({
@@ -243,28 +227,27 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   getAssetPosition(asset: IAssetPositionHistory): { top: number; left: number } {
     const imageWidth = 780;
     const imageHeight = 610; 
-  
+
     const gridColumns = 100; 
     const gridRows = 100; 
-  
+
     const marginTop = 50;
     const marginBottom = 50;
     const marginLeft = 50;
     const marginRight = 50; 
-  
+
     const adjustedWidth = imageWidth - marginLeft - marginRight;
     const adjustedHeight = imageHeight - marginTop - marginBottom;
-  
-    const left =  Math.round(marginLeft + (asset.x / gridColumns) * adjustedWidth);
-    const top = Math.round( marginTop + (asset.y / gridRows) * adjustedHeight);
-  
+
+    const left = Math.round(marginLeft + (asset.x / gridColumns) * adjustedWidth);
+    const top = Math.round(marginTop + (asset.y / gridRows) * adjustedHeight);
+
     return { top, left };
   }
-  
 
   downloadPdf(): void {
     const doc = new jsPDF();
-  
+
     // Asset Table
     doc.text('Assets', 10, 10);
     (doc as any).autoTable({
@@ -279,7 +262,7 @@ export class ReportsComponent implements OnInit, AfterViewInit {
         asset.active ? 'Yes' : 'No',
       ]),
     });
-  
+
     // Asset Position History Table
     doc.text('Asset Position History', 10, (doc as any).lastAutoTable.finalY + 10);
     (doc as any).autoTable({
@@ -292,7 +275,7 @@ export class ReportsComponent implements OnInit, AfterViewInit {
         item.dateTime,
       ]),
     });
-  
+
     // Asset Zone History Table
     doc.text('Asset Zone History', 10, (doc as any).lastAutoTable.finalY + 10);
     (doc as any).autoTable({
@@ -306,7 +289,8 @@ export class ReportsComponent implements OnInit, AfterViewInit {
         item.retentionTime,
       ]),
     });
-  
+
     // Save PDF
     doc.save('Assets_' + this.selectedFloorMapId + '_' + Date.now() + '.pdf');
   }
+}
