@@ -10,13 +10,13 @@ import com.itextpdf.layout.properties.UnitValue
 import hr.foi.air.core.models.IAsset
 import hr.foi.air.core.models.IAssetPositionHistory
 import hr.foi.air.core.models.IAssetZoneHistory
-import hr.foi.air.core.models.impl.Asset
-import hr.foi.air.core.models.impl.AssetZoneHistory
-import hr.foi.air.core.models.impl.AssetPositionHistory
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class PDFReportGenerator(private val dateFormatter: DateFormatter) {
+class PDFReportGenerator() {
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS", Locale.US)
 
     private inline fun <T> createPdfDocument(file: File, block: (Document) -> T): T {
         val pdfWriter = PdfWriter(FileOutputStream(file))
@@ -32,6 +32,17 @@ class PDFReportGenerator(private val dateFormatter: DateFormatter) {
         }
     }
 
+    private fun formatTimestamp(timestamp: String): String {
+        return try {
+            val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.US)
+            val date = isoFormat.parse(timestamp)
+            dateFormat.format(date)
+        } catch (e: Exception) {
+            Log.e("PDFReportGenerator", "Error formatting timestamp: ${e.message}")
+            timestamp
+        }
+    }
+
     fun saveReport(
         assets: List<IAsset>,
         zoneHistories: List<IAssetZoneHistory>,
@@ -44,7 +55,7 @@ class PDFReportGenerator(private val dateFormatter: DateFormatter) {
                 document.add(Paragraph("ID: ${asset.id}"))
                 document.add(Paragraph("Name: ${asset.name}"))
                 document.add(Paragraph("Coordinates: (${asset.x}, ${asset.y})"))
-                document.add(Paragraph("Last Sync: ${dateFormatter.format(asset.lastSync)}"))
+                document.add(Paragraph("Last Sync: ${formatTimestamp(asset.lastSync)}"))
                 document.add(Paragraph("Floor Map ID: ${asset.floorMapId}"))
                 document.add(Paragraph("Active: ${asset.active}"))
                 document.add(Paragraph("\n"))
@@ -60,8 +71,8 @@ class PDFReportGenerator(private val dateFormatter: DateFormatter) {
 
                     assetZoneHistories.forEach { history ->
                         zoneTable.addCell(history.zoneId.toString())
-                        zoneTable.addCell(dateFormatter.format(history.enterDateTime).toString())
-                        zoneTable.addCell(dateFormatter.format(history.exitDateTime).toString() ?: "N/A")
+                        zoneTable.addCell(formatTimestamp(history.enterDateTime))
+                        zoneTable.addCell(history.exitDateTime?.let { formatTimestamp(it) } ?: "-")
                         zoneTable.addCell(history.retentionTime.toString())
                     }
                     document.add(zoneTable)
@@ -80,7 +91,7 @@ class PDFReportGenerator(private val dateFormatter: DateFormatter) {
                     assetPositionHistories.forEach { position ->
                         positionTable.addCell(position.x.toString())
                         positionTable.addCell(position.y.toString())
-                        positionTable.addCell(dateFormatter.format(position.dateTime).toString())
+                        positionTable.addCell(formatTimestamp(position.dateTime))
                         positionTable.addCell(position.floorMapId.toString())
                     }
                     document.add(positionTable)
