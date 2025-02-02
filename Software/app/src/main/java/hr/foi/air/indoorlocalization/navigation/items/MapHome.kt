@@ -46,11 +46,11 @@ fun MapHome(
 
     val assetPositions = remember { mutableStateOf<List<IAsset>>(emptyList()) }
 
-    LaunchedEffect(currentPosition.value) {
-        //ILiveAssetMovement.simulateLiveMovement(currentPosition, floorMap.id)
-        val liveAssets = ILiveAssetMovement.fetchLiveMovementData()
-        assetPositions.value = liveAssets.filter { it.floorMapId == selectedFloorMap.id && it.active }
+    LaunchedEffect(selectedFloorMap.id) {
+        ILiveAssetMovement.simulateLiveMovement(floorMap.id, assetPositions)
     }
+
+
 
     Column(
         modifier = Modifier

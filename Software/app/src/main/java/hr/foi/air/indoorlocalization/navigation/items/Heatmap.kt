@@ -32,6 +32,7 @@ import coil.request.ImageRequest
 import coil3.compose.rememberAsyncImagePainter
 import hr.foi.air.core.models.HeatmapDot
 import hr.foi.air.core.models.HeatmapLiveDot
+import hr.foi.air.core.models.IAsset
 import hr.foi.air.core.parser.assetZoneHistoryList
 import hr.foi.air.core.parser.zonesList
 import hr.foi.air.indoorlocalization.helpers.*
@@ -58,9 +59,10 @@ fun Heatmap(
     val heatmapDots = remember { mutableStateListOf<HeatmapDot>() }
     val heatmapLiveDots = remember { mutableStateListOf<HeatmapLiveDot>() }
     val maxHeatmapDotFrequency = 1;
+    val assetPositions = remember { mutableStateOf<List<IAsset>>(emptyList()) }
 
     LaunchedEffect(Unit) {
-        ILiveAssetMovement.simulateLiveMovement(currentPosition, floorMap.id)
+        ILiveAssetMovement.simulateLiveMovement(floorMap.id, assetPositions)
     }
 
     // live heatmap or history heatmap toggle

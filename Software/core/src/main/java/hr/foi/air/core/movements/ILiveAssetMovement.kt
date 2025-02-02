@@ -13,7 +13,7 @@ interface ILiveAssetMovement {
     }
 
     suspend fun simulateLiveMovement(
-        currentPosition: MutableState<Offset>,
-        floorMapId: Int
+        floorMapId: Int,
+        assetPositions: MutableState<List<IAsset>>
     )
 }
