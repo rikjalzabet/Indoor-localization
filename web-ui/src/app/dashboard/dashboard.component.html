@@ -1,0 +1,49 @@
+<div *ngIf="floorMaps && floorMaps.length > 0" class="floor-map-container">
+  <div class="floor-map-list">
+    <h2>Floor Maps</h2>
+    <mat-list>
+      <mat-list-item *ngFor="let floorMap of floorMaps">
+        <button mat-button (click)="selectFloorMap(floorMap.id)">
+          {{ floorMap.name }}
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </div>
+
+  <div
+    *ngIf="selectedFloorMapId"
+    class="floor-map-image"
+    style="position: relative"
+  >
+    <img
+      [src]="getFloorMapImage(selectedFloorMapId)"
+      alt="Floor Map"
+      *ngIf="getFloorMapImage(selectedFloorMapId)"
+    />
+
+    <svg
+    class="zone-overlay"
+    xmlns="http://www.w3.org/2000/svg"
+    style="position: absolute; top: 0; left: 0; width: 1200px; height: 800px;"
+    >
+      <polygon
+        *ngFor="let zone of zones"
+        [attr.points]="formatZonePoints(scaleZonePoints(zone.points))"
+        [attr.fill]="getZoneColor(zone.id)"
+        stroke="black"
+        stroke-width="2"
+      ></polygon>
+    </svg>
+
+    <div
+    *ngFor="let asset of assets; trackBy: trackByAssetId"
+    class="asset-marker"
+    [ngStyle]="{ top: getAssetPosition(asset).top + 'px', left: getAssetPosition(asset).left + 'px' }"
+    matTooltip="{{ asset.name }} (x: {{ asset.x }}, y: {{ asset.y }})"
+    matTooltipPosition="above"
+  >
+    <mat-icon class="asset-icon">location_on</mat-icon>
+  </div>
+  
+  </div>
+</div>

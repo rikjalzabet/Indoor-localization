@@ -1,3 +1,4 @@
+
 import { AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -23,7 +24,7 @@ import { Observable } from 'rxjs';
 import { title } from 'process';
 import { IZones } from '../models/IZones';
 import { IAssetZoneHistory } from '../models/IAssetZoneHistory';
-
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-reports',
@@ -309,4 +310,3 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     // Save PDF
     doc.save('Assets_' + this.selectedFloorMapId + '_' + Date.now() + '.pdf');
   }
-}

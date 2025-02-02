@@ -1,0 +1,21 @@
+.floor-map-container {
+  display: flex;
+  width: 1200px;
+  height: 800px;
+}
+
+.floor-map-image {
+  position: relative;
+}
+
+.asset-marker {
+  position: absolute;
+  transform: translate(-50%, -50%); 
+  z-index: 10;
+}
+
+.asset-icon {
+  font-size: 24px; 
+  color: red; 
+}
+

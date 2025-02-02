@@ -5,7 +5,7 @@ import { IFloorMap } from '../models/IFloorMap';
 import { IAssetPositionHistory } from '../models/IAssetPositionHistory';
 import { HttpClient } from '@angular/common/http';
 import { IAssetZoneHistory } from '../models/IAssetZoneHistory';
-import { IZones } from '../models/IZones';
+import { IZone } from '../models/IZone';
 
 
 @Injectable({
@@ -24,8 +24,8 @@ export class WebUiService {
       return this.http.get<IFloorMap[]>(`${this.apiUrl}/floormaps`);
     }
 
-    public getZones(): Observable<IZones[]> {
-      return this.http.get<IZones[]>(`${this.apiUrl}/zones`);
+    public getZones(): Observable<IZone[]> {
+      return this.http.get<IZone[]>(`${this.apiUrl}/zones`);
     }
 
     public deleteAsset(Id: number): void {
@@ -62,7 +62,7 @@ export class WebUiService {
         error: (err) => {
           console.error('Error updating asset:', err);
         }
-      });    
+      }); 
     }
 
     public getAssetPositionHistory(FloorMapId: number): Observable<IAssetPositionHistory[]>  {
