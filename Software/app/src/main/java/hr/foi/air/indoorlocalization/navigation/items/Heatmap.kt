@@ -217,7 +217,7 @@ fun Heatmap(
                 }
                 else{
                     rememberAsyncImagePainter(
-                        model = ImageRequest.Builder(LocalContext.current)
+                        model = coil3.request.ImageRequest.Builder(LocalContext.current)
                             .data(selectedFloorMap.image)
                             .build()
                     )
@@ -227,19 +227,19 @@ fun Heatmap(
                 painter = painter,
                 contentDescription = "Floor Map",
                 modifier= Modifier
-                    .onGloballyPositioned { coordinates ->
+                    .onGloballyPositioned { coordinates->
                         val bounds = coordinates.size
                         val position = coordinates.positionInRoot()
                         imageSize.value = Size(
                             bounds.width.toFloat(),
                             bounds.height.toFloat()
                         )
-                        imageOffset.value = position
+                        imageOffset.value=position
                     }
                     .fillMaxWidth()
                     .padding(5.dp)
                     .border(2.dp, Color.Black),
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.Crop
             )
             if (imageSize.value.width > 0 && imageSize.value.height > 0) {
                 zonesList.forEach { zone ->
@@ -260,6 +260,22 @@ fun Heatmap(
                             right = imageOffset.value.x + imageSize.value.width,
                             bottom = imageOffset.value.y + imageSize.value.height
                         ) {
+
+                            assetPositions.value.forEach { asset ->
+                                val assetPosition = getAssetPosition(
+                                    asset.x, asset.y, imageSize.value
+                                )
+
+                                drawCircle(
+                                    color = Color.Red,
+                                    radius = 15f, // Adjusted back to proper scaling
+                                    center = Offset(
+                                        x = imageOffset.value.x + assetPosition.x,
+                                        y = imageOffset.value.y + assetPosition.y
+                                    )
+                                )
+                            }
+
                             val newDotPosition = Offset(
                                 x = imageOffset.value.x + (currentPosition.value.x * imageSize.value.width),
                                 y = imageOffset.value.y + (currentPosition.value.y * imageSize.value.height)
