@@ -77,15 +77,27 @@ fun calculateHeatmapDotsInDateRange(floorMapId : Int, size : Size, fromDate: Dat
 
     val historyAssetPositions = remember { assetPositionHistoryList }
 
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
     val historyWithinRange = historyAssetPositions.filter {
-        val date = LocalDateTime.parse(it.dateTime, formatter)
+        val dateTimeParts = it.dateTime.split(".") // Split at decimal point
+        val truncatedDateTime = if (dateTimeParts.size == 2) {
+            val fraction = dateTimeParts[1].take(3) // Take only the first 3 digits
+            "${dateTimeParts[0]}.$fraction" // Reconstruct the timestamp
+        } else {
+            it.dateTime // No fractional part, use as is
+        }
+
+        val date = LocalDateTime.parse(truncatedDateTime, formatter)
             .atZone(ZoneId.systemDefault())
             .toInstant()
             .let { Date.from(it) }
+
         date in fromDate..toDate
     }
+
+
 
     val areaSizeToGroupBy = 1
 

@@ -20,6 +20,7 @@ import coil3.request.ImageRequest
 import hr.foi.air.indoorlocalization.parser.*
 import hr.foi.air.indoorlocalization.zones.ZoneOverlay
 import androidx.compose.ui.graphics.drawscope.clipRect
+import hr.foi.air.core.models.IAsset
 import hr.foi.air.core.models.IFloorMap
 import hr.foi.air.core.parser.floorMapList
 import hr.foi.air.core.parser.zonesList
@@ -43,8 +44,12 @@ fun MapHome(
 
     val mapsList = remember { floorMapList }
 
-    LaunchedEffect(Unit) {
-        ILiveAssetMovement.simulateLiveMovement(currentPosition, floorMap.id)
+    val assetPositions = remember { mutableStateOf<List<IAsset>>(emptyList()) }
+
+    LaunchedEffect(currentPosition.value) {
+        //ILiveAssetMovement.simulateLiveMovement(currentPosition, floorMap.id)
+        val liveAssets = ILiveAssetMovement.fetchLiveMovementData()
+        assetPositions.value = liveAssets.filter { it.floorMapId == selectedFloorMap.id && it.active }
     }
 
     Column(
@@ -151,16 +156,26 @@ fun MapHome(
                         right = imageOffset.value.x + imageSize.value.width,
                         bottom = imageOffset.value.y + imageSize.value.height
                     ) {
-                        drawCircle(
-                            color = Color.Red,
-                            radius = 15f,
-                            center = Offset(
-                                x = imageOffset.value.x + currentPosition.value.x * imageSize.value.width,
-                                y = imageOffset.value.y + currentPosition.value.y * imageSize.value.height
+
+                        assetPositions.value.forEach { asset ->
+                            val assetPosition = getAssetPosition(
+                                asset.x, asset.y, imageSize.value
                             )
-                        )
+
+                            drawCircle(
+                                color = Color.Red,
+                                radius = 15f, // Adjusted back to proper scaling
+                                center = Offset(
+                                    x = imageOffset.value.x + assetPosition.x,
+                                    y = imageOffset.value.y + assetPosition.y
+                                )
+                            )
+                        }
+
+
                     }
                 }
+
 
             }
 
@@ -176,6 +191,32 @@ fun MapHome(
 
 
 }
+
+fun getAssetPosition(assetX: Float, assetY: Float, imageSize: Size): Offset {
+    val imageWidth = 780f
+    val imageHeight = 610f
+
+    val gridColumns = 100f
+    val gridRows = 100f
+
+    val marginTop = 50f
+    val marginBottom = 50f
+    val marginLeft = 50f
+    val marginRight = 50f
+
+    val adjustedWidth = imageWidth - marginLeft - marginRight
+    val adjustedHeight = imageHeight - marginTop - marginBottom
+
+    val left = marginLeft + (assetX / gridColumns) * adjustedWidth
+    val top = marginTop + (assetY / gridRows) * adjustedHeight
+
+    // Scale to the actual image size in Compose
+    val scaleX = imageSize.width / imageWidth
+    val scaleY = imageSize.height / imageHeight
+
+    return Offset(left * scaleX, top * scaleY)
+}
+
 
 @Preview(showBackground = true)
 @Composable
