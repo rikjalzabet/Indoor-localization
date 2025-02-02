@@ -82,8 +82,8 @@ export class DashboardComponent implements OnInit {
     const imageWidth = 780;
     const imageHeight = 610; 
   
-    const gridColumns = 50; 
-    const gridRows = 50; 
+    const gridColumns = 100; 
+    const gridRows = 100; 
   
     const marginTop = 50;
     const marginBottom = 50;
@@ -99,13 +99,13 @@ export class DashboardComponent implements OnInit {
     return { top, left };
   }  
 
-  scaleZonePoints(points: {X: number, Y: number }[]): { X: number, Y: number }[] {
+  scaleZonePoints(points: {x: number, y: number }[]): { x: number, y: number }[] {
     
     const imageWidth = 780;
     const imageHeight = 610; 
 
-    const gridColumns = 50; 
-    const gridRows = 50; 
+    const gridColumns = 100; 
+    const gridRows = 100; 
   
     const marginTop = 50;
     const marginBottom = 50;
@@ -116,19 +116,19 @@ export class DashboardComponent implements OnInit {
     const adjustedHeight = imageHeight - marginTop - marginBottom;
 
     const scalled = points.map(point => ({
-      X: marginLeft + (Number(point.X) / gridColumns) * adjustedWidth,
-      Y: marginTop + (Number(point.Y) / gridRows) * adjustedHeight,
+      x: marginLeft + (Number(point.x) / gridColumns) * adjustedWidth,
+      y: marginTop + (Number(point.y) / gridRows) * adjustedHeight,
     }));
     
     return scalled;
   }
   
-  formatZonePoints(points: { X: number, Y: number }[]): string {
+  formatZonePoints(points: { x: number, y: number }[]): string {
     if (!points || points.length === 0) {
       console.error('Invalid or empty points array:', points);
       return '';
     }
-    const formattedPoints = points.map(point => `${point.X},${point.Y}`).join(' ');
+    const formattedPoints = points.map(point => `${point.x},${point.y}`).join(' ');
     return formattedPoints;
   }
 
