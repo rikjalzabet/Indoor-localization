@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { IAsset } from '../models/iasset';
 import { IFloorMap } from '../models/IFloorMap';
+import { IAssetPositionHistory } from '../models/IAssetPositionHistory';
 import { HttpClient } from '@angular/common/http';
+import { IAssetZoneHistory } from '../models/IAssetZoneHistory';
 import { IZone } from '../models/IZone';
+
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +62,15 @@ export class WebUiService {
         error: (err) => {
           console.error('Error updating asset:', err);
         }
-      });    
+      }); 
+    }
+
+    public getAssetPositionHistory(FloorMapId: number): Observable<IAssetPositionHistory[]>  {
+      return this.http.get<IAssetPositionHistory[]>(`${this.apiUrl}/assetPositionHistory/${FloorMapId}`);
+    }
+
+    public getAssetZoneHistory(): Observable<IAssetZoneHistory[]>  {
+      return this.http.get<IAssetZoneHistory[]>(`${this.apiUrl}/assetZoneHistory`);
     }
   }
 
