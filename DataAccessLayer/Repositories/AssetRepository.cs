@@ -30,5 +30,21 @@ namespace DataAccessLayer.Repositories
 
             return await _context.SaveChangesAsync();
         }
+        public async Task<int> UpdateAssetPosition(AssetPositionHistory assetPositionHistory)
+        {
+            var existingAsset = await Entities.FindAsync(assetPositionHistory.AssetId);
+            if (existingAsset.FloorMapId != assetPositionHistory.FloorMapId)
+            {
+                existingAsset = null;
+            }
+
+            if (existingAsset != null)
+            {
+                existingAsset.X = assetPositionHistory.X;
+                existingAsset.Y = assetPositionHistory.Y;
+                existingAsset.LastSync = DateTime.UtcNow;
+            }
+            return await _context.SaveChangesAsync();
+        }
     }
 }

@@ -19,6 +19,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") // URL Angular aplikacije
+              .AllowAnyHeader()                    // Omoguæuje sve zaglavlja
+              .AllowAnyMethod();                   // Omoguæuje sve HTTP metode (GET, POST, itd.)
+    });
+});
 
 // zamijeniti sa AddScoped nakon kreiranja EFC-a
 
@@ -61,6 +70,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowSpecificOrigins");
 
 app.UseHttpsRedirection();
 
