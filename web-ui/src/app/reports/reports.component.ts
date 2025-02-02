@@ -44,7 +44,7 @@ import { IAssetZoneHistory } from '../models/IAssetZoneHistory';
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.css'],
 })
-export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class ReportsComponent implements OnInit, AfterViewInit {
   floorMaps?: IFloorMap[];
   assets?: IAsset[];
   dataSource = new MatTableDataSource<IAssetPositionHistory>([]);
@@ -70,18 +70,15 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
   ) {}
 
   ngOnInit(): void {
-
-    this.route.paramMap.subscribe((params) => {
-      const floorMapId = params.get('floorMapId');
+    this.fetchFloorMaps();
+    this.route.paramMap.subscribe(params => {
+      const floorMapId = Number(params.get('floorMapId'));
       if (floorMapId) {
-        this.selectedFloorMapId = +floorMapId;
-        this.fetchAssetPositionHistory(this.selectedFloorMapId);
+        this.selectedFloorMapId = floorMapId;
+        this.fetchAssetPositionHistory(floorMapId);
+        this.fetchAssets(floorMapId);
       }
     });
-
-    this.fetchFloorMaps();
-    this.fetchZones();
-    this.fetchAssetZoneHistory();
   }
 
   ngAfterViewInit(): void {
@@ -101,11 +98,11 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
       const data = {
         min: 0,
         max: 100,
-        data: this.assetPositionHistory.map((item) => ({
-          x: item.x,
-          y: item.y,
-          value: 100, // Adjust the value as needed
-        })),
+        data: this.assetPositionHistory.map((item) => {
+          const { left, top } = this.getAssetPosition(item);
+          return { x: left, y: 
+            top, value: 80 };
+        }),
       };
 
 
@@ -118,11 +115,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
     }
   }
 
-  ngAfterViewChecked(): void {
-    console.log("ULAZI");
-    // Ensure that the element is available before trying to update the heatmap
-  
-  }
+
 
   createHeatmap(): void {
     const heatmapContainer = document.getElementById('heatmapContainer');
@@ -142,6 +135,23 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  updateHeatmap(): void {
+    if (this.heatmap && this.assetPositionHistory) {
+      const data = {
+        min: 0,
+        max: 100,
+        data: this.assetPositionHistory.map((item) => {
+          const { left, top } = this.getAssetPosition(item);
+          return { x: left, y: 
+            top, value: 80 };
+        }),
+      };
+      this.heatmap.setData(data);
+      console.log(data);
+    }
+  
+  }
+
   getAssetZoneHistory(assetId: number): any[] {
     // Merge `assetZoneHistory` with zone names for easier rendering
     return (
@@ -155,23 +165,17 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   fetchFloorMaps(): void {
-    this.webUiService.getFloorMaps().subscribe({
-      next: (data) => {
-        this.floorMaps = data;
-        this.floorMaps.forEach((fm) => this.floorMapMap.set(fm.id, fm.name));
-      },
-      error: (err) => console.error('Error fetching data', err),
-    });
+    this.webUiService.getFloorMaps().subscribe(
+      (data) => { this.floorMaps = data; },
+      (error) => { console.error('Error fetching floor maps:', error); }
+    );
   }
 
   fetchAssets(floorMapId: Number): void {
-    this.webUiService.getAssets().subscribe({
-      next: (data) => {
-        this.assets = data.filter((asset) => asset.floorMapId === floorMapId);
-        this.assets.forEach((ass) => this.assetMap.set(ass.id, ass.name));
-      },
-      error: (err) => console.error('Error fetching data', err),
-    });
+    this.webUiService.getAssets().subscribe(
+      (data) => { this.assets = data.filter((asset) => asset.floorMapId === floorMapId); },
+      (error) => { console.error('Error fetching assets:', error); }
+    );
   }
 
   getAssetName(assetId: number): string {
@@ -179,13 +183,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   getFloorMapImage(floorMapId?: number): string | undefined {
-    if (floorMapId === undefined) {
-      return undefined;
-    }
-    const floorMap = this.floorMaps?.find((fm) => fm.id === floorMapId);
-    this.fetchAssetPositionHistory(floorMapId);
-    this.fetchAssets(floorMapId);
-    return floorMap?.image;
+    return this.floorMaps?.find((fm) => fm.id === floorMapId)?.image;
   }
 
   getAssetPositionHistory(assetId: number): IAssetPositionHistory[] {
@@ -193,27 +191,16 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
   }
 
   fetchAssetPositionHistory(floorMapId: number): void {
-    this.webUiService.getAssetPositionHistory(floorMapId).subscribe({
-      next: (data) => {
+    this.webUiService.getAssetPositionHistory(floorMapId).subscribe(
+      (data) => {
         this.assetPositionHistory = data;
         this.dataSource.data = data;
-
         if (this.heatmap) {
-          const heatmapData = {
-            min: 0,
-            max: 100,
-            data: data.map(item => ({
-              x: item.x,
-              y: item.y,
-              value: 100, // Adjust based on your logic
-            })),
-          };
-          this.heatmap.setData(heatmapData);
+          this.updateHeatmap();
         }
-
       },
-      error: (err) => console.error('Error fetching data', err),
-    });
+      (error) => { console.error('Error fetching asset position history:', error); }
+    );
   }
 
   
@@ -222,10 +209,11 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
       this.router.navigate(['/reports', this.selectedFloorMapId], {
         queryParamsHandling: 'merge',
       });
-  
       this.fetchAssetPositionHistory(this.selectedFloorMapId);
+      this.fetchAssets(this.selectedFloorMapId);
     }
   }
+
   
 
 
@@ -251,6 +239,27 @@ export class ReportsComponent implements OnInit, AfterViewInit, AfterViewChecked
     return this.zoneMap.get(zoneId) || 'Unknown';
   }
 
+  getAssetPosition(asset: IAssetPositionHistory): { top: number; left: number } {
+    const imageWidth = 780;
+    const imageHeight = 610; 
+  
+    const gridColumns = 100; 
+    const gridRows = 100; 
+  
+    const marginTop = 50;
+    const marginBottom = 50;
+    const marginLeft = 50;
+    const marginRight = 50; 
+  
+    const adjustedWidth = imageWidth - marginLeft - marginRight;
+    const adjustedHeight = imageHeight - marginTop - marginBottom;
+  
+    const left =  Math.round(marginLeft + (asset.x / gridColumns) * adjustedWidth);
+    const top = Math.round( marginTop + (asset.y / gridRows) * adjustedHeight);
+  
+    return { top, left };
+  }
+  
 
   downloadPdf(): void {
     const doc = new jsPDF();
