@@ -369,7 +369,8 @@ fun HeatmapView(
             bottom = imageOffset.y + imageSize.height
         ) {
             dots.forEach{ dot ->
-                val leftOffset = dot.position - imageOffset
+                val position = getAssetPosition(dot.position.x, dot.position.y, imageSize)
+                val leftOffset = position - imageOffset
                 drawRect(
                     color = calculateColorForFrequency(dot.frequency, maxFrequency).copy(alpha = 0.25f),
                     topLeft = leftOffset,

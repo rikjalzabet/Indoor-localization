@@ -19,10 +19,10 @@ import java.util.Locale
 
 fun calculateColorForFrequency(frequency: Int, maxFrequency: Int): Color {
     return when {
-        frequency > 0.8 * maxFrequency -> Color.Red
-        frequency > 0.6 * maxFrequency -> Color(0xFFFF8400) // Orange
-        frequency > 0.4 * maxFrequency -> Color.Yellow
-        frequency > 0.2 * maxFrequency -> Color.Green
+        frequency > 0.08 * maxFrequency -> Color.Red
+        frequency > 0.06 * maxFrequency -> Color(0xFFFF8400) // Orange
+        frequency > 0.04 * maxFrequency -> Color.Yellow
+        frequency > 0.02 * maxFrequency -> Color.Green
         else -> Color.Blue
     }
 }
@@ -99,7 +99,7 @@ fun calculateHeatmapDotsInDateRange(floorMapId : Int, size : Size, fromDate: Dat
 
 
 
-    val areaSizeToGroupBy = 1
+    val areaSizeToGroupBy = 10
 
     val groupedHistory = historyWithinRange.groupBy {
         Offset(
