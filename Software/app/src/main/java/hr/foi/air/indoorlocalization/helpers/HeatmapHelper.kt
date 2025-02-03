@@ -11,9 +11,11 @@ import java.time.Instant
 import java.util.Date
 import hr.foi.air.core.models.HeatmapLiveDot
 import hr.foi.air.core.parser.assetPositionHistoryList
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 fun calculateColorForFrequency(frequency: Int, maxFrequency: Int): Color {
     return when {
@@ -43,9 +45,9 @@ fun calculateSizeForColor(color: Color, dot: HeatmapDot): Float {
 */
 fun calculateColorForFrequencyLiveAsset(frequency: Int): Color {
     return when {
-        frequency < 10 -> Color.Blue.copy(alpha = 0.5f)
-        frequency < 20 -> Color.Green.copy(alpha = 0.5f)
-        frequency < 30 -> Color.Yellow.copy(alpha = 0.5f)
+        frequency < 5 -> Color.Blue.copy(alpha = 0.5f)
+        frequency < 10 -> Color.Green.copy(alpha = 0.5f)
+        frequency < 15 -> Color.Yellow.copy(alpha = 0.5f)
         else -> Color.Red.copy(alpha = 0.5f)
     }
 }
@@ -69,19 +71,35 @@ fun calculateHeatmapDotsInDateRange(floorMapId : Int, size : Size, fromDate: Dat
 
     // currently using dummy data; to-refactor
 
+    //val historyAssetPositions = List(10000){
+    //   generateRandomAssetPositionHistory(floorMapId, size)
+    //}
+
     val historyAssetPositions = remember { assetPositionHistoryList }
 
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
     val historyWithinRange = historyAssetPositions.filter {
-        val date = LocalDateTime.parse(it.dateTime, formatter)
+        val dateTimeParts = it.dateTime.split(".") // Split at decimal point
+        val truncatedDateTime = if (dateTimeParts.size == 2) {
+            val fraction = dateTimeParts[1].take(3) // Take only the first 3 digits
+            "${dateTimeParts[0]}.$fraction" // Reconstruct the timestamp
+        } else {
+            it.dateTime // No fractional part, use as is
+        }
+
+        val date = LocalDateTime.parse(truncatedDateTime, formatter)
             .atZone(ZoneId.systemDefault())
             .toInstant()
             .let { Date.from(it) }
+
         date in fromDate..toDate
     }
 
-    val areaSizeToGroupBy = 1
+
+
+    val areaSizeToGroupBy = 5
 
     val groupedHistory = historyWithinRange.groupBy {
         Offset(
