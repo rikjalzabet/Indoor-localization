@@ -76,6 +76,7 @@ dependencies {
 
     implementation(project(":core"))
     implementation(project(":ws"))
-    implementation(project(":save_object_info"))
+
     implementation("androidx.compose.material3:material3:1.2.0")
+    implementation(project(":save_object_info"))
 }

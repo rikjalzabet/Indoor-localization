@@ -72,7 +72,7 @@ fun calculateHeatmapDotsInDateRange(floorMapId : Int, size : Size, fromDate: Dat
     // currently using dummy data; to-refactor
 
     //val historyAssetPositions = List(10000){
-    //   generateRandomAssetPositionHistory(floorMapId, size)
+     //   generateRandomAssetPositionHistory(floorMapId, size)
     //}
 
     val historyAssetPositions = remember { assetPositionHistoryList }
