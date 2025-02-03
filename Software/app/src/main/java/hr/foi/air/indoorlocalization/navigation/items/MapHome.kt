@@ -151,8 +151,8 @@ fun MapHome(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     clipRect(
-                        left = imageOffset.value.x,
-                        top = imageOffset.value.y,
+                        left = imageOffset.value.x/2f,
+                        top = imageOffset.value.y/2f,
                         right = imageOffset.value.x + imageSize.value.width,
                         bottom = imageOffset.value.y + imageSize.value.height
                     ) {
@@ -166,8 +166,8 @@ fun MapHome(
                                 color = Color.Red,
                                 radius = 15f, // Adjusted back to proper scaling
                                 center = Offset(
-                                    x = imageOffset.value.x + assetPosition.x,
-                                    y = imageOffset.value.y + assetPosition.y
+                                    x = imageOffset.value.x/2f + assetPosition.x,
+                                    y = imageOffset.value.y/2f + assetPosition.y
                                 )
                             )
                         }

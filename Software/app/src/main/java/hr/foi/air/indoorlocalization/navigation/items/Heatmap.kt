@@ -46,6 +46,8 @@ import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
 import kotlin.math.floor
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -302,6 +304,8 @@ fun Heatmap(
                         }
                     }
                 }*/
+                val heatmapRadius = 20f // Define grouping radius for heatmap
+
                 if (selectedOption.value == "Live") {
                     Canvas(modifier = Modifier.fillMaxSize()) {
                         clipRect(
@@ -310,7 +314,6 @@ fun Heatmap(
                             right = imageOffset.value.x + imageSize.value.width,
                             bottom = imageOffset.value.y + imageSize.value.height
                         ) {
-                            // Update live dots with current asset positions
                             assetPositions.value.forEach { asset ->
                                 val assetPosition = getAssetPosition(asset.x, asset.y, imageSize.value)
 
@@ -319,8 +322,15 @@ fun Heatmap(
                                     y = imageOffset.value.y + assetPosition.y
                                 )
 
-                                // Check if the position already exists in heatmapLiveDots
-                                val existingDot = heatmapLiveDots.find { it.position == newDotPosition }
+                                // Find if there's an existing dot within the radius
+                                val existingDot = heatmapLiveDots.find { dot ->
+                                    val distance = sqrt(
+                                        (newDotPosition.x - dot.position.x).pow(2) +
+                                                (newDotPosition.y - dot.position.y).pow(2)
+                                    )
+                                    distance < heatmapRadius
+                                }
+
                                 if (existingDot != null) {
                                     existingDot.frequency += 1  // Increase frequency count
                                 } else {
@@ -328,7 +338,7 @@ fun Heatmap(
                                 }
                             }
 
-                            // Draw all stored heatmap dots
+                            // Draw all heatmap dots with smooth color transition
                             heatmapLiveDots.forEach { dot ->
                                 val color = calculateColorForFrequencyLiveAsset(dot.frequency)
                                 val size = calculateSizeForColorLiveAsset(color, dot)
@@ -342,6 +352,8 @@ fun Heatmap(
                         }
                     }
                 }
+
+
 
                 else{
                     HeatmapView(
@@ -388,8 +400,48 @@ fun Heatmap(
 
 
 
-
 @Composable
+fun HeatmapView(
+    heatmapOffset: Offset,
+    modifier: Modifier = Modifier,
+    dots: List<HeatmapDot>,
+    maxFrequency: Int,
+    imageSize: Size,
+    imageOffset: Offset
+) {
+    Canvas(modifier = modifier.fillMaxSize()) {
+        Log.d("Heatmap", "Drawing ${dots.size} heatmap dots")
+
+        clipRect(
+            left = imageOffset.x,
+            top = imageOffset.y/2f,
+            right = imageOffset.x + imageSize.width,
+            bottom = imageOffset.y + imageSize.height
+        ) {
+            dots.forEach { dot ->
+                val position = getAssetPosition(dot.position.x, dot.position.y, imageSize)
+                val mappedPosition = Offset(
+                    x = position.x + imageOffset.x,
+                    y = position.y + imageOffset.y/2f
+                )
+
+                /*drawCircle(
+                    color = calculateColorForFrequency(dot.frequency, maxFrequency),
+                    radius = 10f,
+                    center = mappedPosition
+                )*/
+                drawRect(
+                    color = calculateColorForFrequency(dot.frequency, maxFrequency).copy(alpha = 0.25f),
+                    topLeft = mappedPosition,
+                    size = Size(32f, 32f),
+                    blendMode = BlendMode.SrcOver
+                )
+            }
+        }
+    }
+}
+
+/*@Composable
 fun HeatmapView(
     heatmapOffset : Offset,
     modifier: Modifier = Modifier,
@@ -422,7 +474,7 @@ fun HeatmapView(
         }
 
     }
-}
+}*/
 
 @Composable
 fun LiveHeatmap(){
