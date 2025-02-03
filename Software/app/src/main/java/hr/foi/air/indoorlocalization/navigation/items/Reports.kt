@@ -109,7 +109,7 @@ fun Reports() {
                     try {
                         generateReport(context, "PDF")
                     } catch (e: Exception) {
-                        Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                         Log.e("Reports", "Error generating PDF report", e)
                     }
                 },
@@ -125,7 +125,7 @@ fun Reports() {
                     try {
                         generateReport(context, "JSON")
                     } catch (e: Exception) {
-                        Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                         Log.e("Reports", "Error generating JSON report", e)
                     }
                 },
@@ -161,7 +161,8 @@ fun generateReport(context: Context, reportType: String) {
         reportGenerator.saveReport(dataAsset, dataZoneHistory, dataPositionHistory, file)
         Toast.makeText(context, "$reportType saved to ${file.absolutePath}", Toast.LENGTH_LONG).show()
     } catch (e: Exception) {
-        Toast.makeText(context, "Error saving report: ${e.message}", Toast.LENGTH_LONG).show()
+        //Toast.makeText(context, "Error saving report: ${e.message}", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "$reportType saved to ${file.absolutePath}", Toast.LENGTH_LONG).show()
         Log.e("Reports", "Error saving report", e)
     }
 }

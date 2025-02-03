@@ -63,7 +63,8 @@ class PDFReportGenerator : IReportGenerator {
         val assetZoneHistories = zoneHistories.filter { it.assetId == asset.id }
         if (assetZoneHistories.isNotEmpty()) {
             paragraphs.add(Paragraph("Zone History"))
-            val zoneTable = Table(UnitValue.createPercentArray(floatArrayOf(2f, 2f, 2f, 2f, 2f))).useAllAvailableWidth()
+            //val zoneTable = Table(UnitValue.createPercentArray(floatArrayOf(25f, 25f, 25f, 25f))).useAllAvailableWidth()
+            val zoneTable = Table(4).useAllAvailableWidth()
             zoneTable.addHeaderCell("Zone ID")
             //zoneTable.addHeaderCell("Zone Name")
             zoneTable.addHeaderCell("Enter Date Time")
@@ -85,7 +86,8 @@ class PDFReportGenerator : IReportGenerator {
         val assetPositionHistories = positionHistories.filter { it.assetId == asset.id }
         if (assetPositionHistories.isNotEmpty()) {
             paragraphs.add(Paragraph("Position History"))
-            val positionTable = Table(UnitValue.createPercentArray(floatArrayOf(2f, 2f, 2f, 2f))).useAllAvailableWidth()
+            //val positionTable = Table(UnitValue.createPercentArray(floatArrayOf(25f, 25f, 25f, 25f))).useAllAvailableWidth()
+            val positionTable = Table(4).useAllAvailableWidth()
             positionTable.addHeaderCell("X")
             positionTable.addHeaderCell("Y")
             positionTable.addHeaderCell("Date Time")
