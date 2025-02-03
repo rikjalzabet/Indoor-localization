@@ -250,7 +250,7 @@ fun Heatmap(
                     )
                 }
                 //Log.d("Heatmap", "Dots size: ${heatmapDots.size}")
-                if(selectedOption.value == "Live"){
+               /* if(selectedOption.value == "Live"){
                     Canvas(
                         modifier = Modifier.fillMaxSize()
                     ) {
@@ -301,7 +301,48 @@ fun Heatmap(
                             }
                         }
                     }
+                }*/
+                if (selectedOption.value == "Live") {
+                    Canvas(modifier = Modifier.fillMaxSize()) {
+                        clipRect(
+                            left = imageOffset.value.x,
+                            top = imageOffset.value.y,
+                            right = imageOffset.value.x + imageSize.value.width,
+                            bottom = imageOffset.value.y + imageSize.value.height
+                        ) {
+                            // Update live dots with current asset positions
+                            assetPositions.value.forEach { asset ->
+                                val assetPosition = getAssetPosition(asset.x, asset.y, imageSize.value)
+
+                                val newDotPosition = Offset(
+                                    x = imageOffset.value.x + assetPosition.x,
+                                    y = imageOffset.value.y + assetPosition.y
+                                )
+
+                                // Check if the position already exists in heatmapLiveDots
+                                val existingDot = heatmapLiveDots.find { it.position == newDotPosition }
+                                if (existingDot != null) {
+                                    existingDot.frequency += 1  // Increase frequency count
+                                } else {
+                                    heatmapLiveDots.add(HeatmapLiveDot(newDotPosition, 1, liveMovementSize = 30f))
+                                }
+                            }
+
+                            // Draw all stored heatmap dots
+                            heatmapLiveDots.forEach { dot ->
+                                val color = calculateColorForFrequencyLiveAsset(dot.frequency)
+                                val size = calculateSizeForColorLiveAsset(color, dot)
+
+                                drawCircle(
+                                    color = color.copy(alpha = 0.5f),
+                                    radius = size,
+                                    center = dot.position
+                                )
+                            }
+                        }
+                    }
                 }
+
                 else{
                     HeatmapView(
                         imageSize = imageSize.value,
