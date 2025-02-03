@@ -314,8 +314,8 @@ fun Heatmap(
                 if (selectedOption.value == "Live") {
                     Canvas(modifier = Modifier.fillMaxSize()) {
                         clipRect(
-                            left = imageOffset.value.x,
-                            top = imageOffset.value.y,
+                            left = imageOffset.value.x/2f,
+                            top = imageOffset.value.y/2f,
                             right = imageOffset.value.x + imageSize.value.width,
                             bottom = imageOffset.value.y + imageSize.value.height
                         ) {
@@ -323,8 +323,8 @@ fun Heatmap(
                                 val assetPosition = getAssetPosition(asset.x, asset.y, imageSize.value)
 
                                 val newDotPosition = Offset(
-                                    x = imageOffset.value.x + assetPosition.x,
-                                    y = imageOffset.value.y + assetPosition.y
+                                    x = imageOffset.value.x/2f + assetPosition.x,
+                                    y = imageOffset.value.y/2f + assetPosition.y
                                 )
 
                                 // Find if there's an existing dot within the radius
@@ -363,7 +363,7 @@ fun Heatmap(
                 else{
                     HeatmapView(
                         imageSize = imageSize.value,
-                        imageOffset = imageOffset.value,
+                        imageOffset = imageOffset.value/1.7f,
                         heatmapOffset = imageOffset.value,
                         maxFrequency = maxHeatmapDotFrequency,
                         modifier = Modifier.fillMaxWidth(),
