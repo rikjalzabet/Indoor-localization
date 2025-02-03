@@ -143,7 +143,7 @@ fun MapHome(
                     ZoneOverlay(
                         zone = zone,
                         imageSize = imageSize.value,
-                        imageOffset = imageOffset.value
+                        imageOffset = imageOffset.value/1.5f
                     )
                 }
 
@@ -151,8 +151,8 @@ fun MapHome(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     clipRect(
-                        left = imageOffset.value.x/2f,
-                        top = imageOffset.value.y/2f,
+                        left = imageOffset.value.x,
+                        top = imageOffset.value.y,
                         right = imageOffset.value.x + imageSize.value.width,
                         bottom = imageOffset.value.y + imageSize.value.height
                     ) {
@@ -191,8 +191,37 @@ fun MapHome(
 
 
 }
-
 fun getAssetPosition(assetX: Float, assetY: Float, imageSize: Size): Offset {
+    val imageWidth = 780f
+    val imageHeight = 610f
+
+    val gridColumns = 100f
+    val gridRows = 100f
+
+    val marginTop = 50f
+    val marginBottom = 50f
+    val marginLeft = 50f
+    val marginRight = 50f
+
+    val adjustedWidth = imageWidth - marginLeft - marginRight
+    val adjustedHeight = imageHeight - marginTop - marginBottom
+
+    val left = marginLeft + (assetX / gridColumns) * adjustedWidth
+    // Flip the y-axis to make the origin at the bottom-left corner
+    val top = marginTop + (assetY / gridRows) * adjustedHeight
+
+    // Scale to the actual image size in Compose
+    val scaleX = imageSize.width / imageWidth
+    val scaleY = imageSize.height / imageHeight
+
+    // Invert the Y axis: calculate the position from the bottom
+    val flippedY = imageSize.height - (top * scaleY)
+
+    return Offset(left * scaleX, flippedY)
+}
+
+
+/*fun getAssetPosition(assetX: Float, assetY: Float, imageSize: Size): Offset {
     val imageWidth = 780f
     val imageHeight = 610f
 
@@ -215,7 +244,7 @@ fun getAssetPosition(assetX: Float, assetY: Float, imageSize: Size): Offset {
     val scaleY = imageSize.height / imageHeight
 
     return Offset(left * scaleX, top * scaleY)
-}
+}*/
 
 
 @Preview(showBackground = true)

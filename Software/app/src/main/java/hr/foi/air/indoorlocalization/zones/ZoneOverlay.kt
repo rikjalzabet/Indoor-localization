@@ -23,8 +23,8 @@ fun ZoneOverlay(
             .fillMaxSize()
     ) {
         clipRect(
-            left=imageOffset.x/2f,
-            top=imageOffset.y/2f,
+            left=imageOffset.x,
+            top=imageOffset.y,
             right=imageOffset.x + imageSize.width,
             bottom=imageOffset.y + imageSize.height
         ){
@@ -32,8 +32,8 @@ fun ZoneOverlay(
             val points = zone.points.map { point ->
                 //val scaledX = imageOffset.x + point.x * imageSize.width
                 //val scaledY = imageOffset.y + point.y * imageSize.height
-                val scaledX = imageOffset.x/2f + (point.x / 100f) * imageSize.width // Adjust scaling logic if needed
-                val scaledY = imageOffset.y/2f + (point.y / 100f) * imageSize.height
+                val scaledX = imageOffset.x + (point.x / 100f) * imageSize.width // Adjust scaling logic if needed
+                val scaledY = imageOffset.y + (point.y / 100f) * imageSize.height
                 Offset(scaledX.toFloat(), scaledY.toFloat())
             }
             if (points.isNotEmpty()) {

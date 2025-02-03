@@ -243,12 +243,17 @@ fun Heatmap(
                     .border(2.dp, Color.Black),
                 contentScale = ContentScale.Crop
             )
+            var adjustedImageOffset = if (selectedOption.value == "Live") {
+                imageOffset.value / 1.7f
+            } else {
+                imageOffset.value / 2.2f
+            }
             if (imageSize.value.width > 0 && imageSize.value.height > 0) {
                 zonesList.forEach { zone ->
                     ZoneOverlay(
                         zone = zone,
                         imageSize = imageSize.value,
-                        imageOffset = imageOffset.value
+                        imageOffset = adjustedImageOffset
                     )
                 }
                 //Log.d("Heatmap", "Dots size: ${heatmapDots.size}")
