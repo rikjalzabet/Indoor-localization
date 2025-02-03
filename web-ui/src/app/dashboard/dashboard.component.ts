@@ -101,8 +101,15 @@ export class DashboardComponent implements OnInit {
 
   scaleZonePoints(points: {x: number, y: number }[]): { x: number, y: number }[] {
     
-    const imageWidth = 780;
-    const imageHeight = 610; 
+    var imageWidth = 780;
+    var imageHeight = 610; 
+
+    
+    if(this.selectedFloorMapId == 2){
+      imageWidth = 805;
+      imageHeight = 590; 
+    }
+
 
     const gridColumns = 100; 
     const gridRows = 100; 
