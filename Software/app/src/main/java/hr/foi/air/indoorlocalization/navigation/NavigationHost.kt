@@ -208,17 +208,25 @@ fun NavigationHost(
 
                 clearDataListsIfTheyNotEmpty()
 
+                val assets = withContext(Dispatchers.IO) {
+                    apiService.getAllAssets()
+                }
+                val assetsJson = gson.toJson(assets)
+                Log.d("ApiService321", "Fetched assets: $assetsJson")
+
                 val assetZoneHistory = withContext(Dispatchers.IO) {
                     apiService.getAllAssetZoneHistory()
                 }
                 val assetZoneHistoryJson = gson.toJson(assetZoneHistory)
                 Log.d("ApiService321", "Fetched ZoneHist: $assetZoneHistoryJson")
+
                 val assetPositionHistory = withContext(Dispatchers.IO) {
                     apiService.getAllAssetPositionHistory()
                 }
                 val assetPositionHistoryJson = gson.toJson(assetPositionHistory)
                 Log.d("ApiService321", "Fetched PosHist: $assetPositionHistoryJson")
 
+                JsonDataParser().updateLiveAssetPositions(assetsJson)
                 JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJson)
                 JsonDataParser().updateAssetPositionHistory(assetPositionHistoryJson)
             }

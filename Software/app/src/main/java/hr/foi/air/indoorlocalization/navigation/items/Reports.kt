@@ -37,6 +37,7 @@ import hr.foi.air.core.parser.liveAssetPositionList
 import hr.foi.air.indoorlocalization.navigation.items.ReportsItems.AssetPositionHistoryList
 import hr.foi.air.indoorlocalization.navigation.items.ReportsItems.AssetZoneHistoryList
 import hr.foi.air.indoorlocalization.parser.JsonDataParser
+import hr.foi.air.save_object_info.IReportGenerator
 import hr.foi.air.save_object_info.JSONReportGenerator
 import hr.foi.air.save_object_info.PDFReportGenerator
 import hr.foi.air.ws.TestData.assetPositionHistoryJSON
@@ -96,7 +97,6 @@ fun Reports() {
             }
         }
 
-        // Use a Row to arrange the buttons horizontally
         Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -107,9 +107,10 @@ fun Reports() {
             Button(
                 onClick = {
                     try {
-                        generatePdfReport(context)
+                        generateReport(context, "PDF")
                     } catch (e: Exception) {
                         Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Log.e("Reports", "Error generating PDF report", e)
                     }
                 },
                 modifier = Modifier
@@ -122,9 +123,10 @@ fun Reports() {
             Button(
                 onClick = {
                     try {
-                        generateJsonReport(context)
+                        generateReport(context, "JSON")
                     } catch (e: Exception) {
                         Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Log.e("Reports", "Error generating JSON report", e)
                     }
                 },
                 modifier = Modifier
@@ -137,47 +139,37 @@ fun Reports() {
     }
 }
 
-fun generateJsonReport(context: Context) {
-    val jsonReportGenerator = JSONReportGenerator()
-    val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "report.json")
+fun generateReport(context: Context, reportType: String) {
+    val reportGenerator: IReportGenerator = when (reportType) {
+        "PDF" -> PDFReportGenerator()
+        "JSON" -> JSONReportGenerator()
+        else -> throw IllegalArgumentException("Unsupported report type: $reportType")
+    }
 
-    val jsonDataParser = JsonDataParser()
-    jsonDataParser.updateLiveAssetPositions(testAssetPositionJSON)
-    jsonDataParser.updateAssetPositionHistory(assetPositionHistoryJSON)
-    jsonDataParser.updateAssetZoneHistory(assetZoneHistoryJSON)
-
-    val dataAsset = liveAssetPositionList
-    val dataPositionHistory = assetPositionHistoryList
-    val dataZoneHistory = assetZoneHistoryList
-
-    jsonReportGenerator.saveReport(dataAsset, dataZoneHistory, dataPositionHistory, file)
-    Toast.makeText(context, "JSON saved to ${file.absolutePath}", Toast.LENGTH_LONG).show()
-}
-
-fun generatePdfReport(context: Context) {
-    val pdfReportGenerator = PDFReportGenerator()
-    val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "report.pdf")
-
-    /*val dataAsset: List<Asset> = JsonDataParser().parseLiveAssetPositions(testAssetPositionJSON)
-    val dataPositionHistory: List<AssetPositionHistory> = JsonDataParser().parseAssetPositionHistory(assetPositionHistoryJSON)
-    val dataZoneHistory: List<AssetZoneHistory> = JsonDataParser().parseAssetZoneHistory(assetZoneHistoryJSON)*/
-
-    val jsonDataParser = JsonDataParser()
-    jsonDataParser.updateLiveAssetPositions(testAssetPositionJSON)
-    jsonDataParser.updateAssetPositionHistory(assetPositionHistoryJSON)
-    jsonDataParser.updateAssetZoneHistory(assetZoneHistoryJSON)
+    val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "report.${reportType.lowercase()}")
 
     val dataAsset = liveAssetPositionList
     val dataPositionHistory = assetPositionHistoryList
     val dataZoneHistory = assetZoneHistoryList
 
-    pdfReportGenerator.saveReport(dataAsset, dataZoneHistory, dataPositionHistory, file)
-    Toast.makeText(context, "PDF saved to ${file.absolutePath}", Toast.LENGTH_LONG).show()
+    if (dataAsset.isEmpty() && dataPositionHistory.isEmpty() && dataZoneHistory.isEmpty()) {
+        Toast.makeText(context, "No data available to generate report", Toast.LENGTH_LONG).show()
+        return
+    }
+
+    try {
+        reportGenerator.saveReport(dataAsset, dataZoneHistory, dataPositionHistory, file)
+        Toast.makeText(context, "$reportType saved to ${file.absolutePath}", Toast.LENGTH_LONG).show()
+    } catch (e: Exception) {
+        Toast.makeText(context, "Error saving report: ${e.message}", Toast.LENGTH_LONG).show()
+        Log.e("Reports", "Error saving report", e)
+    }
 }
 
 @Preview
 @Composable
 fun PreviewReports() {
+    JsonDataParser().updateLiveAssetPositions(testAssetPositionJSON)
     JsonDataParser().updateAssetZoneHistory(assetZoneHistoryJSON)
     JsonDataParser().updateAssetPositionHistory(assetPositionHistoryJSON)
     Reports()
