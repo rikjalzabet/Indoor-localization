@@ -7,6 +7,6 @@ interface IAssetPositionHistory {
     val assetId: Int
     val x: Float
     val y: Float
-    val dateTime: Date
+    val dateTime: String
     val floorMapId: Int
 }

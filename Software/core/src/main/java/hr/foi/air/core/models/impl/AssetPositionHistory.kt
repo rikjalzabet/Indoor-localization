@@ -8,7 +8,7 @@ class AssetPositionHistory(
     override val assetId: Int,
     override val x: Float,
     override val y: Float,
-    override val dateTime: Date,
+    override val dateTime: String,
     override val floorMapId: Int
 ) : IAssetPositionHistory{
 
