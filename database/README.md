@@ -98,7 +98,7 @@ To check if the database is correctly configured:
     
      ```docker-compose down -v ```
     
-    You will need to reinitialize the database following the steps in [Setting up local database]() .
+    You will need to reinitialize the database following the steps in [Setting up local database](#setting-up-local-database) .
     
 - To stop the container while retaining the data:
     
