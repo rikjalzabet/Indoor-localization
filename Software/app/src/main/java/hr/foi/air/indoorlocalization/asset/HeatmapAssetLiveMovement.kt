@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.geometry.Offset
 import ca.hss.heatmaplib.HeatMap
 import com.google.gson.Gson
+import hr.foi.air.core.models.IAsset
 import hr.foi.air.core.movements.ILiveAssetMovement
 import hr.foi.air.core.parser.liveAssetPositionList
 import hr.foi.air.indoorlocalization.parser.JsonDataParser
@@ -16,8 +17,8 @@ import kotlinx.coroutines.withContext
 
 class HeatmapAssetLiveMovement(): ILiveAssetMovement {
     override suspend fun simulateLiveMovement(
-        currentPosition: MutableState<Offset>,
-        floorMapId: Int
+        floorMapId: Int,
+        assetPositions: MutableState<List<IAsset>>
     ) {
         /*val liveAssetPositions = liveAssetPositionList.filter { it.floorMapId == floorMapId }
 
@@ -38,23 +39,17 @@ class HeatmapAssetLiveMovement(): ILiveAssetMovement {
         val gson = Gson()
         while (true) {
             try {
+                // Fetch live movement data
                 val getLiveMovement = withContext(Dispatchers.IO) {
                     apiService.getAllAssets()
                 }
                 val getLiveMovementToJson = gson.toJson(getLiveMovement)
-                withContext(Dispatchers.Main){
-                    liveAssetPositionList.clear()
-                    JsonDataParser().updateLiveAssetPositions(getLiveMovementToJson)
-                }
-                val liveAssetPositions = liveAssetPositionList.filter { it.floorMapId == floorMapId }
+                Log.d("HomeMapLiveMov88", "Fetched NEW Live Movement: $getLiveMovementToJson")
 
-                if (liveAssetPositions.isNotEmpty()) {
-                    val assetPosition = liveAssetPositions.first()
-                    withContext(Dispatchers.Main) {
-                        currentPosition.value = Offset(assetPosition.x, assetPosition.y)
-                    }
-                } else {
-                    Log.e("HomeMapLiveMov88", "No positions found for floor map $floorMapId")
+                // Filter the assets for the current floor map and update the state
+                val liveAssetPositions = getLiveMovement.filter { it.floorMapId == floorMapId }
+                withContext(Dispatchers.Main) {
+                    assetPositions.value = liveAssetPositions
                 }
             } catch (e: Exception) {
                 Log.e("HomeMapLiveMov88", "Error fetching live movement data: ${e.message}")
@@ -63,4 +58,5 @@ class HeatmapAssetLiveMovement(): ILiveAssetMovement {
             delay(1500L)
         }
     }
-}
+    }
+

@@ -6,6 +6,7 @@ import androidx.compose.ui.geometry.Offset
 import kotlinx.coroutines.delay
 import androidx.compose.runtime.MutableState
 import com.google.gson.Gson
+import hr.foi.air.core.models.IAsset
 import hr.foi.air.core.parser.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,28 +19,9 @@ import kotlinx.coroutines.launch
 
 class HomeMapAssetLiveMovement(): ILiveAssetMovement {
     override suspend fun simulateLiveMovement(
-        currentPosition: MutableState<Offset>,
-        floorMapId: Int
+        floorMapId: Int,
+        assetPositions: MutableState<List<IAsset>>
     ) {
-        /*var liveAssetPositions = liveAssetPositionList.filter { it.floorMapId == floorMapId }
-
-        if (liveAssetPositions.isEmpty()) {
-            Log.e("AssetLiveMovement", "No positions found for floor map $floorMapId")
-            return
-        }
-
-        var index = 0
-
-                val assetPosition = liveAssetPositions[index]
-                //Log.i("AssetLiveMovement", "Moving asset ${assetPosition.id} to position (${assetPosition.x}, ${assetPosition.y})")
-                withContext(Dispatchers.Main) {
-                    currentPosition.value = Offset(assetPosition.x, assetPosition.y)
-                }
-                index = (index + 1) % liveAssetPositions.size
-                delay(3000L)
-
-        }*/
-
         val apiService = getApiService()
         val gson = Gson()
         while (true) {
@@ -50,19 +32,11 @@ class HomeMapAssetLiveMovement(): ILiveAssetMovement {
                 }
                 val getLiveMovementToJson = gson.toJson(getLiveMovement)
                 Log.d("HomeMapLiveMov88", "Fetched NEW Live Movement: $getLiveMovementToJson")
-                withContext(Dispatchers.Main){
-                    liveAssetPositionList.clear()
-                    JsonDataParser().updateLiveAssetPositions(getLiveMovementToJson)
-                }
-                val liveAssetPositions = liveAssetPositionList.filter { it.floorMapId == floorMapId }
 
-                if (liveAssetPositions.isNotEmpty()) {
-                    val assetPosition = liveAssetPositions.first()
-                    withContext(Dispatchers.Main) {
-                        currentPosition.value = Offset(assetPosition.x, assetPosition.y)
-                    }
-                } else {
-                    Log.e("HomeMapLiveMov88", "No positions found for floor map $floorMapId")
+                // Filter the assets for the current floor map and update the state
+                val liveAssetPositions = getLiveMovement.filter { it.floorMapId == floorMapId }
+                withContext(Dispatchers.Main) {
+                    assetPositions.value = liveAssetPositions
                 }
             } catch (e: Exception) {
                 Log.e("HomeMapLiveMov88", "Error fetching live movement data: ${e.message}")
