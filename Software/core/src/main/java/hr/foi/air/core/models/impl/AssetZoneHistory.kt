@@ -1,7 +1,6 @@
 package hr.foi.air.core.models.impl
 
 import hr.foi.air.core.models.IAssetZoneHistory
-import java.util.Date
 
 class AssetZoneHistory(
     override var id: Int,

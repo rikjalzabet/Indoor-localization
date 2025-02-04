@@ -1,7 +1,6 @@
 package hr.foi.air.core.models.impl
 
 import hr.foi.air.core.models.IAssetPositionHistory
-import java.util.Date
 
 class AssetPositionHistory(
     override var id: Int,

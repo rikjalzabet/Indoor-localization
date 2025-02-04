@@ -1,7 +1,6 @@
 package hr.foi.air.core.models.impl
 
 import hr.foi.air.core.models.IAsset
-import java.util.Date
 
 class Asset(
     override var id: Int,
