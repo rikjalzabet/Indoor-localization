@@ -1,0 +1,12 @@
+
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+.success-snackbar {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .error-snackbar {
+    background-color: #f44336;
+    color: #fff;
+  }
