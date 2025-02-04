@@ -22,7 +22,7 @@ To begin, download and install [Get Started | Docker](https://www.docker.com/get
 
 ### Cloning the repository
 
-Clone the repository from GitHub: [GitHub - rikjalzabet/Indoor-localization](https://github.com/rikjalzabet/Indoor-localization). Since the database configuration files are located in the `DB` branch, switch to that branch. Once checked out, you should see a `database` directory containing the necessary configuration files.
+Clone the repository from GitHub: [GitHub - rikjalzabet/Indoor-localization](https://github.com/rikjalzabet/Indoor-localization). Once checked out, you should see four folders, including `DB` folder containing the necessary configuration files.
 
 - `.env`: Stores environment variables.
     
@@ -41,7 +41,7 @@ Clone the repository from GitHub: [GitHub - rikjalzabet/Indoor-localization](htt
 
 ### Start Docker containers
 
-Open a terminal inside the `database` folder and execute `docker-compose up -d --build`. This will initialize the Docker containers running PostgreSQL, pgAdmin, and Node-RED.
+Open a terminal inside the `DB` folder and execute `docker-compose up -d --build`. This will initialize the Docker containers running PostgreSQL, pgAdmin, and Node-RED.
 
 
 ### Access pgAdmin
