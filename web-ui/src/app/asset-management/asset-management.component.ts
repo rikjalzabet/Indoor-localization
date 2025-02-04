@@ -3,7 +3,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'; 
 import { WebUiService } from '../services/web-ui.service';
 import { IAsset } from '../models/iasset';
 import { MatIconModule } from '@angular/material/icon';
@@ -85,6 +85,7 @@ export class AssetManagementComponent implements OnInit {
       this.webUiService.deleteAsset(selectedAsset.id);
       this.fetchAssets();
       this.notificationService.showSuccess('Succcesfully deleted asset!');
+      window.location.reload();
       }
       else{
         this.notificationService.showError('Error: No asset was selected');
@@ -103,6 +104,7 @@ export class AssetManagementComponent implements OnInit {
           this.webUiService.addAsset(result);
           this.fetchAssets();
           this.notificationService.showSuccess('Succcesfully added new asset!');
+          window.location.reload();
         }
       })
     }
@@ -124,6 +126,7 @@ export class AssetManagementComponent implements OnInit {
           this.webUiService.updateAsset(result, selectedAsset.id);
           this.fetchAssets();
           this.notificationService.showSuccess('Succcesfully updated asset!');
+          window.location.reload();
         }
       })
     }
