@@ -102,10 +102,8 @@ export class ReportsComponent implements OnInit, AfterViewInit {
         }),
       };
 
-      // Clear the existing data before setting new data
       this.heatmap.setData({ data: [] });
 
-      // Set the new data to the heatmap
       this.heatmap.setData(data);
     }
   }
@@ -248,7 +246,6 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   downloadPdf(): void {
     const doc = new jsPDF();
 
-    // Asset Table
     doc.text('Assets', 10, 10);
     (doc as any).autoTable({
       startY: 15,
@@ -263,7 +260,6 @@ export class ReportsComponent implements OnInit, AfterViewInit {
       ]),
     });
 
-    // Asset Position History Table
     doc.text('Asset Position History', 10, (doc as any).lastAutoTable.finalY + 10);
     (doc as any).autoTable({
       startY: (doc as any).lastAutoTable.finalY + 15,
@@ -276,7 +272,6 @@ export class ReportsComponent implements OnInit, AfterViewInit {
       ]),
     });
 
-    // Asset Zone History Table
     doc.text('Asset Zone History', 10, (doc as any).lastAutoTable.finalY + 10);
     (doc as any).autoTable({
       startY: (doc as any).lastAutoTable.finalY + 15,
@@ -290,7 +285,6 @@ export class ReportsComponent implements OnInit, AfterViewInit {
       ]),
     });
 
-    // Save PDF
     doc.save('Assets_' + this.selectedFloorMapId + '_' + Date.now() + '.pdf');
   }
 }

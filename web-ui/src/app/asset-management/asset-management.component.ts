@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableModule } from '@angular/material/table'; // Import MatTableModule
+import { MatTableModule } from '@angular/material/table';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { CommonModule } from '@angular/common'; // Required for common directives like ngFor, ngIf
+import { CommonModule } from '@angular/common';
 import { WebUiService } from '../services/web-ui.service';
 import { IAsset } from '../models/iasset';
 import { MatIconModule } from '@angular/material/icon';

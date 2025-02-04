@@ -52,7 +52,6 @@
       <tr mat-row *matRowDef="let row; columns: ['x', 'y', 'dateTime'];"></tr>
     </table>
 
-    <!-- Asset Zone History Table -->
     <h4>Zone History</h4>
     <table mat-table [dataSource]="getAssetZoneHistory(asset.id)" class="mat-elevation-z8">
       <ng-container matColumnDef="zone">
